@@ -179,4 +179,6 @@ function toggleMobileMenu() {
     }
 }
 
+// No carousel needed - kategori shows 3 cards per row
+
 console.log('Landing page loaded successfully');

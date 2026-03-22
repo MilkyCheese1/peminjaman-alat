@@ -37,18 +37,6 @@ Route::middleware('auth')->group(function () {
         };
         return view($viewName);
     });
-
-    Route::get('/dashboard-admin', function () {
-        return view('dashboard-admin');
-    });
-
-    Route::get('/dashboard-staff', function () {
-        return view('dashboard-staff');
-    });
-
-    Route::get('/dashboard-user', function () {
-        return view('dashboard-user');
-    });
 });
 
 /*

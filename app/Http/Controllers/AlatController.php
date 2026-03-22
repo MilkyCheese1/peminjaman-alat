@@ -13,19 +13,12 @@ class AlatController extends Controller
      */
     public function index(Request $request)
     {
-        try {
-            $alats = Alat::with('kategori')->get();
+        $alats = Alat::with('kategori')->get();
 
-            return response()->json([
-                'success' => true,
-                'data' => $alats,
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error fetching alat: ' . $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'data' => $alats,
+        ]);
     }
 
     /**
@@ -33,26 +26,12 @@ class AlatController extends Controller
      */
     public function show($id)
     {
-        try {
-            $alat = Alat::with('kategori')->find($id);
+        $alat = Alat::with('kategori')->findOrFail($id);
 
-            if (!$alat) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Alat tidak ditemukan',
-                ], 404);
-            }
-
-            return response()->json([
-                'success' => true,
-                'data' => $alat,
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error fetching alat: ' . $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'data' => $alat,
+        ]);
     }
 
     /**
@@ -67,20 +46,13 @@ class AlatController extends Controller
             'dipinjam' => 'required|integer|min:0',
         ]);
 
-        try {
-            $alat = Alat::create($validated);
+        $alat = Alat::create($validated);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Alat berhasil ditambahkan',
-                'data' => $alat,
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error creating alat: ' . $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Alat berhasil ditambahkan',
+            'data' => $alat,
+        ], 201);
     }
 
     /**
@@ -88,14 +60,7 @@ class AlatController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $alat = Alat::find($id);
-
-        if (!$alat) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Alat tidak ditemukan',
-            ], 404);
-        }
+        $alat = Alat::findOrFail($id);
 
         $validated = $request->validate([
             'nama_alat' => 'sometimes|string|max:50',
@@ -104,20 +69,13 @@ class AlatController extends Controller
             'dipinjam' => 'sometimes|integer|min:0',
         ]);
 
-        try {
-            $alat->update($validated);
+        $alat->update($validated);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Alat berhasil diperbarui',
-                'data' => $alat,
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error updating alat: ' . $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Alat berhasil diperbarui',
+            'data' => $alat,
+        ]);
     }
 
     /**
@@ -125,28 +83,13 @@ class AlatController extends Controller
      */
     public function destroy($id)
     {
-        $alat = Alat::find($id);
+        $alat = Alat::findOrFail($id);
+        $alat->delete();
 
-        if (!$alat) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Alat tidak ditemukan',
-            ], 404);
-        }
-
-        try {
-            $alat->delete();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Alat berhasil dihapus',
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error deleting alat: ' . $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Alat berhasil dihapus',
+        ]);
     }
 
     /**
@@ -154,18 +97,11 @@ class AlatController extends Controller
      */
     public function getCategories()
     {
-        try {
-            $categories = Kategori::all();
+        $categories = Kategori::all();
 
-            return response()->json([
-                'success' => true,
-                'data' => $categories,
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error fetching categories: ' . $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'data' => $categories,
+        ]);
     }
 }

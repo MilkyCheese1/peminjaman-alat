@@ -17,7 +17,7 @@ class AuthController extends Controller
         $validated = $request->validate([
             'username' => 'required|unique:users|min:3|max:50',
             'email' => 'required|email|unique:users',
-            'phone' => 'required|min:10|max:20',
+            'phone' => 'sometimes|min:10|max:20',
             'password' => 'required|min:6|confirmed',
             'alamat' => 'required|min:5',
         ]);
@@ -26,14 +26,12 @@ class AuthController extends Controller
             $user = User::create([
                 'username' => $validated['username'],
                 'email' => $validated['email'],
-                'phone' => $validated['phone'],
+                'phone' => $validated['phone'] ?? '',
                 'password' => Hash::make($validated['password']),
                 'alamat' => $validated['alamat'],
                 'role' => 'peminjam',
                 'email_verified' => false,
                 'is_active' => true,
-                'created_at' => now(),
-                'updated_at' => now(),
             ]);
 
             return response()->json([
@@ -108,13 +106,6 @@ class AuthController extends Controller
      */
     public function getProfile(Request $request)
     {
-        if (!Auth::check()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Tidak ada user yang login',
-            ], 401);
-        }
-
         return response()->json([
             'success' => true,
             'user' => Auth::user(),
@@ -126,26 +117,18 @@ class AuthController extends Controller
      */
     public function updateProfile(Request $request)
     {
-        if (!Auth::check()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Tidak ada user yang login',
-            ], 401);
-        }
-
         $validated = $request->validate([
             'phone' => 'sometimes|min:10|max:20',
             'alamat' => 'sometimes|min:5',
         ]);
 
         try {
-            $user = Auth::user();
-            $user->update(array_merge($validated, ['updated_at' => now()]));
+            Auth::user()->update($validated);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Profil berhasil diperbarui',
-                'user' => $user,
+                'user' => Auth::user(),
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -160,13 +143,6 @@ class AuthController extends Controller
      */
     public function changePassword(Request $request)
     {
-        if (!Auth::check()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Tidak ada user yang login',
-            ], 401);
-        }
-
         $validated = $request->validate([
             'current_password' => 'required',
             'new_password' => 'required|min:6|confirmed',
@@ -182,10 +158,7 @@ class AuthController extends Controller
         }
 
         try {
-            $user->update([
-                'password' => Hash::make($validated['new_password']),
-                'updated_at' => now(),
-            ]);
+            $user->update(['password' => Hash::make($validated['new_password'])]);
 
             return response()->json([
                 'success' => true,
@@ -205,9 +178,9 @@ class AuthController extends Controller
     private function getDashboardRoute($role)
     {
         $routes = [
-            'admin' => '/dashboard-admin',
-            'petugas' => '/dashboard-staff',
-            'peminjam' => '/dashboard-user',
+            'admin' => '/dashboard',
+            'petugas' => '/dashboard',
+            'peminjam' => '/dashboard',
         ];
 
         return $routes[$role] ?? '/dashboard';

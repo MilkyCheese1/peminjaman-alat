@@ -16,8 +16,16 @@ document.addEventListener('DOMContentLoaded', function() {
 async function handleLogin(e) {
     e.preventDefault();
     
-    const username_or_email = document.getElementById('username_or_email').value;
+    const username_or_email = document.getElementById('usernameOrEmail').value;
     const password = document.getElementById('password').value;
+    const errorDiv = document.getElementById('errorMessage');
+    const successDiv = document.getElementById('successMessage');
+
+    // Clear messages
+    errorDiv.textContent = '';
+    successDiv.textContent = '';
+    errorDiv.classList.remove('show');
+    successDiv.classList.remove('show');
 
     try {
         const response = await fetch('/api/login', {
@@ -35,14 +43,19 @@ async function handleLogin(e) {
         const data = await response.json();
 
         if (data.success) {
-            alert(data.message);
-            window.location.href = data.redirect;
+            successDiv.textContent = data.message;
+            successDiv.classList.add('show');
+            setTimeout(() => {
+                window.location.href = data.redirect || '/dashboard';
+            }, 1500);
         } else {
-            alert('Error: ' + data.message);
+            errorDiv.textContent = 'Error: ' + data.message;
+            errorDiv.classList.add('show');
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('Login failed');
+        errorDiv.textContent = 'Login failed: ' + error.message;
+        errorDiv.classList.add('show');
     }
 }
 
@@ -58,6 +71,15 @@ async function handleRegister(e) {
         password_confirmation: document.getElementById('password_confirmation').value
     };
 
+    const errorDiv = document.getElementById('errorMessage');
+    const successDiv = document.getElementById('successMessage');
+
+    // Clear messages
+    errorDiv.textContent = '';
+    successDiv.textContent = '';
+    errorDiv.classList.remove('show');
+    successDiv.classList.remove('show');
+
     try {
         const response = await fetch('/api/register', {
             method: 'POST',
@@ -71,13 +93,18 @@ async function handleRegister(e) {
         const data = await response.json();
 
         if (data.success) {
-            alert(data.message);
-            window.location.href = '/login';
+            successDiv.textContent = data.message;
+            successDiv.classList.add('show');
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 1500);
         } else {
-            alert('Error: ' + data.message);
+            errorDiv.textContent = 'Error: ' + data.message;
+            errorDiv.classList.add('show');
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('Registration failed');
+        errorDiv.textContent = 'Registration failed: ' + error.message;
+        errorDiv.classList.add('show');
     }
 }

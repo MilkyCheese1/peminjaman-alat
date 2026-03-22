@@ -22,10 +22,9 @@
                         type="text" 
                         id="username" 
                         name="username" 
-                        placeholder="3-30 karakter, huruf/angka/underscore"
+                        placeholder="3-30 karakter"
                         maxlength="30"
                         minlength="3"
-                        pattern="[a-zA-Z0-9_]{3,30}"
                         required
                     >
                     <span class="error-message" id="usernameError"></span>
@@ -45,13 +44,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="phone">Nomor Telepon (Opsional)</label>
+                    <label for="phone">Nomor Telepon</label>
                     <input 
                         type="tel" 
                         id="phone" 
                         name="phone" 
-                        placeholder="08xxxxxxxxxx atau +62xxx"
-                        maxlength="15"
+                        placeholder="08xxxxxxxxxx"
+                        maxlength="20"
                     >
                     <span class="error-message" id="phoneError"></span>
                 </div>
@@ -77,44 +76,26 @@
                             type="password" 
                             id="password" 
                             name="password" 
-                            placeholder="Minimal 8 karakter"
+                            placeholder="Minimal 6 karakter"
                             maxlength="128"
-                            minlength="8"
+                            minlength="6"
                             required
                         >
-                        <button type="button" class="toggle-password" data-target="password">
-                            <svg class="eye-icon-open" viewBox="0 0 24 24" width="20" height="20">
-                                <path d="M12 2C6.48 2 1.73 5.1 1 10c.73 4.9 5.48 8 11 8s10.27-3.1 11-8c-.73-4.9-5.48-8-11-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-10c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z" fill="currentColor"/>
-                            </svg>
-                            <svg class="eye-icon-closed" viewBox="0 0 24 24" width="20" height="20" style="display:none;">
-                                <path d="M11.83 9L15.23 12.39c.75-.52 1.25-1.3 1.25-2.39 0-2.21-1.79-4-4-4-.99 0-1.87.35-2.65 1.02m7.58 9.58L19.73 21 21 19.73l-9-9L5.27 3 4 4.27l3.58 3.58A10 10 0 0 0 1 10c.73 4.9 5.48 8 11 8 1.66 0 3.25-.3 4.72-.91m-2.04-2.06c-.5.13-1.03.2-1.58.2-3.31 0-6-2.69-6-6 0-.55.07-1.08.2-1.58l2.07 2.07c0 2.21 1.79 4 4 4l2.31 2.31z" fill="currentColor"/>
-                            </svg>
-                        </button>
                     </div>
                     <span class="error-message" id="passwordError"></span>
-                    <div class="password-strength">
-                        <div class="strength-bar" id="strengthBar"></div>
-                        <small id="strengthText">Kekuatan password: lemah</small>
-                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="confirmPassword">Konfirmasi Password</label>
+                    <label for="password_confirmation">Konfirmasi Password</label>
                     <input 
                         type="password" 
-                        id="confirmPassword" 
-                        name="confirmPassword" 
+                        id="password_confirmation" 
+                        name="password_confirmation" 
                         placeholder="Ulangi password Anda"
                         maxlength="128"
                         required
                     >
                     <span class="error-message" id="confirmPasswordError"></span>
-                </div>
-
-                <div class="form-group checkbox">
-                    <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
-                    <label for="agreeTerms">Saya setuju dengan <a href="/terms">Syarat & Ketentuan</a></label>
-                    <span class="error-message" id="agreeTermsError"></span>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Daftar</button>
@@ -130,23 +111,8 @@
     </div>
 
     <script src="{{ asset('js/auth.js') }}"></script>
-    <script>
-        const passwordInput = document.getElementById('password');
-        const confirmPasswordInput = document.getElementById('confirmPassword');
-        const registerForm = document.getElementById('registerForm');
-
-        // Monitor password strength
-        passwordInput.addEventListener('input', checkPasswordStrength);
-
-        // Monitor password match
-        confirmPasswordInput.addEventListener('input', checkPasswordMatch);
-
-        registerForm.addEventListener('submit', handleRegister);
-
-        function checkPasswordStrength() {
-            const password = passwordInput.value;
-            const strengthBar = document.getElementById('strengthBar');
-            const strengthText = document.getElementById('strengthText');
+</body>
+</html>
             
             let strength = 0;
             const patterns = {
@@ -183,21 +149,7 @@
                 error.textContent = '';
             }
         }
-
-        async function handleRegister(e) {
-            e.preventDefault();
-
-            const username = document.getElementById('username').value.trim();
-            const email = document.getElementById('email').value.trim().toLowerCase();
-            const phone = document.getElementById('phone').value.trim();
-            const alamat = document.getElementById('alamat').value.trim();
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const agreeTerms = document.getElementById('agreeTerms').checked;
-
-            // Validasi
-            if (!username || !email || !alamat || !password || !confirmPassword) {
-                showError('Semua field wajib diisi');
+    </script>
                 return;
             }
 

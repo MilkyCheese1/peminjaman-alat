@@ -12,7 +12,7 @@ class User extends Authenticatable
 
     protected $table = 'users';
     protected $primaryKey = 'id_user';
-    public $timestamps = false;
+    public $timestamps = true;
 
     /**
      * The attributes that are mass assignable.
@@ -28,8 +28,6 @@ class User extends Authenticatable
         'alamat',
         'email_verified',
         'is_active',
-        'created_at',
-        'updated_at',
     ];
 
     /**

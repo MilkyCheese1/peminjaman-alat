@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Peminjaman Alat - Kelola Peminjaman dengan Mudah</title>
+    <title>TrustEquip - Pinjam Alat Konstruksi & Teknik Cepat & Mudah</title>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
 </head>
@@ -12,6 +12,7 @@
     <nav class="navbar">
         <div class="navbar-container">
             <div class="navbar-brand">
+                <div class="brand-logo">🛡️</div>
                 <h2>TrustEquip</h2>
             </div>
             <button class="burger-menu" id="burgerMenu">
@@ -21,8 +22,8 @@
             </button>
             <ul class="navbar-menu" id="navbarMenu">
                 <li><a href="#home">Beranda</a></li>
-                <li><a href="#fitur">Fitur</a></li>
-                <li><a href="#tentang">Tentang</a></li>
+                <li><a href="#keunggulan">Keunggulan</a></li>
+                <li><a href="#kategori">Kategori</a></li>
                 <li><a href="/login" class="btn-nav">Login</a></li>
             </ul>
         </div>
@@ -31,75 +32,57 @@
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-content">
-            <h1>Kelola Peminjaman Alat dengan Mudah</h1>
-            <p>Platform terpadu untuk mengelola peminjaman alat secara efisien dan terorganisir</p>
+            <h1>PINJAM ALAT KONSTRUKSI & TEKNIK CEPAT & MUDAH</h1>
+            <p>TrustEquip menyediakan peralatan berkualitas tinggi untuk proyek Anda. Proses aman, harga transparan.</p>
+            <a href="/login" class="btn btn-cta">MULAI PEMINJAMAN SEKARANG →</a>
         </div>
         <div class="hero-image">
-            <div class="placeholder-image">📦</div>
+            <div class="placeholder-image">👨‍🔧</div>
         </div>
     </section>
 
-    <!-- Fitur Section -->
-    <section id="fitur" class="fitur">
-        <h2>Fitur Utama</h2>
-        <div class="fitur-grid">
-            <div class="fitur-card">
-                <div class="fitur-icon">📋</div>
-                <h3>Daftar Alat</h3>
-                <p>Kelola daftar lengkap alat yang tersedia dengan deskripsi dan status ketersediaan</p>
+    <!-- Keunggulan Section -->
+    <section id="keunggulan" class="keunggulan">
+        <h2>KEUNGGULAN KAMI</h2>
+        <div class="keunggulan-grid">
+            <div class="keunggulan-card">
+                <div class="keunggulan-icon">🔧</div>
+                <h3>Alat Terawat</h3>
+                <p>Semua alat dalam kondisi prima dan terawat dengan baik</p>
             </div>
-
-            <div class="fitur-card">
-                <div class="fitur-icon">📅</div>
-                <h3>Jadwal Peminjaman</h3>
-                <p>Kelola peminjaman dengan mudah melalui sistem jadwal yang terintegrasi</p>
+            <div class="keunggulan-card">
+                <div class="keunggulan-icon">⏱️</div>
+                <h3>Proses Cepat</h3>
+                <p>Peminjaman dan pengembalian dilakukan dengan cepat dan mudah</p>
             </div>
-
-            <div class="fitur-card">
-                <div class="fitur-icon">👥</div>
-                <h3>Manajemen Pengguna</h3>
-                <p>Kontrol akses peminjam dengan sistem role-based yang fleksibel</p>
-            </div>
-
-            <div class="fitur-card">
-                <div class="fitur-icon">📊</div>
-                <h3>Laporan & Analitik</h3>
-                <p>Dapatkan wawasan mendalam tentang penggunaan alat melalui laporan terperinci</p>
-            </div>
-
-            <div class="fitur-card">
-                <div class="fitur-icon">🔔</div>
-                <h3>Notifikasi Otomatis</h3>
-                <p>Terima pemberitahuan tentang peminjaman dan pengembalian alat</p>
-            </div>
-
-            <div class="fitur-card">
-                <div class="fitur-icon">🔒</div>
-                <h3>Keamanan Data</h3>
-                <p>Data Anda terlindungi dengan sistem keamanan tingkat enterprise</p>
+            <div class="keunggulan-card">
+                <div class="keunggulan-icon">📞</div>
+                <h3>Dukungan 24/7</h3>
+                <p>Tim support kami siap membantu kapan pun Anda membutuhkan</p>
             </div>
         </div>
     </section>
 
-    <!-- Tentang Section -->
-    <section id="tentang" class="tentang">
-        <h2>Mengapa Memilih Aplikasi Kami?</h2>
-        <div class="tentang-content">
-            <div class="tentang-item">
-                <h3>✓ Mudah Digunakan</h3>
-                <p>Interface yang intuitif membuat siapa saja dapat menggunakan aplikasi ini tanpa pelatihan khusus.</p>
-            </div>
-            <div class="tentang-item">
-                <h3>✓ Efisien & Cepat</h3>
-                <p>Proses peminjaman yang dipercepat menghemat waktu dan meningkatkan produktivitas.</p>
-            </div>
-            <div class="tentang-item">
-                <h3>✓ Dukungan 24/7</h3>
-                <p>Tim support kami siap membantu Anda kapan saja dalam mengatasi masalah teknis.</p>
-            </div>
-            <div class="tentang-item">
-                <h3>✓ Skalabilitas</h3>
-                <p>Aplikasi dapat dengan mudah disesuaikan dengan kebutuhan organisasi Anda yang berkembang.</p>
+    <!-- Kategori Alat Section -->
+    <section id="kategori" class="kategori">
+        <h2>KATEGORI ALAT POPULER</h2>
+        <div class="kategori-container">
+            <div class="kategori-grid" id="kategoriGrid">
+                <div class="kategori-card">
+                    <div class="kategori-image">🔨</div>
+                    <h3>Bor Listrik</h3>
+                    <p>Peralatan berkualitas untuk pekerjaan presisi</p>
+                </div>
+                <div class="kategori-card">
+                    <div class="kategori-image">🪚</div>
+                    <h3>Gergaji Listrik</h3>
+                    <p>Potong material dengan cepat dan akurat</p>
+                </div>
+                <div class="kategori-card">
+                    <div class="kategori-image">⚡</div>
+                    <h3>Generator</h3>
+                    <p>Sumber tenaga listrik mobile untuk lapangan</p>
+                </div>
             </div>
         </div>
     </section>
@@ -108,29 +91,29 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section">
-                <h4>Aplikasi Peminjaman Alat</h4>
-                <p>Platform terpadu untuk mengelola peminjaman alat dengan efisien.</p>
+                <h4>TrustEquip</h4>
+                <p>Platform terpercaya untuk pinjam alat konstruksi dan teknik berkualitas.</p>
             </div>
             <div class="footer-section">
                 <h4>Menu</h4>
                 <ul>
                     <li><a href="#home">Beranda</a></li>
-                    <li><a href="#fitur">Fitur</a></li>
-                    <li><a href="#tentang">Tentang</a></li>
+                    <li><a href="#keunggulan">Keunggulan</a></li>
+                    <li><a href="#kategori">Kategori</a></li>
                     <li><a href="/login">Login</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h4>Kontak</h4>
                 <ul>
-                    <li>Email: info@peminjaman-alat.com</li>
+                    <li>Email: info@trustequip.com</li>
                     <li>Telepon: +62 123 4567 8900</li>
                     <li>Alamat: Jl. Teknologi No. 1</li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 Aplikasi Peminjaman Alat. Semua hak cipta dilindungi.</p>
+            <p>&copy; 2026 TrustEquip. Semua hak cipta dilindungi.</p>
         </div>
     </footer>
 
