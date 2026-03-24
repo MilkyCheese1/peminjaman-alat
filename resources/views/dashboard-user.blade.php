@@ -51,6 +51,62 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Daftar Alat Section -->
+            <section id="alat-section" class="section">
+                <h2>Daftar Alat Tersedia</h2>
+                <div id="alatList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+                    <!-- Loaded from database -->
+                </div>
+            </section>
+
+            <!-- Peminjaman Saya Section -->
+            <section id="peminjaman-section" class="section">
+                <h2>Peminjaman Saya</h2>
+                <div id="peminjamanList" style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f5f5f5; border-bottom: 2px solid #ddd;">
+                                <th style="padding: 10px; text-align: left;">Alat</th>
+                                <th style="padding: 10px; text-align: left;">Tgl Peminjaman</th>
+                                <th style="padding: 10px; text-align: left;">Tgl Kembali</th>
+                                <th style="padding: 10px; text-align: left;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="peminjamanBody">
+                            <tr><td colspan="4" style="text-align: center; padding: 20px;">Tidak ada data</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Riwayat Section -->
+            <section id="history-section" class="section">
+                <h2>Riwayat Peminjaman</h2>
+                <div id="historyList" style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f5f5f5; border-bottom: 2px solid #ddd;">
+                                <th style="padding: 10px; text-align: left;">Alat</th>
+                                <th style="padding: 10px; text-align: left;">Tgl Peminjaman</th>
+                                <th style="padding: 10px; text-align: left;">Tgl Kembali</th>
+                                <th style="padding: 10px; text-align: left;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyBody">
+                            <tr><td colspan="4" style="text-align: center; padding: 20px;">Tidak ada data</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Profil Section -->
+            <section id="profile-section" class="section">
+                <h2>Profil Saya</h2>
+                <div id="profileContent" style="background: #f5f5f5; padding: 20px; border-radius: 8px;">
+                    <!-- Loaded from API -->
+                </div>
+            </section>
         </main>
     </div>
 

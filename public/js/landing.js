@@ -1,14 +1,20 @@
 // JavaScript untuk Landing Page
 
+document.addEventListener('DOMContentLoaded', function () {
+    initBurgerMenu();
+    loadCategoriesFromDatabase();
+    loadEquipmentFromDatabase();
+    smoothScrolling();
+});
+
 /**
  * Toggle Burger Menu
  */
-document.addEventListener('DOMContentLoaded', function () {
+function initBurgerMenu() {
     const burgerMenu = document.getElementById('burgerMenu');
     const navbarMenu = document.getElementById('navbarMenu');
     const navLinks = document.querySelectorAll('.navbar-menu a');
 
-    // Toggle burger menu
     if (burgerMenu) {
         burgerMenu.addEventListener('click', function () {
             burgerMenu.classList.toggle('active');
@@ -16,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Close menu when link is clicked
     navLinks.forEach(link => {
         link.addEventListener('click', function () {
             if (burgerMenu) {
@@ -28,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Close menu when clicking outside
     document.addEventListener('click', function (event) {
         if (burgerMenu && navbarMenu) {
             const isClickInsideNav = burgerMenu.contains(event.target) || navbarMenu.contains(event.target);
@@ -38,7 +42,92 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
-});
+}
+
+/**
+ * Load categories from database API
+ */
+async function loadCategoriesFromDatabase() {
+    try {
+        const response = await fetch('/api/kategoris', {
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) throw new Error('Failed to load categories');
+
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+            const kategoriGrid = document.getElementById('kategoriGrid');
+            kategoriGrid.innerHTML = '';
+
+            const icons = ['🔨', '🪚', '⚡', '🛠️', '🦺'];
+            
+            data.data.forEach((kategori, index) => {
+                const card = document.createElement('div');
+                card.className = 'kategori-card';
+                card.innerHTML = `
+                    <div class="kategori-image">${icons[index % icons.length]}</div>
+                    <h3>${kategori.nama_kategori}</h3>
+                    <p>Peralatan berkualitas dari kategori ini tersedia untuk disewa</p>
+                `;
+                kategoriGrid.appendChild(card);
+            });
+
+            console.log('✓ Categories loaded from database');
+        }
+    } catch (error) {
+        console.error('Error loading categories:', error);
+    }
+}
+
+/**
+ * Load equipment from database API
+ */
+async function loadEquipmentFromDatabase() {
+    try {
+        const response = await fetch('/api/alat', {
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) throw new Error('Failed to load equipment');
+
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+            const alatGrid = document.getElementById('alatGrid');
+            alatGrid.innerHTML = '';
+
+            data.data.forEach((alat) => {
+                const available = alat.stok - alat.dipinjam;
+                const availability = available > 0 ? `<span style="color: green;">✓ Tersedia (${available})</span>` : '<span style="color: red;">✗ Tidak Tersedia</span>';
+                
+                const card = document.createElement('div');
+                card.style.cssText = 'border: 1px solid #ddd; border-radius: 8px; padding: 20px; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);';
+                card.innerHTML = `
+                    <h3 style="margin-top: 0;">${alat.nama_alat}</h3>
+                    <p><strong>Jumlah Stock:</strong> ${alat.stok} unit</p>
+                    <p><strong>Tersedia:</strong> ${available} unit</p>
+                    <p><strong>Status:</strong> ${availability}</p>
+                    <p style="font-size: 12px; color: #666; margin-bottom: 0;">Kategori ID: ${alat.id_kategori}</p>
+                `;
+                alatGrid.appendChild(card);
+            });
+
+            console.log('✓ Equipment loaded from database (' + data.data.length + ' items)');
+        }
+    } catch (error) {
+        console.error('Error loading equipment:', error);
+    }
+}
 
 /**
  * Smooth scrolling untuk navbar links

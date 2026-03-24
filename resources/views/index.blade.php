@@ -68,21 +68,17 @@
         <h2>KATEGORI ALAT POPULER</h2>
         <div class="kategori-container">
             <div class="kategori-grid" id="kategoriGrid">
-                <div class="kategori-card">
-                    <div class="kategori-image">🔨</div>
-                    <h3>Bor Listrik</h3>
-                    <p>Peralatan berkualitas untuk pekerjaan presisi</p>
-                </div>
-                <div class="kategori-card">
-                    <div class="kategori-image">🪚</div>
-                    <h3>Gergaji Listrik</h3>
-                    <p>Potong material dengan cepat dan akurat</p>
-                </div>
-                <div class="kategori-card">
-                    <div class="kategori-image">⚡</div>
-                    <h3>Generator</h3>
-                    <p>Sumber tenaga listrik mobile untuk lapangan</p>
-                </div>
+                <!-- Loaded dynamically from database -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Alat Available Section -->
+    <section id="alat" class="alat-section" style="padding: 60px 20px; background: #f5f5f5;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto;">
+            <h2 style="text-align: center; margin-bottom: 40px;">ALAT YANG TERSEDIA</h2>
+            <div class="alat-grid" id="alatGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                <!-- Loaded dynamically from database -->
             </div>
         </div>
     </section>

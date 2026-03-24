@@ -30,8 +30,10 @@ async function handleLogin(e) {
     try {
         const response = await fetch('/api/login', {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('input[name="_token"]')?.value || ''
             },
             body: JSON.stringify({
@@ -83,8 +85,10 @@ async function handleRegister(e) {
     try {
         const response = await fetch('/api/register', {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('input[name="_token"]')?.value || ''
             },
             body: JSON.stringify(formData)
