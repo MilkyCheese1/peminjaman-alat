@@ -20,12 +20,16 @@ class Peminjaman extends Model
         'tgl_kembali',
         'status',
         'denda',
+        'buffer_checked',
+        'actual_return_date',
     ];
 
     protected $casts = [
         'tgl_peminjaman' => 'date',
         'tgl_kembali' => 'date',
         'denda' => 'decimal:2',
+        'buffer_checked' => 'boolean',
+        'actual_return_date' => 'datetime',
     ];
 
     /**

@@ -15,9 +15,12 @@ class Alat extends Model
 
     protected $fillable = [
         'nama_alat',
+        'sku',
         'id_kategori',
+        'deskripsi',
         'stok',
         'dipinjam',
+        'status_alat',
     ];
 
     /**

@@ -33,42 +33,39 @@ Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard/stats', [DashboardController::class, 'getStats']);
 
-    // Alat
+    // ===== ALAT MANAGEMENT =====
+    // Public endpoints for all authenticated users
     Route::get('/alat', [AlatController::class, 'index']);
     Route::get('/alat/{id}', [AlatController::class, 'show']);
+    Route::get('/alat/{id}/stock-info', [AlatController::class, 'getStockInfo']);
+    Route::get('/alat/{id}/available-dates', [AlatController::class, 'getAvailableDates']);
     Route::get('/kategoris', [AlatController::class, 'getCategories']);
 
-    // Peminjaman (User)
-    Route::get('/my-borrowings', [PeminjamanController::class, 'getMyBorrowings']);
-    Route::get('/borrow-history', [PeminjamanController::class, 'getBorrowHistory']);
-    Route::post('/peminjaman', [PeminjamanController::class, 'store']);
-
-    // Admin
+    // Admin only - Create, Update, Delete Alat
     Route::middleware('role:admin')->group(function () {
-        Route::get('/users', [DashboardController::class, 'getUsers']);
         Route::post('/alat', [AlatController::class, 'store']);
         Route::put('/alat/{id}', [AlatController::class, 'update']);
         Route::delete('/alat/{id}', [AlatController::class, 'destroy']);
+        Route::post('/alat/{id}/maintenance', [AlatController::class, 'setMaintenance']);
     });
 
-    // Staff & Admin - Peminjaman Management
-    Route::middleware('auth')->group(function () {
-        Route::get('/peminjaman', function (Request $request) {
-            $user = Auth::user();
-            if ($user->role !== 'admin' && $user->role !== 'petugas') {
-                return response()->json(['message' => 'Forbidden'], 403);
-            }
-            $controller = new PeminjamanController();
-            return $controller->index($request);
-        });
-        
-        Route::put('/peminjaman/{id}', function (Request $request, $id) {
-            $user = Auth::user();
-            if ($user->role !== 'admin' && $user->role !== 'petugas') {
-                return response()->json(['message' => 'Forbidden'], 403);
-            }
-            $controller = new PeminjamanController();
-            return $controller->updateStatus($request, $id);
-        });
+    // ===== PEMINJAMAN MANAGEMENT =====
+    // User - Create borrowing request and view own history
+    Route::post('/peminjaman', [PeminjamanController::class, 'store']);
+    Route::get('/my-borrowings', [PeminjamanController::class, 'getMyBorrowings']);
+    Route::get('/borrow-history', [PeminjamanController::class, 'getBorrowHistory']);
+    Route::post('/peminjaman/check-availability/{id_alat}', [PeminjamanController::class, 'checkAvailability']);
+
+    // Admin & Petugas (Staff) - Manage all borrowings
+    Route::middleware('role:admin,petugas')->group(function () {
+        Route::get('/peminjaman', [PeminjamanController::class, 'index']);
+        Route::put('/peminjaman/{id}', [PeminjamanController::class, 'updateStatus']);
+        Route::get('/peminjaman/schedule/{id_alat}', [PeminjamanController::class, 'getSchedule']);
+    });
+
+    // Users endoint
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/users', [DashboardController::class, 'getUsers']);
     });
 });
+
