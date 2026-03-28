@@ -78,6 +78,7 @@ Route::middleware('auth')->group(function () {
     // User - Create borrowing request and view own history
     Route::post('/peminjaman', [PeminjamanController::class, 'store']);
     Route::get('/my-borrowings', [PeminjamanController::class, 'getMyBorrowings']);
+    Route::post('/peminjaman/{id_peminjaman}/cancel', [PeminjamanController::class, 'cancelBorrowing']);
     Route::get('/borrow-history', [PeminjamanController::class, 'getBorrowHistory']);
     Route::post('/peminjaman/check-availability/{id_alat}', [PeminjamanController::class, 'checkAvailability']);
 

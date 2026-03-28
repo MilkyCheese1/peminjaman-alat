@@ -22,9 +22,8 @@
         <aside class="sidebar">
             <nav class="sidebar-nav">
                 <a href="#" class="nav-item active" data-section="overview">Overview</a>
-                <a href="#" class="nav-item" data-section="alat">Data Alat (Tabel)</a>
-                <a href="#" class="nav-item" data-section="peminjaman">Data Peminjaman (Tabel)</a>
-                <a href="#" class="nav-item" data-section="history">Log Aktivitas</a>
+                <a href="#" class="nav-item" data-section="alat">Daftar Alat</a>
+                <a href="#" class="nav-item" data-section="peminjaman">Peminjaman Saya</a>
                 <a href="#" class="nav-item" data-section="profile">Profil</a>
             </nav>
         </aside>
@@ -55,29 +54,15 @@
 
             <!-- Data Alat Section -->
             <section id="alat-section" class="section">
-                <h2>Data Alat (Tabel)</h2>
-                <div id="alatList" style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="background: #f5f5f5; border-bottom: 2px solid #ddd;">
-                                <th style="padding: 10px; text-align: left;">ID</th>
-                                <th style="padding: 10px; text-align: left;">Nama Alat</th>
-                                <th style="padding: 10px; text-align: left;">Kategori</th>
-                                <th style="padding: 10px; text-align: center;">Stock Total</th>
-                                <th style="padding: 10px; text-align: center;">Dipinjam</th>
-                                <th style="padding: 10px; text-align: center;">Tersedia</th>
-                            </tr>
-                        </thead>
-                        <tbody id="alatBody">
-                            <tr><td colspan="6" style="text-align: center; padding: 20px;">Loading...</td></tr>
-                        </tbody>
-                    </table>
+                <h2>Daftar Alat Tersedia</h2>
+                <div id="alatList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 20px 0;">
+                    <!-- Loaded dynamically as cards -->
                 </div>
             </section>
 
             <!-- Data Peminjaman Section -->
             <section id="peminjaman-section" class="section">
-                <h2>Data Peminjaman (Tabel)</h2>
+                <h2>Peminjaman Saya</h2>
                 <div id="peminjamanList" style="overflow-x: auto;">
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
@@ -86,30 +71,11 @@
                                 <th style="padding: 10px; text-align: left;">Tgl Peminjaman</th>
                                 <th style="padding: 10px; text-align: left;">Tgl Kembali</th>
                                 <th style="padding: 10px; text-align: left;">Status</th>
+                                <th style="padding: 10px; text-align: center;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="peminjamanBody">
-                            <tr><td colspan="4" style="text-align: center; padding: 20px;">Tidak ada data</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Log Aktivitas Section -->
-            <section id="history-section" class="section">
-                <h2>Log Aktivitas</h2>
-                <div id="historyList" style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="background: #f5f5f5; border-bottom: 2px solid #ddd;">
-                                <th style="padding: 10px; text-align: left;">User</th>
-                                <th style="padding: 10px; text-align: left;">Aksi</th>
-                                <th style="padding: 10px; text-align: left;">Deskripsi</th>
-                                <th style="padding: 10px; text-align: left;">Waktu</th>
-                            </tr>
-                        </thead>
-                        <tbody id="historyBody">
-                            <tr><td colspan="4" style="text-align: center; padding: 20px;">Tidak ada data</td></tr>
+                            <tr><td colspan="5" style="text-align: center; padding: 20px;">Tidak ada peminjaman</td></tr>
                         </tbody>
                     </table>
                 </div>

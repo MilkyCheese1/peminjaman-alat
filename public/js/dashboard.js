@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
     loadDashboardStats();
     loadEquipmentList();
     loadMyBorrowings();
-    loadBorrowHistory();
     setupNavigation();
     setupLogout();
     loadUserGreeting();
@@ -50,32 +49,74 @@ async function loadEquipmentList() {
         const data = await response.json();
 
         if (data.success && data.data) {
-            const tbody = document.getElementById('alatBody');
-            tbody.innerHTML = '';
+            const alatList = document.getElementById('alatList');
+            alatList.innerHTML = '';
+
+            if (data.data.length === 0) {
+                alatList.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px; color: #999;">Belum ada alat yang tersedia</p>';
+                return;
+            }
 
             data.data.forEach(alat => {
                 const available = alat.stok - alat.dipinjam;
-                const row = document.createElement('tr');
-                row.style.borderBottom = '1px solid #ddd';
-                
                 const kategoriName = alat.kategori ? alat.kategori.nama_kategori : '-';
-                const tersediaColor = available > 0 ? 'green' : available === 0 ? 'orange' : 'red';
+                const statusColor = available > 3 ? '#28a745' : available > 0 ? '#ffc107' : '#dc3545';
+                const statusText = available > 3 ? 'Tersedia Banyak' : available > 0 ? 'Terbatas' : 'Habis';
+                const imageSrc = alat.gambar ? `/storage/${alat.gambar}` : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100%" height="200"%3E%3Crect fill="%23e0e0e0" width="100%" height="100%"/%3E%3Ctext x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23999" font-size="14"%3EAlat%3C/text%3E%3C/svg%3E';
                 
-                row.innerHTML = `
-                    <td style="padding: 10px;">${alat.id_alat}</td>
-                    <td style="padding: 10px;">${alat.nama_alat}</td>
-                    <td style="padding: 10px;">${kategoriName}</td>
-                    <td style="padding: 10px; text-align: center;">${alat.stok}</td>
-                    <td style="padding: 10px; text-align: center;">${alat.dipinjam}</td>
-                    <td style="padding: 10px; text-align: center; color: ${tersediaColor}; font-weight: bold;">${available}</td>
+                const card = document.createElement('div');
+                card.style.cssText = `
+                    background: white;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                    transition: all 0.3s ease;
+                    display: flex;
+                    flex-direction: column;
+                    height: 100%;
                 `;
-                tbody.appendChild(row);
+                card.innerHTML = `
+                    <div style="position: relative; height: 200px; background: #f5f5f5; overflow: hidden;">
+                        <img src="${imageSrc}" alt="${alat.nama_alat}" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div style="position: absolute; top: 10px; right: 10px; background: ${statusColor}; color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;">
+                            ${statusText}
+                        </div>
+                    </div>
+                    <div style="padding: 15px; flex: 1; display: flex; flex-direction: column;">
+                        <h3 style="margin: 0 0 8px; font-size: 16px; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${alat.nama_alat}</h3>
+                        <p style="margin: 0 0 12px; font-size: 13px; color: #666;">${kategoriName}</p>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                            <div style="background: #f5f5f5; padding: 10px; border-radius: 6px; text-align: center;">
+                                <div style="font-size: 11px; color: #999; margin-bottom: 4px;">Stock</div>
+                                <div style="font-size: 18px; font-weight: bold; color: #333;">${alat.stok}</div>
+                            </div>
+                            <div style="background: #f5f5f5; padding: 10px; border-radius: 6px; text-align: center;">
+                                <div style="font-size: 11px; color: #999; margin-bottom: 4px;">Tersedia</div>
+                                <div style="font-size: 18px; font-weight: bold; color: ${statusColor};">${available}</div>
+                            </div>
+                        </div>
+                        <button style="padding: 10px; background: #0066cc; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; transition: background 0.3s ease;" onmouseover="this.style.background='#0052a3'" onmouseout="this.style.background='#0066cc'" onclick="alert('Fitur peminjaman: Silakan login dan navigasi ke menu peminjaman');">
+                            Pesan Sekarang
+                        </button>
+                    </div>
+                `;
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-5px)';
+                    card.style.boxShadow = '0 8px 16px rgba(0,0,0,0.15)';
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                    card.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+                });
+                
+                alatList.appendChild(card);
             });
 
-            console.log('✓ Equipment list loaded from database (' + data.data.length + ' items)');
+            console.log('✓ Equipment list loaded as cards (' + data.data.length + ' items)');
         }
     } catch (error) {
         console.error('Error loading equipment:', error);
+        document.getElementById('alatList').innerHTML = '<p style="text-align: center; color: red;">Gagal memuat data alat</p>';
     }
 }
 
@@ -97,7 +138,7 @@ async function loadMyBorrowings() {
             tbody.innerHTML = '';
             
             if (data.data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px;">Tidak ada peminjaman</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">Tidak ada peminjaman</td></tr>';
                 return;
             }
             
@@ -106,16 +147,29 @@ async function loadMyBorrowings() {
                 row.style.borderBottom = '1px solid #ddd';
                 let statusColor = 'gray';
                 if (peminjaman.status === 'pending') statusColor = 'orange';
-                if (peminjaman.status === 'disetujui') statusColor = 'green';
-                if (peminjaman.status === 'dikembalikan') statusColor = 'blue';
+                if (peminjaman.status === 'booked') statusColor = 'green';
+                if (peminjaman.status === 'in_use') statusColor = 'blue';
+                if (peminjaman.status === 'returned') statusColor = 'purple';
                 
                 const namaAlat = peminjaman.alat ? peminjaman.alat.nama_alat : 'Unknown';
+                const peminjamanId = peminjaman.id_peminjaman || peminjaman.id;
+                
+                // Add cancel button only for pending status
+                let actionButtons = '';
+                if (peminjaman.status === 'pending') {
+                    actionButtons = `
+                        <button onclick="cancelPeminjaman(${peminjamanId})" style="padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                            Batalkan
+                        </button>
+                    `;
+                }
                 
                 row.innerHTML = `
                     <td style="padding: 10px;">${namaAlat}</td>
                     <td style="padding: 10px;">${new Date(peminjaman.tgl_peminjaman).toLocaleDateString('id-ID')}</td>
                     <td style="padding: 10px;">${new Date(peminjaman.tgl_kembali).toLocaleDateString('id-ID')}</td>
                     <td style="padding: 10px; color: ${statusColor}; font-weight: bold;">${peminjaman.status}</td>
+                    <td style="padding: 10px; text-align: center;">${actionButtons || '-'}</td>
                 `;
                 tbody.appendChild(row);
             });
@@ -127,45 +181,33 @@ async function loadMyBorrowings() {
     }
 }
 
-async function loadBorrowHistory() {
+async function cancelPeminjaman(peminjamanId) {
+    if (!confirm('Apakah Anda yakin ingin membatalkan peminjaman ini?')) {
+        return;
+    }
+
     try {
-        const response = await fetch('/api/activity-logs', {
-            method: 'GET',
+        const response = await fetch(`/api/peminjaman/${peminjamanId}/cancel`, {
+            method: 'POST',
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
             }
         });
 
         const data = await response.json();
-
-        if (data.success && data.data) {
-            const tbody = document.getElementById('historyBody');
-            tbody.innerHTML = '';
-            
-            if (data.data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px;">Tidak ada log aktivitas</td></tr>';
-                return;
-            }
-            
-            data.data.forEach(log => {
-                const row = document.createElement('tr');
-                row.style.borderBottom = '1px solid #ddd';
-                
-                row.innerHTML = `
-                    <td style="padding: 10px;">${log.user?.username || 'System'}</td>
-                    <td style="padding: 10px;"><strong>${log.action}</strong></td>
-                    <td style="padding: 10px;">${log.description || '-'}</td>
-                    <td style="padding: 10px;">${new Date(log.created_at).toLocaleString('id-ID')}</td>
-                `;
-                tbody.appendChild(row);
-            });
-            
-            console.log('✓ Activity logs loaded (' + data.data.length + ' items)');
+        
+        if (data.success) {
+            alert('Peminjaman berhasil dibatalkan');
+            loadMyBorrowings();
+        } else {
+            alert('Gagal membatalkan peminjaman: ' + (data.message || 'Unknown error'));
         }
     } catch (error) {
-        console.error('Error loading activity logs:', error);
+        console.error('Error:', error);
+        alert('Terjadi kesalahan: ' + error.message);
     }
 }
 
@@ -525,9 +567,11 @@ async function saveProfile(e) {
         } else {
             // Display validation errors if available
             let errorMessage = data.message || 'Terjadi kesalahan';
-            if (data.errors) {
+            if (data.errors && typeof data.errors === 'object') {
                 let errorList = Object.keys(data.errors).map(field => {
-                    return `${field}: ${data.errors[field].join(', ')}`;
+                    let fieldError = data.errors[field];
+                    let errorMsg = Array.isArray(fieldError) ? fieldError.join(', ') : String(fieldError);
+                    return `${field}: ${errorMsg}`;
                 }).join('\n');
                 errorMessage += '\n\n' + errorList;
             }

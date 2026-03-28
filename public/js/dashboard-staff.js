@@ -201,7 +201,7 @@ async function loadStaffProfile() {
     } catch (error) {
         console.error('Error loading profile:', error);
     }
-}}
+}
 
 async function updatePeminjamanStatus(peminjamanId, newStatus) {
     try {
@@ -235,7 +235,7 @@ function setupNavigation() {
         item.addEventListener('click', function(e) {
             e.preventDefault();
             const section = this.getAttribute('data-section');
-            switchSection(section);
+            switchSection(section, this);
         });
     });
 }
@@ -338,9 +338,11 @@ async function saveProfile(e) {
         } else {
             // Display validation errors if available
             let errorMessage = data.message || 'Terjadi kesalahan';
-            if (data.errors) {
+            if (data.errors && typeof data.errors === 'object') {
                 let errorList = Object.keys(data.errors).map(field => {
-                    return `${field}: ${data.errors[field].join(', ')}`;
+                    let fieldError = data.errors[field];
+                    let errorMsg = Array.isArray(fieldError) ? fieldError.join(', ') : String(fieldError);
+                    return `${field}: ${errorMsg}`;
                 }).join('\n');
                 errorMessage += '\n\n' + errorList;
             }
@@ -395,7 +397,7 @@ async function changePassword(e) {
     }
 }
 
-function switchSection(section) {
+function switchSection(section, clickedElement) {
     const sections = document.querySelectorAll('.section');
     sections.forEach(s => s.classList.remove('active'));
     
@@ -407,7 +409,9 @@ function switchSection(section) {
         targetSection.classList.add('active');
     }
     
-    event.target.classList.add('active');
+    if (clickedElement) {
+        clickedElement.classList.add('active');
+    }
 }
 
 function setupLogout() {

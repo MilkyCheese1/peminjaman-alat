@@ -439,9 +439,11 @@ async function saveProfile(e) {
             document.getElementById('photoInput').value = '';
         } else {
             let errorMessage = data.message || 'Terjadi kesalahan';
-            if (data.errors) {
+            if (data.errors && typeof data.errors === 'object') {
                 let errorList = Object.keys(data.errors).map(field => {
-                    return `${field}: ${data.errors[field].join(', ')}`;
+                    let fieldError = data.errors[field];
+                    let errorMsg = Array.isArray(fieldError) ? fieldError.join(', ') : String(fieldError);
+                    return `${field}: ${errorMsg}`;
                 }).join('\n');
                 errorMessage += '\n\n' + errorList;
             }

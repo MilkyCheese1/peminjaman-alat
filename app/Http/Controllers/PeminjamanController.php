@@ -240,6 +240,60 @@ class PeminjamanController extends Controller
     }
 
     /**
+     * Cancel a borrowing request (only for pending status)
+     */
+    public function cancelBorrowing($id_peminjaman, Request $request)
+    {
+        try {
+            $peminjaman = DB::transaction(function () use ($id_peminjaman) {
+                $peminjaman = Peminjaman::lockForUpdate()->findOrFail($id_peminjaman);
+                $user = Auth::user();
+
+                // Check if user is authorized (only owner of the borrowing can cancel)
+                if ($peminjaman->id_user !== $user->id_user) {
+                    throw new \Exception('Anda tidak sah membatalkan peminjaman ini');
+                }
+
+                // Only allow cancellation for pending status
+                if ($peminjaman->status !== 'pending') {
+                    throw new \Exception('Hanya peminjaman dengan status pending yang bisa dibatalkan');
+                }
+
+                // Release the reserved stock
+                $this->stockService->releaseStock($peminjaman->id_alat);
+
+                // Update status to rejected
+                $peminjaman->status = 'rejected';
+                $peminjaman->save();
+
+                // Update alat status
+                $this->stockService->updateAlatStatus($peminjaman->id_alat);
+
+                // Log activity
+                $alat = $peminjaman->alat;
+                ActivityLogService::log('cancel', 'Peminjaman', $peminjaman->id_peminjaman, [
+                    'alat_name' => $alat->nama_alat,
+                    'reason' => 'User membatalkan peminjaman',
+                ]);
+
+                return $peminjaman;
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Peminjaman berhasil dibatalkan',
+                'data' => $peminjaman->load(['user', 'alat']),
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    /**
      * Check available dates for an alat
      */
     public function checkAvailability($id_alat, Request $request)

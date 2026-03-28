@@ -36,6 +36,7 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'private',
             'throw' => false,
+            'root' => storage_path('app'),
         ],
 
         'public' => [
@@ -44,6 +45,7 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'throw' => false,
+            'root' => storage_path('app/public'),
         ],
 
         's3' => [

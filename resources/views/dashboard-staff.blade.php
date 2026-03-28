@@ -22,7 +22,7 @@
         <aside class="sidebar">
             <nav class="sidebar-nav">
                 <a href="#" class="nav-item active" data-section="overview">Overview</a>
-                <a href="#" class="nav-item" data-section="peminjaman">Peminjaman</a>
+                <a href="#" class="nav-item" data-section="peminjaman">Verifikasi Peminjaman</a>
                 <a href="#" class="nav-item" data-section="profile">Profil</a>
             </nav>
         </aside>
