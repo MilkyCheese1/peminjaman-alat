@@ -21,11 +21,16 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'username',
+        'nama_lengkap',
         'email',
         'phone',
         'password',
         'role',
         'alamat',
+        'kota',
+        'provinsi',
+        'kode_pos',
+        'foto',
         'email_verified',
         'is_active',
     ];
@@ -63,10 +68,42 @@ class User extends Authenticatable
     }
 
     /**
+     * Relationship: User has many ActivityLogs
+     */
+    public function activityLogs()
+    {
+        return $this->hasMany(ActivityLog::class, 'id_user', 'id_user');
+    }
+
+    /**
+     * Relationship: User has many approved peminjamans
+     */
+    public function approvedPeminjamans()
+    {
+        return $this->hasMany(Peminjaman::class, 'approved_by', 'id_user');
+    }
+
+    /**
      * Check if user has a specific role
      */
     public function hasRole($role)
     {
         return $this->role === $role;
+    }
+
+    /**
+     * Check if user is owner or admin
+     */
+    public function isOwnerOrAdmin()
+    {
+        return $this->role === 'owner' || $this->role === 'admin';
+    }
+
+    /**
+     * Check if user is owner
+     */
+    public function isOwner()
+    {
+        return $this->role === 'owner';
     }
 }
