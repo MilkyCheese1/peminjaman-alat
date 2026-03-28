@@ -119,14 +119,19 @@ class AlatController extends Controller
     {
         $validated = $request->validate([
             'nama_alat' => 'required|string|max:50',
-            'sku' => 'required|string|max:50|unique:alat,sku',
             'id_kategori' => 'required|exists:kategori,id_kategori',
-            'deskripsi' => 'nullable|string',
             'stok' => 'required|integer|min:1',
+            'dipinjam' => 'sometimes|integer|min:0',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $validated['dipinjam'] = 0;
-        $validated['status_alat'] = 'tersedia';
+        $validated['dipinjam'] = $validated['dipinjam'] ?? 0;
+
+        // Handle image upload
+        if ($request->hasFile('gambar')) {
+            $path = $request->file('gambar')->store('alat', 'public');
+            $validated['gambar'] = $path;
+        }
 
         $alat = Alat::create($validated);
         $alat->load('kategori');
@@ -147,18 +152,23 @@ class AlatController extends Controller
 
         $validated = $request->validate([
             'nama_alat' => 'sometimes|string|max:50',
-            'sku' => 'sometimes|string|max:50|unique:alat,sku,' . $id . ',id_alat',
             'id_kategori' => 'sometimes|exists:kategori,id_kategori',
-            'deskripsi' => 'sometimes|string|nullable',
             'stok' => 'sometimes|integer|min:1',
-            'status_alat' => 'sometimes|in:tersedia,booked,in_use,maintenance',
+            'dipinjam' => 'sometimes|integer|min:0',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        // Handle image upload
+        if ($request->hasFile('gambar')) {
+            // Delete old image if exists
+            if ($alat->gambar && \Storage::disk('public')->exists($alat->gambar)) {
+                \Storage::disk('public')->delete($alat->gambar);
+            }
+            $path = $request->file('gambar')->store('alat', 'public');
+            $validated['gambar'] = $path;
+        }
+
         $alat->update($validated);
-        
-        // Update status if needed
-        $this->stockService->updateAlatStatus($id);
-        
         $alat->refresh()->load('kategori');
 
         return response()->json([

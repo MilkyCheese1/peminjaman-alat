@@ -6,6 +6,8 @@ use App\Models\Peminjaman;
 use App\Models\Alat;
 use App\Services\BookingValidationService;
 use App\Services\StockManagementService;
+use App\Services\QrCodeService;
+use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -133,8 +135,19 @@ class PeminjamanController extends Controller
                     'buffer_checked' => false,
                 ]);
 
-                // 6. Update alat status
+                // 6. Generate QR code untuk peminjaman
+                $qrCode = QrCodeService::generateQrCode($peminjaman->id_peminjaman);
+                $peminjaman->update(['qr_code' => $qrCode]);
+
+                // 7. Update alat status
                 $this->stockService->updateAlatStatus($validated['id_alat']);
+
+                // 8. Log activity
+                ActivityLogService::log('create', 'Peminjaman', $peminjaman->id_peminjaman, [
+                    'alat_name' => $alat->nama_alat,
+                    'tgl_peminjaman' => $validated['tgl_peminjaman'],
+                    'tgl_kembali' => $validated['tgl_kembali'],
+                ]);
 
                 return $peminjaman;
             });

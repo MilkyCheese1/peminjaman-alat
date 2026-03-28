@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
         $viewName = match($user->role) {
             'admin' => 'dashboard-admin',
             'petugas' => 'dashboard-staff',
+            'owner' => 'dashboard-owner',
             default => 'dashboard-user'
         };
         return view($viewName);

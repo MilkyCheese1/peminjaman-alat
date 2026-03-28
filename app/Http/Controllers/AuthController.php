@@ -181,6 +181,7 @@ class AuthController extends Controller
             'admin' => '/dashboard',
             'petugas' => '/dashboard',
             'peminjam' => '/dashboard',
+            'owner' => '/dashboard',
         ];
 
         return $routes[$role] ?? '/dashboard';

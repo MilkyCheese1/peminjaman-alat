@@ -50,27 +50,26 @@ async function loadEquipmentList() {
         const data = await response.json();
 
         if (data.success && data.data) {
-            const alatList = document.getElementById('alatList');
-            alatList.innerHTML = '';
+            const tbody = document.getElementById('alatBody');
+            tbody.innerHTML = '';
 
             data.data.forEach(alat => {
                 const available = alat.stok - alat.dipinjam;
-                const card = document.createElement('div');
-                card.style.cssText = 'border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: white; display: flex; flex-direction: column;';
+                const row = document.createElement('tr');
+                row.style.borderBottom = '1px solid #ddd';
                 
-                const imageHtml = alat.gambar ? `<img src="/api/alat/${alat.id_alat}/image" alt="${alat.nama_alat}" style="width: 100%; height: 180px; object-fit: cover; border-radius: 6px; margin-bottom: 12px;">` : `<div style="width: 100%; height: 180px; background: #f0f0f0; border-radius: 6px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; color: #999;">Tidak ada foto</div>`;
+                const kategoriName = alat.kategori ? alat.kategori.nama_kategori : '-';
+                const tersediaColor = available > 0 ? 'green' : available === 0 ? 'orange' : 'red';
                 
-                card.innerHTML = `
-                    ${imageHtml}
-                    <h3 style="margin-top: 0; margin-bottom: 10px;">${alat.nama_alat}</h3>
-                    <div style="margin-bottom: 10px;">
-                        <p style="margin: 5px 0;"><strong>Stock Total:</strong> ${alat.stok} unit</p>
-                        <p style="margin: 5px 0;"><strong>Tersedia:</strong> <span style="color: ${available > 0 ? 'green' : 'red'};">${available} unit</span></p>
-                        <p style="margin: 5px 0;"><strong>Dipinjam:</strong> ${alat.dipinjam} unit</p>
-                    </div>
-                    <button class="btn" style="width: 100%; margin-top: auto; ${available <= 0 ? 'opacity: 0.5; cursor: not-allowed;' : ''}" ${available <= 0 ? 'disabled' : ''} onclick="showBorrowModal(${alat.id_alat}, '${alat.nama_alat.replace(/'/g, "\\'")}')">Pinjam Sekarang</button>
+                row.innerHTML = `
+                    <td style="padding: 10px;">${alat.id_alat}</td>
+                    <td style="padding: 10px;">${alat.nama_alat}</td>
+                    <td style="padding: 10px;">${kategoriName}</td>
+                    <td style="padding: 10px; text-align: center;">${alat.stok}</td>
+                    <td style="padding: 10px; text-align: center;">${alat.dipinjam}</td>
+                    <td style="padding: 10px; text-align: center; color: ${tersediaColor}; font-weight: bold;">${available}</td>
                 `;
-                alatList.appendChild(card);
+                tbody.appendChild(row);
             });
 
             console.log('✓ Equipment list loaded from database (' + data.data.length + ' items)');
@@ -130,7 +129,7 @@ async function loadMyBorrowings() {
 
 async function loadBorrowHistory() {
     try {
-        const response = await fetch('/api/borrow-history', {
+        const response = await fetch('/api/activity-logs', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -146,28 +145,27 @@ async function loadBorrowHistory() {
             tbody.innerHTML = '';
             
             if (data.data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px;">Tidak ada riwayat peminjaman</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px;">Tidak ada log aktivitas</td></tr>';
                 return;
             }
             
-            data.data.forEach(peminjaman => {
+            data.data.forEach(log => {
                 const row = document.createElement('tr');
                 row.style.borderBottom = '1px solid #ddd';
-                const namaAlat = peminjaman.alat ? peminjaman.alat.nama_alat : 'Unknown';
                 
                 row.innerHTML = `
-                    <td style="padding: 10px;">${namaAlat}</td>
-                    <td style="padding: 10px;">${new Date(peminjaman.tgl_peminjaman).toLocaleDateString('id-ID')}</td>
-                    <td style="padding: 10px;">${new Date(peminjaman.tgl_kembali).toLocaleDateString('id-ID')}</td>
-                    <td style="padding: 10px; color: blue; font-weight: bold;">${peminjaman.status}</td>
+                    <td style="padding: 10px;">${log.user?.username || 'System'}</td>
+                    <td style="padding: 10px;"><strong>${log.action}</strong></td>
+                    <td style="padding: 10px;">${log.description || '-'}</td>
+                    <td style="padding: 10px;">${new Date(log.created_at).toLocaleString('id-ID')}</td>
                 `;
                 tbody.appendChild(row);
             });
             
-            console.log('✓ Borrow history loaded (' + data.data.length + ' items)');
+            console.log('✓ Activity logs loaded (' + data.data.length + ' items)');
         }
     } catch (error) {
-        console.error('Error loading borrow history:', error);
+        console.error('Error loading activity logs:', error);
     }
 }
 
@@ -212,6 +210,46 @@ async function borrowEquipment(alatId, tglPinjam, tglKembali) {
         console.error('Error:', error);
         alert('Terjadi kesalahan: ' + error.message);
     }
+}
+
+function showDetailModal(alat) {
+    console.log('📋 Showing detail for alat:', alat);
+    
+    // Populate modal fields
+    document.getElementById('detailId').textContent = alat.id_alat || '-';
+    document.getElementById('detailNama').textContent = alat.nama_alat || '-';
+    document.getElementById('detailKategori').textContent = alat.kategori ? alat.kategori.nama_kategori : '-';
+    document.getElementById('detailStok').textContent = alat.stok || 0;
+    
+    const dipinjam = alat.dipinjam || 0;
+    const tersedia = (alat.stok || 0) - dipinjam;
+    
+    document.getElementById('detailDipinjam').textContent = dipinjam;
+    document.getElementById('detailTersedia').textContent = tersedia;
+    
+    // Set color based on availability
+    const tersediaEl = document.getElementById('detailTersedia');
+    tersediaEl.style.color = tersedia > 0 ? 'green' : 'red';
+    
+    // Handle image
+    const detailImage = document.getElementById('detailImage');
+    const detailImagePlaceholder = document.getElementById('detailImagePlaceholder');
+    
+    if (alat.gambar) {
+        detailImage.src = `/api/alat/${alat.id_alat}/image`;
+        detailImage.style.display = 'block';
+        detailImagePlaceholder.style.display = 'none';
+    } else {
+        detailImage.style.display = 'none';
+        detailImagePlaceholder.style.display = 'flex';
+    }
+    
+    // Show modal
+    document.getElementById('detailAlatModal').style.display = 'flex';
+}
+
+function closeDetailModal() {
+    document.getElementById('detailAlatModal').style.display = 'none';
 }
 
 function setupNavigation() {

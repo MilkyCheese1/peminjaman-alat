@@ -10,17 +10,29 @@ class CheckRole
 {
     /**
      * Handle an incoming request.
+     * Supports single or multiple roles: role:admin or role:admin,petugas
      */
-    public function handle(Request $request, Closure $next, $role): mixed
+    public function handle(Request $request, Closure $next, ...$roles): mixed
     {
         if (!Auth::check()) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 401);
         }
 
-        if (Auth::user()->role !== $role) {
-            return response()->json(['message' => 'Forbidden'], 403);
+        $user = Auth::user();
+        
+        // Check if user has one of the required roles
+        foreach ($roles as $role) {
+            if ($user->hasRole($role)) {
+                return $next($request);
+            }
         }
 
-        return $next($request);
+        return response()->json([
+            'success' => false,
+            'message' => 'Forbidden - Anda tidak memiliki akses ke resource ini. Required roles: ' . implode(', ', $roles)
+        ], 403);
     }
 }

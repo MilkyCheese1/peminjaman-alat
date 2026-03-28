@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
 </head>
 <body>
+    <a href="/" style="position: fixed; top: 20px; left: 20px; display: flex; align-items: center; gap: 8px; text-decoration: none; color: #007bff; font-weight: bold; font-size: 14px; z-index: 1000; padding: 8px 12px; border-radius: 4px; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='transparent'">
+        <span style="font-size: 20px;">←</span>
+        <span>Kembali</span>
+    </a>
     <div class="auth-container">
         <div class="auth-box">
             <div class="auth-header">

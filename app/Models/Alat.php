@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Alat extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'alat';
     protected $primaryKey = 'id_alat';
@@ -21,7 +22,10 @@ class Alat extends Model
         'stok',
         'dipinjam',
         'status_alat',
+        'gambar',
     ];
+
+    protected $dates = ['deleted_at'];
 
     /**
      * Relationship: Alat belongs to Kategori

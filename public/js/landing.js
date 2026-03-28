@@ -129,6 +129,7 @@ async function loadEquipmentFromDatabase() {
     }
 }
 
+
 /**
  * Smooth scrolling untuk navbar links
  */

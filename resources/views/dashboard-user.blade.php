@@ -22,9 +22,9 @@
         <aside class="sidebar">
             <nav class="sidebar-nav">
                 <a href="#" class="nav-item active" data-section="overview">Overview</a>
-                <a href="#" class="nav-item" data-section="alat">Daftar Alat</a>
-                <a href="#" class="nav-item" data-section="peminjaman">Peminjaman Saya</a>
-                <a href="#" class="nav-item" data-section="history">Riwayat</a>
+                <a href="#" class="nav-item" data-section="alat">Data Alat (Tabel)</a>
+                <a href="#" class="nav-item" data-section="peminjaman">Data Peminjaman (Tabel)</a>
+                <a href="#" class="nav-item" data-section="history">Log Aktivitas</a>
                 <a href="#" class="nav-item" data-section="profile">Profil</a>
             </nav>
         </aside>
@@ -53,17 +53,31 @@
                 </div>
             </section>
 
-            <!-- Daftar Alat Section -->
+            <!-- Data Alat Section -->
             <section id="alat-section" class="section">
-                <h2>Daftar Alat Tersedia</h2>
-                <div id="alatList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
-                    <!-- Loaded from database -->
+                <h2>Data Alat (Tabel)</h2>
+                <div id="alatList" style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f5f5f5; border-bottom: 2px solid #ddd;">
+                                <th style="padding: 10px; text-align: left;">ID</th>
+                                <th style="padding: 10px; text-align: left;">Nama Alat</th>
+                                <th style="padding: 10px; text-align: left;">Kategori</th>
+                                <th style="padding: 10px; text-align: center;">Stock Total</th>
+                                <th style="padding: 10px; text-align: center;">Dipinjam</th>
+                                <th style="padding: 10px; text-align: center;">Tersedia</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alatBody">
+                            <tr><td colspan="6" style="text-align: center; padding: 20px;">Loading...</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
 
-            <!-- Peminjaman Saya Section -->
+            <!-- Data Peminjaman Section -->
             <section id="peminjaman-section" class="section">
-                <h2>Peminjaman Saya</h2>
+                <h2>Data Peminjaman (Tabel)</h2>
                 <div id="peminjamanList" style="overflow-x: auto;">
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
@@ -81,17 +95,17 @@
                 </div>
             </section>
 
-            <!-- Riwayat Section -->
+            <!-- Log Aktivitas Section -->
             <section id="history-section" class="section">
-                <h2>Riwayat Peminjaman</h2>
+                <h2>Log Aktivitas</h2>
                 <div id="historyList" style="overflow-x: auto;">
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
                             <tr style="background: #f5f5f5; border-bottom: 2px solid #ddd;">
-                                <th style="padding: 10px; text-align: left;">Alat</th>
-                                <th style="padding: 10px; text-align: left;">Tgl Peminjaman</th>
-                                <th style="padding: 10px; text-align: left;">Tgl Kembali</th>
-                                <th style="padding: 10px; text-align: left;">Status</th>
+                                <th style="padding: 10px; text-align: left;">User</th>
+                                <th style="padding: 10px; text-align: left;">Aksi</th>
+                                <th style="padding: 10px; text-align: left;">Deskripsi</th>
+                                <th style="padding: 10px; text-align: left;">Waktu</th>
                             </tr>
                         </thead>
                         <tbody id="historyBody">
@@ -195,6 +209,61 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Detail Alat Modal -->
+            <div id="detailAlatModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; padding: 20px;">
+                <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;">
+                    <button type="button" id="closeDetailModalBtn" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 24px; cursor: pointer; color: #999;">&times;</button>
+                    
+                    <h3 id="detailModalTitle" style="margin-top: 0; margin-bottom: 20px;">Detail Alat</h3>
+                    
+                    <div id="detailModalContent" style="display: grid; gap: 15px;">
+                        <!-- Image -->
+                        <div style="text-align: center; margin-bottom: 10px;">
+                            <img id="detailImage" src="" alt="Alat" style="width: 100%; max-width: 400px; height: auto; border-radius: 6px; display: none;">
+                            <div id="detailImagePlaceholder" style="width: 100%; height: 250px; background: #f0f0f0; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #999;">Tidak ada foto</div>
+                        </div>
+                        
+                        <!-- Details -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                                <label style="display: block; font-weight: bold; color: #666; margin-bottom: 5px;">ID Alat</label>
+                                <p id="detailId" style="margin: 0; padding: 10px; background: #f5f5f5; border-radius: 4px;">-</p>
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: bold; color: #666; margin-bottom: 5px;">Nama Alat</label>
+                                <p id="detailNama" style="margin: 0; padding: 10px; background: #f5f5f5; border-radius: 4px;">-</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                                <label style="display: block; font-weight: bold; color: #666; margin-bottom: 5px;">Kategori</label>
+                                <p id="detailKategori" style="margin: 0; padding: 10px; background: #f5f5f5; border-radius: 4px;">-</p>
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: bold; color: #666; margin-bottom: 5px;">Stock Total</label>
+                                <p id="detailStok" style="margin: 0; padding: 10px; background: #f5f5f5; border-radius: 4px;">-</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                                <label style="display: block; font-weight: bold; color: #666; margin-bottom: 5px;">Dipinjam</label>
+                                <p id="detailDipinjam" style="margin: 0; padding: 10px; background: #f5f5f5; border-radius: 4px;">-</p>
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: bold; color: #666; margin-bottom: 5px;">Tersedia</label>
+                                <p id="detailTersedia" style="margin: 0; padding: 10px; background: #f5f5f5; border-radius: 4px; color: green; font-weight: bold;">-</p>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px; text-align: right;">
+                            <button type="button" id="closeDetailModalBtnBottom" class="btn" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Tutup</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 

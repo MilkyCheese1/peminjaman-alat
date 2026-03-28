@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupAlatCRUD();
     setupKategoriCRUD();
     setupProfileForms();
+    setupDetailModalAdmin();
 });
 
 async function loadDashboardStats() {
@@ -973,4 +974,81 @@ async function changePassword(e) {
         console.error('Error:', error);
         alert('Terjadi kesalahan: ' + error.message);
     }
+}
+
+// ===== Setup Detail Modal Admin =====
+function setupDetailModalAdmin() {
+    console.log('⚙️ Setting up admin detail modal handlers...');
+    
+    const modal = document.getElementById('detailAlatModalAdmin');
+    const closeXBtn = document.getElementById('detailModalCloseXAdmin');
+    const closeBtn = document.getElementById('detailModalCloseBtnAdmin');
+    
+    if (!modal) {
+        console.error('✗ detailAlatModalAdmin element not found');
+        return;
+    }
+    
+    // Close button X
+    if (closeXBtn) {
+        closeXBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            modal.style.display = 'none';
+            console.log('✓ Admin detail modal closed via X button');
+        });
+    }
+    
+    // Close button Tutup
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            modal.style.display = 'none';
+            console.log('✓ Admin detail modal closed via Tutup button');
+        });
+    }
+    
+    // Close when clicking outside modal (on background)
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            console.log('✓ Admin detail modal closed via background click');
+        }
+    });
+}
+
+// ===== Show Detail Alat Admin =====
+function showDetailAlatAdmin(alat) {
+    // Populate modal fields
+    document.getElementById('detailIdAdmin').textContent = alat.id_alat || '-';
+    document.getElementById('detailNamaAdmin').textContent = alat.nama_alat || '-';
+    document.getElementById('detailKategoriAdmin').textContent = alat.kategori ? alat.kategori.nama_kategori : '-';
+    document.getElementById('detailStokAdmin').textContent = alat.stok || 0;
+    
+    const dipinjam = alat.dipinjam || 0;
+    const tersedia = (alat.stok || 0) - dipinjam;
+    
+    document.getElementById('detailDipinjamAdmin').textContent = dipinjam;
+    document.getElementById('detailTersediaAdmin').textContent = tersedia;
+    
+    // Set color based on availability
+    const tersediaEl = document.getElementById('detailTersediaAdmin');
+    tersediaEl.style.color = tersedia > 0 ? 'green' : 'red';
+    
+    // Handle image
+    const detailImage = document.getElementById('detailImageAdmin');
+    const detailImagePlaceholder = document.getElementById('detailImagePlaceholderAdmin');
+    
+    if (alat.gambar) {
+        detailImage.src = `/api/alat/${alat.id_alat}/image`;
+        detailImage.style.display = 'block';
+        detailImagePlaceholder.style.display = 'none';
+    } else {
+        detailImage.style.display = 'none';
+        detailImagePlaceholder.style.display = 'flex';
+    }
+    
+    // Show modal
+    document.getElementById('detailAlatModalAdmin').style.display = 'flex';
 }
