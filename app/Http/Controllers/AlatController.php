@@ -81,11 +81,24 @@ class AlatController extends Controller
             }
         }
 
+        // Return list without expensive function calls (prevent N+1 query problem)
+        // Expensive calculations moved to show() endpoint for details
         $alats = $query->get()->map(function ($alat) {
-            return array_merge($alat->toArray(), [
-                'stock_info' => $this->stockService->getStockInfo($alat->id_alat),
-                'unavailable_periods' => $this->bookingService->getUnavailablePeriods($alat->id_alat),
-            ]);
+            return [
+                'id_alat' => $alat->id_alat,
+                'nama_alat' => $alat->nama_alat,
+                'sku' => $alat->sku,
+                'id_kategori' => $alat->id_kategori,
+                'deskripsi' => $alat->deskripsi,
+                'stok' => $alat->stok,
+                'dipinjam' => $alat->dipinjam,
+                'tersedia' => $alat->stok - $alat->dipinjam,
+                'status_alat' => $alat->status_alat,
+                'gambar' => $alat->gambar,
+                'kategori' => $alat->kategori,
+                'created_at' => $alat->created_at,
+                'updated_at' => $alat->updated_at,
+            ];
         });
 
         return response()->json([

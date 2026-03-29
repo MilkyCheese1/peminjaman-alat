@@ -27,9 +27,10 @@ class BookingValidationService
         $start_date = $this->toCarbon($start_date);
         $end_date = $this->toCarbon($end_date);
 
-        // Get all active bookings for this alat
+        // Get all active bookings for this alat (ignore soft-deleted)
         $query = Peminjaman::where('id_alat', $id_alat)
-            ->whereIn('status', ['pending', 'booked', 'in_use']);
+            ->whereIn('status', ['pending', 'booked', 'in_use'])
+            ->whereNull('deleted_at'); // Exclude soft-deleted records
 
         if ($exclude_id) {
             $query->where('id_peminjaman', '!=', $exclude_id);
@@ -67,10 +68,11 @@ class BookingValidationService
     {
         $requested_start = $this->toCarbon($requested_start);
 
-        // Get the last returned alat
+        // Get the last returned alat (ignore soft-deleted)
         // Use COALESCE to handle NULL actual_return_date (fallback to tgl_kembali)
         $last_return = Peminjaman::where('id_alat', $id_alat)
             ->where('status', 'returned')
+            ->whereNull('deleted_at') // Exclude soft-deleted
             ->orderByRaw('COALESCE(actual_return_date, tgl_kembali) DESC')
             ->first();
 
@@ -100,6 +102,7 @@ class BookingValidationService
     {
         return Peminjaman::where('id_alat', $id_alat)
             ->whereIn('status', ['pending', 'booked', 'in_use'])
+            ->whereNull('deleted_at') // Exclude soft-deleted
             ->with('user')
             ->orderBy('tgl_peminjaman', 'asc')
             ->get();
@@ -149,6 +152,7 @@ class BookingValidationService
     {
         $bookings = Peminjaman::where('id_alat', $id_alat)
             ->whereIn('status', ['pending', 'booked', 'in_use', 'returned'])
+            ->whereNull('deleted_at') // Exclude soft-deleted
             ->orderBy('tgl_peminjaman', 'asc')
             ->get();
 
