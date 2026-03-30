@@ -220,9 +220,28 @@ body.landing {
 
 .hero {
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    background-attachment: fixed;
+    background-size: cover;
     color: white;
-    padding: 4rem 2rem;
-    min-height: auto;
+    padding: 6rem 2rem;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    animation: parallaxShift 20s ease-in-out infinite;
 }
 
 .hero-container {
@@ -232,6 +251,8 @@ body.landing {
     grid-template-columns: 1fr;
     gap: 3rem;
     align-items: center;
+    position: relative;
+    z-index: 10;
 }
 
 .hero-left {
@@ -263,7 +284,8 @@ body.landing {
 
 @media (max-width: 1024px) {
     .hero {
-        padding: 3rem 2rem;
+        padding: 4rem 2rem;
+        min-height: auto;
     }
 
     .hero-left h1 {
@@ -367,11 +389,26 @@ body.landing {
 .why-section {
     padding: 1.5rem 2rem;
     background-color: var(--background-light);
+    background-attachment: fixed;
+    position: relative;
+}
+
+.why-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(0, 102, 204, 0.02) 0%, rgba(0, 102, 204, 0.05) 100%);
+    pointer-events: none;
 }
 
 .why-container {
     max-width: 1400px;
     margin: 0 auto;
+    position: relative;
+    z-index: 1;
 }
 
 .why-section h2 {
@@ -396,11 +433,21 @@ body.landing {
 @media (max-width: 768px) {
     .why-section {
         padding: 1.2rem 1rem;
+        background-attachment: scroll;
+    }
+
+    .why-section::before {
+        animation: none;
     }
 
     .why-section h2 {
         font-size: 1.2rem;
         margin-bottom: 0.9rem;
+        animation: none !important;
+    }
+
+    .why-card {
+        animation: none !important;
     }
 }
 
@@ -509,11 +556,26 @@ body.landing {
 .how-section {
     padding: 1.5rem 2rem;
     background-color: white;
+    background-attachment: fixed;
+    position: relative;
+}
+
+.how-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 102, 204, 0.02) 100%);
+    pointer-events: none;
 }
 
 .how-container {
     max-width: 1400px;
     margin: 0 auto;
+    position: relative;
+    z-index: 1;
 }
 
 .how-section h2 {
@@ -538,11 +600,21 @@ body.landing {
 @media (max-width: 768px) {
     .how-section {
         padding: 1.2rem 1rem;
+        background-attachment: scroll;
+    }
+
+    .how-section::before {
+        animation: none;
     }
 
     .how-section h2 {
         font-size: 1.2rem;
         margin-bottom: 0.9rem;
+        animation: none !important;
+    }
+
+    .how-step {
+        animation: none !important;
     }
 }
 
@@ -662,11 +734,26 @@ body.landing {
 .testimonials-section {
     padding: 1.5rem 2rem;
     background-color: var(--background-light);
+    background-attachment: fixed;
+    position: relative;
+}
+
+.testimonials-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(0, 102, 204, 0.02) 0%, rgba(0, 102, 204, 0.05) 100%);
+    pointer-events: none;
 }
 
 .testimonials-container {
     max-width: 1400px;
     margin: 0 auto;
+    position: relative;
+    z-index: 1;
 }
 
 .testimonials-section h2 {
@@ -691,11 +778,21 @@ body.landing {
 @media (max-width: 768px) {
     .testimonials-section {
         padding: 1.2rem 1rem;
+        background-attachment: scroll;
+    }
+
+    .testimonials-section::before {
+        animation: none;
     }
 
     .testimonials-section h2 {
         font-size: 1.2rem;
         margin-bottom: 0.9rem;
+        animation: none !important;
+    }
+
+    .testimonial-card {
+        animation: none !important;
     }
 }
 
@@ -1096,6 +1193,124 @@ body.landing {
 }
 
 /* ===================================== 
+   ANIMATIONS & PARALLAX EFFECTS
+   ===================================== */
+
+@keyframes parallaxShift {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(20px);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.hero-left {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    animation: fadeInUp 1s ease-out;
+}
+
+.why-section h2 {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.why-card {
+    animation: fadeInUp 0.8s ease-out;
+    animation-fill-mode: both;
+}
+
+.why-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.why-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.why-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.how-section h2 {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.how-step {
+    animation: scaleIn 0.8s ease-out;
+    animation-fill-mode: both;
+}
+
+.how-step:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.how-step:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.how-step:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.testimonials-section h2 {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.testimonial-card {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.section-visible {
+    animation: fadeInUp 0.6s ease-out !important;
+}
+
+/* ===================================== 
    RESPONSIVE DESIGN 
    ===================================== */
 
@@ -1117,6 +1332,16 @@ body.landing {
 @media (max-width: 768px) {
     .hero {
         padding: 1.5rem 1rem;
+        min-height: auto;
+        background-attachment: scroll;
+    }
+
+    .hero::before {
+        animation: none;
+    }
+
+    .hero-left {
+        animation: none !important;
     }
 
     .hero-left h1 {

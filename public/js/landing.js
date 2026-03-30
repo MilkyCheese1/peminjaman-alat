@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initNavbarEffect();
     observeElements();
     initCarousel();
+    initParallaxScrolling();
 });
 
 /**
@@ -135,6 +136,65 @@ function initCarousel() {
         currentSlide = (currentSlide + 1) % slides.length;
         showSlide(currentSlide);
     }, 5000);
+}
+
+/**
+ * Initialize Parallax Scrolling Effect
+ */
+function initParallaxScrolling() {
+    let rafId;
+    const parallaxElements = {
+        hero: document.querySelector('.hero'),
+        whySection: document.querySelector('.why-section'),
+        howSection: document.querySelector('.how-section'),
+        testimonialsSection: document.querySelector('.testimonials-section')
+    };
+
+    // Check if device supports parallax (not mobile with small screen)
+    const supportsParallax = window.innerWidth > 768 && 'requestAnimationFrame' in window;
+
+    if (!supportsParallax) return;
+
+    window.addEventListener('scroll', function () {
+        if (rafId) cancelAnimationFrame(rafId);
+        
+        rafId = requestAnimationFrame(function () {
+            const scrollY = window.scrollY;
+
+            // Hero parallax with subtle movement
+            if (parallaxElements.hero) {
+                const heroRect = parallaxElements.hero.getBoundingClientRect();
+                if (heroRect.top < window.innerHeight && heroRect.bottom > 0) {
+                    const yOffset = scrollY * 0.5;
+                    parallaxElements.hero.style.backgroundPosition = `center ${yOffset * 0.3}px`;
+                }
+            }
+
+            // Fade in parallax elements as they come into view
+            const fadeElements = document.querySelectorAll('.why-card, .how-step, .testimonial-card');
+            fadeElements.forEach(element => {
+                const rect = element.getBoundingClientRect();
+                const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+                
+                if (isVisible) {
+                    const distance = window.innerHeight - rect.top;
+                    const opacity = Math.min(distance / 300, 1);
+                    const translateY = Math.max(0, (window.innerHeight - rect.top) * -0.02);
+                    
+                    element.style.opacity = opacity;
+                    element.style.transform = `translateY(${translateY}px)`;
+                }
+            });
+        });
+    }, { passive: true });
+
+    // Initial setup for parallax elements
+    const hero = parallaxElements.hero;
+    if (hero) {
+        hero.style.backgroundAttachment = 'fixed';
+        hero.style.backgroundSize = 'cover';
+        hero.style.backgroundPosition = 'center';
+    }
 }
 
 /**
