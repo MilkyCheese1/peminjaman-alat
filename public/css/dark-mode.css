@@ -280,22 +280,56 @@ html.dark-mode a:visited {
     border: 1px solid #f39c12;
 }
 
-/* Scrollbar */
+/* ===== Scrollbar Styling ===== */
+
+/* Light Mode Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+    transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* Dark Mode Scrollbar */
 html.dark-mode ::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
+    height: 6px;
 }
 
 html.dark-mode ::-webkit-scrollbar-track {
-    background: var(--bg-primary);
+    background: transparent;
 }
 
 html.dark-mode ::-webkit-scrollbar-thumb {
-    background: var(--bg-tertiary);
-    border-radius: 4px;
+    background: #555;
+    border-radius: 3px;
+    transition: background 0.2s ease;
 }
 
 html.dark-mode ::-webkit-scrollbar-thumb:hover {
-    background: var(--hover-bg);
+    background: #777;
+}
+
+/* Firefox Scrollbar */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent;
+}
+
+html.dark-mode {
+    scrollbar-color: #555 transparent;
 }
 
 /* Status badges */
