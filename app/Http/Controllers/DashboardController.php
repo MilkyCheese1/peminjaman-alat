@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class DashboardController extends Controller
 {
     /**
-     * Get dashboard statistics
+     * Get dashboard statistics - Real data from database
      */
     public function getStats(Request $request)
     {
@@ -19,30 +19,46 @@ class DashboardController extends Controller
         $stats = [];
 
         if ($user->role === 'admin') {
+            // Admin view: System overview
             $stats = [
                 'total_users' => User::count(),
+                'total_users_peminjam' => User::where('role', 'peminjam')->count(),
                 'total_alat' => Alat::count(),
                 'total_peminjaman' => Peminjaman::count(),
                 'peminjaman_pending' => Peminjaman::where('status', 'pending')->count(),
-                'peminjaman_approved' => Peminjaman::where('status', 'disetujui')->count(),
-                'peminjaman_returned' => Peminjaman::where('status', 'dikembalikan')->count(),
+                'peminjaman_booked' => Peminjaman::where('status', 'booked')->count(),
+                'peminjaman_in_use' => Peminjaman::where('status', 'in_use')->count(),
+                'peminjaman_returned' => Peminjaman::where('status', 'returned')->count(),
+                'peminjaman_rejected' => Peminjaman::where('status', 'rejected')->count(),
+                'alat_tersedia' => Alat::where('stok', '>', 0)->sum('stok'),
+                'alat_terpinjam' => Alat::sum('dipinjam'),
             ];
         } elseif ($user->role === 'petugas') {
+            // Staff view: Borrowing management
             $stats = [
                 'total_peminjaman' => Peminjaman::count(),
                 'peminjaman_pending' => Peminjaman::where('status', 'pending')->count(),
-                'peminjaman_approved' => Peminjaman::where('status', 'disetujui')->count(),
-                'alat_tersedia' => Alat::whereColumn('stok', '>', 'dipinjam')->count(),
+                'peminjaman_booked' => Peminjaman::where('status', 'booked')->count(),
+                'peminjaman_in_use' => Peminjaman::where('status', 'in_use')->count(),
+                'peminjaman_returned' => Peminjaman::where('status', 'returned')->count(),
+                'peminjaman_rejected' => Peminjaman::where('status', 'rejected')->count(),
+                'alat_tersedia' => Alat::where('stok', '>', 0)->sum('stok'),
+                'alat_terpinjam' => Alat::sum('dipinjam'),
             ];
         } else {
+            // User/Customer view: Personal borrowings
             $stats = [
                 'total_peminjaman' => Peminjaman::where('id_user', $user->id_user)->count(),
                 'peminjaman_pending' => Peminjaman::where('id_user', $user->id_user)
                     ->where('status', 'pending')->count(),
-                'peminjaman_approved' => Peminjaman::where('id_user', $user->id_user)
-                    ->where('status', 'disetujui')->count(),
+                'peminjaman_booked' => Peminjaman::where('id_user', $user->id_user)
+                    ->where('status', 'booked')->count(),
+                'peminjaman_in_use' => Peminjaman::where('id_user', $user->id_user)
+                    ->where('status', 'in_use')->count(),
                 'peminjaman_returned' => Peminjaman::where('id_user', $user->id_user)
-                    ->where('status', 'dikembalikan')->count(),
+                    ->where('status', 'returned')->count(),
+                'peminjaman_rejected' => Peminjaman::where('id_user', $user->id_user)
+                    ->where('status', 'rejected')->count(),
             ];
         }
 

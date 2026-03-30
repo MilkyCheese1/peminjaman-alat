@@ -22,9 +22,34 @@ async function loadDashboardStats() {
 
         if (data.success) {
             const stats = data.stats;
+            
+            // Map stats to UI elements dynamically
+            Object.keys(stats).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.textContent = stats[key] || 0;
+                    // Add appropriate color based on status
+                    const parent = element.closest('.stat-card');
+                    if (parent) {
+                        if (key.includes('pending')) {
+                            parent.style.borderLeft = '4px solid #f39c12';
+                        } else if (key.includes('rejected')) {
+                            parent.style.borderLeft = '4px solid #e74c3c';
+                        } else if (key.includes('returned')) {
+                            parent.style.borderLeft = '4px solid #9b59b6';
+                        } else if (key.includes('in_use') || key.includes('booked')) {
+                            parent.style.borderLeft = '4px solid #3498db';
+                        } else if (key.includes('tersedia') || key.includes('available')) {
+                            parent.style.borderLeft = '4px solid #27ae60';
+                        }
+                    }
+                }
+            });
+            
+            // Keep backward compatibility for old IDs
             document.getElementById('totalPeminjaman').textContent = stats.total_peminjaman || 0;
             document.getElementById('pendingPeminjaman').textContent = stats.peminjaman_pending || 0;
-            document.getElementById('approvedPeminjaman').textContent = stats.peminjaman_approved || 0;
+            document.getElementById('approvedPeminjaman').textContent = stats.peminjaman_booked || stats.peminjaman_approved || 0;
             document.getElementById('availableAlat').textContent = stats.alat_tersedia || 0;
         }
     } catch (error) {

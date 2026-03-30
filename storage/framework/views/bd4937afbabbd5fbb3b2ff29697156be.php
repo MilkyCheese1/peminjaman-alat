@@ -7,8 +7,36 @@
     <link rel="stylesheet" href="<?php echo e(asset('css/style.css')); ?>">
     <link rel="stylesheet" href="<?php echo e(asset('css/landing.css')); ?>">
     <link rel="stylesheet" href="<?php echo e(asset('css/dark-mode.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(asset('css/splash-loading.css')); ?>">
 </head>
 <body class="landing">
+    <!-- Splash Screen -->
+    <div id="splashScreen" class="splash-screen">
+        <div class="splash-content">
+            <div class="splash-logo">🛡️</div>
+            <div class="splash-brand-name">TrustEquip</div>
+            <div class="splash-tagline">Sewa Alat Konstruksi & Teknik Mudah</div>
+            <div class="splash-loader">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">LOADING...</div>
+        </div>
+    </div>
+
+    <!-- Loading Bar -->
+    <div id="loadingBar" class="loading-bar">
+        <div class="loading-bar-progress"></div>
+    </div>
+
     <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar-container">
@@ -199,6 +227,7 @@
 
     <script src="<?php echo e(asset('js/main.js')); ?>"></script>
     <script src="<?php echo e(asset('js/dark-mode.js')); ?>"></script>
+    <script src="<?php echo e(asset('js/splash-loading.js')); ?>"></script>
     <script src="<?php echo e(asset('js/landing.js')); ?>"></script>
 </body>
 </html>

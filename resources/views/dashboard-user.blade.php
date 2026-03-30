@@ -46,23 +46,37 @@
         <main class="dashboard-content">
             <!-- Overview Section -->
             <section id="overview-section" class="section active">
-                <h2>Overview</h2>
+                <h2>Overview Peminjaman Anda</h2>
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <h3>Total Peminjaman</h3>
-                        <p class="stat-value" id="totalPeminjaman">-</p>
+                        <h3>📊 Total Peminjaman</h3>
+                        <p class="stat-value" id="total_peminjaman">-</p>
+                        <p class="stat-description">Semua peminjaman</p>
                     </div>
                     <div class="stat-card">
-                        <h3>Pending</h3>
-                        <p class="stat-value" id="pendingPeminjaman">-</p>
+                        <h3>⏳ Menunggu Persetujuan</h3>
+                        <p class="stat-value" id="peminjaman_pending">-</p>
+                        <p class="stat-description">Belum diproses</p>
                     </div>
                     <div class="stat-card">
-                        <h3>Disetujui</h3>
-                        <p class="stat-value" id="approvedPeminjaman">-</p>
+                        <h3>✅ Disetujui</h3>
+                        <p class="stat-value" id="peminjaman_booked">-</p>
+                        <p class="stat-description">Siap diambil</p>
                     </div>
                     <div class="stat-card">
-                        <h3>Dikembalikan</h3>
-                        <p class="stat-value" id="returnedPeminjaman">-</p>
+                        <h3>📦 Sedang Dipinjam</h3>
+                        <p class="stat-value" id="peminjaman_in_use">-</p>
+                        <p class="stat-description">Aktif digunakan</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>✔️ Dikembalikan</h3>
+                        <p class="stat-value" id="peminjaman_returned">-</p>
+                        <p class="stat-description">Selesai</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>❌ Ditolak</h3>
+                        <p class="stat-value" id="peminjaman_rejected">-</p>
+                        <p class="stat-description">Tidak disetujui</p>
                     </div>
                 </div>
             </section>

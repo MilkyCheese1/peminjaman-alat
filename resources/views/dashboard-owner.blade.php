@@ -36,7 +36,8 @@
     <div class="dashboard-container">
         <aside class="sidebar">
             <nav class="sidebar-nav">
-                <a href="#" class="nav-item active" data-section="alat">Data Alat</a>
+                <a href="#" class="nav-item active" data-section="overview">Overview</a>
+                <a href="#" class="nav-item" data-section="alat">Data Alat</a>
                 <a href="#" class="nav-item" data-section="peminjaman">Data Peminjaman</a>
                 <a href="#" class="nav-item" data-section="activity">Log Aktivitas</a>
                 <a href="#" class="nav-item" data-section="profile">Profil</a>
@@ -44,8 +45,55 @@
         </aside>
 
         <main class="dashboard-content">
+            <!-- Overview Section -->
+            <section id="overview-section" class="section active">
+                <h2>Overview Sistem</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>📊 Total Peminjaman</h3>
+                        <p class="stat-value" id="total_peminjaman">-</p>
+                        <p class="stat-description">Semua transaksi</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>⏳ Menunggu Persetujuan</h3>
+                        <p class="stat-value" id="peminjaman_pending">-</p>
+                        <p class="stat-description">Belum diproses</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>✅ Disetujui</h3>
+                        <p class="stat-value" id="peminjaman_booked">-</p>
+                        <p class="stat-description">Siap diambil</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>📦 Sedang Dipinjam</h3>
+                        <p class="stat-value" id="peminjaman_in_use">-</p>
+                        <p class="stat-description">Aktif digunakan</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>✔️ Dikembalikan</h3>
+                        <p class="stat-value" id="peminjaman_returned">-</p>
+                        <p class="stat-description">Selesai</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>❌ Ditolak</h3>
+                        <p class="stat-value" id="peminjaman_rejected">-</p>
+                        <p class="stat-description">Tidak disetujui</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>✓ Stok Total</h3>
+                        <p class="stat-value" id="alat_tersedia">-</p>
+                        <p class="stat-description">Unit tersedia</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>📤 Sedang Dipinjam</h3>
+                        <p class="stat-value" id="alat_terpinjam">-</p>
+                        <p class="stat-description">Unit dipinjam</p>
+                    </div>
+                </div>
+            </section>
+
             <!-- Data Alat Section -->
-            <section id="alat-section" class="section active">
+            <section id="alat-section" class="section">
                 <h2>Data Alat</h2>
                 <div id="alatManagement" style="overflow-x: auto;">
                     <table style="width: 100%; border-collapse: collapse;">

@@ -6,9 +6,24 @@
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
     <title>Dashboard Admin - Sistem Peminjaman Alat</title>
     <link rel="stylesheet" href="<?php echo e(asset('css/dashboard.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(asset('css/dark-mode.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(asset('css/splash-loading.css')); ?>">
 </head>
 <body>
-    <nav class="navbar">
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">LOADING...</div>
+        </div>
+    </div>
+
+    <!-- Loading Bar -->
+    <div id="loadingBar" class="loading-bar">
+        <div class="loading-bar-progress"></div>
+    </div>
+
+    <!-- Navbar -->
         <div class="navbar-brand">
             <h2>Dashboard Admin</h2>
         </div>
@@ -206,6 +221,61 @@
                 </div>
             </div>
 
+            <!-- Modal Detail Alat (Admin View) -->
+            <div id="detailAlatModalAdmin" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; padding: 20px;">
+                <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; position: relative;" id="detailAlatModalContentAdmin">
+                    <button type="button" id="detailModalCloseXAdmin" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 24px; cursor: pointer; color: #999; padding: 0;">&times;</button>
+                    
+                    <h3 style="margin-top: 0; margin-bottom: 20px;">Detail Alat</h3>
+                    
+                    <div style="display: grid; gap: 15px;">
+                        <!-- Image -->
+                        <div style="text-align: center; margin-bottom: 10px;">
+                            <img id="detailImageAdmin" src="" alt="Alat" style="width: 100%; max-width: 400px; height: auto; border-radius: 6px; display: none;">
+                            <div id="detailImagePlaceholderAdmin" style="width: 100%; height: 250px; background: #f0f0f0; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #999;">Tidak ada foto</div>
+                        </div>
+                        
+                        <!-- Details -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                                <label style="display: block; font-weight: bold; color: #666; margin-bottom: 5px;">ID Alat</label>
+                                <p id="detailIdAdmin" style="margin: 0; padding: 10px; background: #f5f5f5; border-radius: 4px;">-</p>
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: bold; color: #666; margin-bottom: 5px;">Nama Alat</label>
+                                <p id="detailNamaAdmin" style="margin: 0; padding: 10px; background: #f5f5f5; border-radius: 4px;">-</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                                <label style="display: block; font-weight: bold; color: #666; margin-bottom: 5px;">Kategori</label>
+                                <p id="detailKategoriAdmin" style="margin: 0; padding: 10px; background: #f5f5f5; border-radius: 4px;">-</p>
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: bold; color: #666; margin-bottom: 5px;">Stock Total</label>
+                                <p id="detailStokAdmin" style="margin: 0; padding: 10px; background: #f5f5f5; border-radius: 4px;">-</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                                <label style="display: block; font-weight: bold; color: #666; margin-bottom: 5px;">Dipinjam</label>
+                                <p id="detailDipinjamAdmin" style="margin: 0; padding: 10px; background: #f5f5f5; border-radius: 4px;">-</p>
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: bold; color: #666; margin-bottom: 5px;">Tersedia</label>
+                                <p id="detailTersediaAdmin" style="margin: 0; padding: 10px; background: #f5f5f5; border-radius: 4px; color: green; font-weight: bold;">-</p>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px; text-align: right;">
+                            <button type="button" id="detailModalCloseBtnAdmin" class="btn" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Tutup</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Manajemen Peminjaman Section -->
             <section id="peminjaman-section" class="section">
                 <h2>Manajemen Peminjaman</h2>
@@ -322,6 +392,8 @@
         </main>
     </div>
 
+    <script src="<?php echo e(asset('js/dark-mode.js')); ?>"></script>
+    <script src="<?php echo e(asset('js/splash-loading.js')); ?>"></script>
     <script src="<?php echo e(asset('js/dashboard-admin.js')); ?>"></script>
 </body>
 </html>

@@ -2,6 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('✓ Owner dashboard loaded');
+    loadDashboardStats();
     loadOwnerProfile();
     loadAlatData();
     loadPeminjamanData();
@@ -12,7 +13,48 @@ document.addEventListener('DOMContentLoaded', function() {
     setupProfileForms();
 });
 
-// ===== Navigation Setup =====
+// ===== Dashboard Stats =====
+async function loadDashboardStats() {
+    try {
+        const response = await fetch('/api/dashboard/stats', {
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            const stats = data.stats;
+            
+            // Map stats to UI elements dynamically
+            Object.keys(stats).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.textContent = stats[key] || 0;
+                    // Add appropriate color based on status
+                    const parent = element.closest('.stat-card');
+                    if (parent) {
+                        if (key.includes('pending')) {
+                            parent.style.borderLeft = '4px solid #f39c12';
+                        } else if (key.includes('rejected')) {
+                            parent.style.borderLeft = '4px solid #e74c3c';
+                        } else if (key.includes('returned')) {
+                            parent.style.borderLeft = '4px solid #9b59b6';
+                        } else if (key.includes('in_use') || key.includes('booked')) {
+                            parent.style.borderLeft = '4px solid #3498db';
+                        } else if (key.includes('tersedia') || key.includes('available')) {
+                            parent.style.borderLeft = '4px solid #27ae60';
+                        }
+                    }
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Error loading stats:', error);
+    }
+}
 function setupNavigation() {
     console.log('⚙️ Setting up navigation...');
     const navItems = document.querySelectorAll('.nav-item');
