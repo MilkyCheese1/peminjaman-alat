@@ -29,7 +29,6 @@
         </div>
         <div class="navbar-menu">
             <span id="userGreeting"></span>
-            <button id="logoutBtn" class="btn btn-danger">Logout</button>
         </div>
     </nav>
 
@@ -40,6 +39,7 @@
                 <a href="#" class="nav-item" data-section="peminjaman">Verifikasi Peminjaman</a>
                 <a href="#" class="nav-item" data-section="profile">Profil</a>
             </nav>
+            <button id="logoutBtn" class="sidebar-logout-btn">Logout</button>
         </aside>
 
         <main class="dashboard-content">

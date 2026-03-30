@@ -70,6 +70,23 @@ body {
     border-left-color: var(--accent-color);
 }
 
+.sidebar-logout-btn {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.sidebar-logout-btn:hover {
+    background-color: #c0392b;
+}
+
+.dark-mode .sidebar-logout-btn {
+    background-color: #e74c3c;
+}
+
+.dark-mode .sidebar-logout-btn:hover {
+    background-color: #c0392b;
+}
+
 /* Dashboard Content */
 .dashboard-content {
     background-color: var(--bg-primary);
