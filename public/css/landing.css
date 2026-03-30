@@ -977,3 +977,169 @@ body.landing {
     }
 }
 
+/* ===================================== 
+   DARK MODE FOR LANDING PAGE
+   ===================================== */
+
+html.dark-mode {
+    --primary-color: #7b8fd9;
+    --primary-dark: #6a7ec8;
+    --primary-light: rgba(123, 143, 217, 0.1);
+    --secondary-color: #252d3d;
+    --text-dark: #e0e0e0;
+    --text-light: #a0a0a0;
+    --border-color: #3a4454;
+    --background-light: #1a1f29;
+}
+
+html.dark-mode body.landing {
+    background-color: #0f1419;
+    color: var(--text-dark);
+}
+
+html.dark-mode .navbar {
+    background-color: #151b27;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+html.dark-mode .navbar-brand {
+    color: var(--text-dark);
+}
+
+html.dark-mode .navbar-menu a {
+    color: var(--text-light);
+}
+
+html.dark-mode .navbar-menu a:hover {
+    color: var(--primary-color);
+}
+
+html.dark-mode .login-btn,
+html.dark-mode .register-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+html.dark-mode .register-btn {
+    background-color: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+html.dark-mode .hero {
+    background: linear-gradient(135deg, #1a2338 0%, #2a1a38 100%);
+}
+
+html.dark-mode .hero-left h1,
+html.dark-mode .hero-left p,
+html.dark-mode .why-section h2,
+html.dark-mode .how-section h2,
+html.dark-mode .testimonials-section h2,
+html.dark-mode .cta-section h3,
+html.dark-mode section h2 {
+    color: var(--text-dark);
+}
+
+html.dark-mode .hero-left > p {
+    color: var(--text-light);
+}
+
+html.dark-mode .primary-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+html.dark-mode .primary-btn:hover {
+    background-color: var(--primary-dark);
+}
+
+html.dark-mode .secondary-btn {
+    background-color: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+html.dark-mode .secondary-btn:hover {
+    background-color: rgba(123, 143, 217, 0.1);
+}
+
+html.dark-mode .why-section,
+html.dark-mode .how-section,
+html.dark-mode .testimonials-section,
+html.dark-mode .cta-section {
+    background-color: #0f1419;
+}
+
+html.dark-mode .why-card,
+html.dark-mode .how-step {
+    background-color: #1a1f29;
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+html.dark-mode .why-card h3,
+html.dark-mode .how-step h3 {
+    color: var(--text-dark);
+}
+
+html.dark-mode .why-card p,
+html.dark-mode .how-step p {
+    color: var(--text-light);
+}
+
+html.dark-mode .testimonial-card {
+    background-color: #1a1f29;
+    border-color: var(--border-color);
+}
+
+html.dark-mode .testimonial-text {
+    color: var(--text-light);
+}
+
+html.dark-mode .author-info h4 {
+    color: var(--text-dark);
+}
+
+html.dark-mode .author-info p {
+    color: var(--text-light);
+}
+
+html.dark-mode .carousel-indicators .indicator.active {
+    background-color: var(--primary-color);
+}
+
+html.dark-mode .carousel-indicators .indicator {
+    background-color: var(--text-light);
+}
+
+html.dark-mode footer {
+    background-color: #151b27;
+    border-top-color: var(--border-color);
+}
+
+html.dark-mode .footer-section h4 {
+    color: var(--text-dark);
+}
+
+html.dark-mode .footer-section p {
+    color: var(--text-light);
+}
+
+html.dark-mode .footer-links a {
+    color: var(--text-light);
+}
+
+html.dark-mode .footer-links a:hover {
+    color: var(--primary-color);
+}
+
+html.dark-mode .social-icon {
+    color: var(--text-light);
+    border-color: var(--border-color);
+}
+
+html.dark-mode .social-icon:hover {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+

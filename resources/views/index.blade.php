@@ -6,6 +6,7 @@
     <title>TrustEquip - Sewa Alat Konstruksi & Teknik Mudah</title>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/dark-mode.css') }}">
 </head>
 <body class="landing">
     <!-- Navbar -->
@@ -197,6 +198,7 @@
     </footer>
 
     <script src="{{ asset('js/main.js') }}"></script>
+    <script src="{{ asset('js/dark-mode.js') }}"></script>
     <script src="{{ asset('js/landing.js') }}"></script>
 </body>
 </html>

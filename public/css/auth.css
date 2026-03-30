@@ -245,3 +245,82 @@ button[type="submit"]:hover {
         font-size: 24px;
     }
 }
+
+/* Dark Mode for Auth Pages */
+html.dark-mode body {
+    background: linear-gradient(135deg, #4a5f8f 0%, #5a3f6f 100%);
+}
+
+html.dark-mode .auth-box {
+    background: #1a1f29;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+html.dark-mode .auth-header h1 {
+    color: #e0e0e0;
+}
+
+html.dark-mode .auth-header p {
+    color: #a0a0a0;
+}
+
+html.dark-mode .form-group label {
+    color: #e0e0e0;
+}
+
+html.dark-mode .form-group input,
+html.dark-mode .form-group textarea {
+    background-color: #252d3d;
+    border-color: #3a4454;
+    color: #e0e0e0;
+}
+
+html.dark-mode .form-group input:focus,
+html.dark-mode .form-group textarea:focus {
+    border-color: #7b8fd9;
+    box-shadow: 0 0 0 3px rgba(123, 143, 217, 0.2);
+}
+
+html.dark-mode button[type="submit"] {
+    background-color: #7b8fd9;
+}
+
+html.dark-mode button[type="submit"]:hover {
+    background-color: #6a7ec8;
+}
+
+html.dark-mode .btn-primary {
+    background-color: #7b8fd9;
+}
+
+html.dark-mode .btn-primary:hover {
+    background-color: #6a7ec8;
+}
+
+html.dark-mode .error-message.show {
+    background-color: rgba(231, 76, 60, 0.1);
+    border: 1px solid #e74c3c;
+    color: #ff6b6b;
+}
+
+html.dark-mode .success-message.show {
+    background-color: rgba(39, 174, 96, 0.1);
+    border: 1px solid #27ae60;
+    color: #66bb6a;
+}
+
+html.dark-mode .auth-footer {
+    border-top-color: #3a4454;
+}
+
+html.dark-mode .auth-footer p {
+    color: #a0a0a0;
+}
+
+html.dark-mode .auth-footer a {
+    color: #7b8fd9;
+}
+
+html.dark-mode .auth-footer a:hover {
+    color: #a0a0a0;
+}

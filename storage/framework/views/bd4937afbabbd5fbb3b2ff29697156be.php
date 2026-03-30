@@ -6,6 +6,7 @@
     <title>TrustEquip - Sewa Alat Konstruksi & Teknik Mudah</title>
     <link rel="stylesheet" href="<?php echo e(asset('css/style.css')); ?>">
     <link rel="stylesheet" href="<?php echo e(asset('css/landing.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(asset('css/dark-mode.css')); ?>">
 </head>
 <body class="landing">
     <!-- Navbar -->
@@ -197,6 +198,7 @@
     </footer>
 
     <script src="<?php echo e(asset('js/main.js')); ?>"></script>
+    <script src="<?php echo e(asset('js/dark-mode.js')); ?>"></script>
     <script src="<?php echo e(asset('js/landing.js')); ?>"></script>
 </body>
 </html>

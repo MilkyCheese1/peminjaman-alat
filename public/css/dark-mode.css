@@ -1,0 +1,395 @@
+/* Dark Mode Styles */
+
+:root {
+    /* Light mode colors */
+    --bg-primary: #f5f7fa;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #34495e;
+    --text-primary: #333;
+    --text-secondary: #7f8c8d;
+    --text-light: #bdc3c7;
+    --header-bg: #2c3e50;
+    --sidebar-bg: #34495e;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --accent-color: #667eea;
+    --input-bg: #ffffff;
+    --input-border: #e0e0e0;
+    --table-border: #ecf0f1;
+    --hover-bg: #2c3e50;
+}
+
+html.dark-mode {
+    /* Dark mode colors */
+    --bg-primary: #0f1419;
+    --bg-secondary: #1a1f29;
+    --bg-tertiary: #252d3d;
+    --text-primary: #e0e0e0;
+    --text-secondary: #a0a0a0;
+    --text-light: #808080;
+    --header-bg: #151b27;
+    --sidebar-bg: #1e2633;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --accent-color: #7b8fd9;
+    --input-bg: #252d3d;
+    --input-border: #3a4454;
+    --table-border: #2a3342;
+    --hover-bg: #2a3342;
+}
+
+/* Body */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--header-bg);
+    color: var(--text-primary);
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: var(--sidebar-bg);
+    color: var(--text-light);
+    box-shadow: 2px 0 10px var(--shadow-color);
+}
+
+.nav-item {
+    color: var(--text-light);
+    border-left-color: transparent;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background-color: var(--hover-bg);
+    color: var(--text-primary);
+    border-left-color: var(--accent-color);
+}
+
+/* Dashboard Content */
+.dashboard-content {
+    background-color: var(--bg-primary);
+}
+
+.dashboard-content h2,
+.dashboard-content h3,
+.dashboard-content h4,
+.dashboard-content h5 {
+    color: var(--text-primary);
+}
+
+/* Cards */
+.stat-card,
+.equipment-card,
+.borrowing-card,
+.profile-card {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.stat-card h3,
+.equipment-card h3 {
+    color: var(--text-secondary);
+}
+
+.stat-value {
+    color: var(--accent-color);
+}
+
+/* Tables */
+table {
+    background-color: var(--bg-secondary);
+    border-color: var(--table-border);
+}
+
+thead {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+tbody tr {
+    border-bottom: 1px solid var(--table-border);
+}
+
+tbody tr:hover {
+    background-color: var(--bg-tertiary);
+}
+
+td {
+    color: var(--text-primary);
+}
+
+/* Forms */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+input[type="number"],
+select,
+textarea {
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--input-border);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="date"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--accent-color);
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+/* Buttons */
+.btn {
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #5a6db3;
+}
+
+.btn-secondary {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--hover-bg);
+}
+
+.btn-success {
+    background-color: #27ae60;
+}
+
+.btn-success:hover {
+    background-color: #229954;
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+}
+
+.btn-info {
+    background-color: #3498db;
+}
+
+.btn-info:hover {
+    background-color: #2980b9;
+}
+
+/* Dark mode toggle */
+.dark-mode-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    transition: transform 0.3s ease, color 0.3s ease;
+    padding: 5px 10px;
+}
+
+.dark-mode-toggle:hover {
+    transform: scale(1.1);
+    color: var(--accent-color);
+}
+
+/* Links */
+a {
+    color: var(--accent-color);
+}
+
+a:visited {
+    color: #9e7dc3;
+}
+
+html.dark-mode a:visited {
+    color: #a89fd9;
+}
+
+/* Modal */
+.modal {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border-color);
+}
+
+/* Alerts */
+.alert {
+    border-radius: 5px;
+}
+
+.alert-success {
+    background-color: rgba(39, 174, 96, 0.1);
+    color: #27ae60;
+    border: 1px solid #27ae60;
+}
+
+.alert-danger {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+}
+
+.alert-info {
+    background-color: rgba(52, 152, 219, 0.1);
+    color: #3498db;
+    border: 1px solid #3498db;
+}
+
+.alert-warning {
+    background-color: rgba(241, 196, 15, 0.1);
+    color: #f39c12;
+    border: 1px solid #f39c12;
+}
+
+/* Scrollbar */
+html.dark-mode ::-webkit-scrollbar {
+    width: 8px;
+}
+
+html.dark-mode ::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+html.dark-mode ::-webkit-scrollbar-thumb {
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+}
+
+html.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: var(--hover-bg);
+}
+
+/* Status badges */
+.badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.badge-pending {
+    background-color: rgba(241, 196, 15, 0.2);
+    color: #f39c12;
+}
+
+.badge-booked {
+    background-color: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+}
+
+.badge-in_use {
+    background-color: rgba(39, 174, 96, 0.2);
+    color: #27ae60;
+}
+
+.badge-returned {
+    background-color: rgba(155, 89, 182, 0.2);
+    color: #9b59b6;
+}
+
+.badge-rejected {
+    background-color: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+}
+
+/* Equipment status colors remain visible in dark mode */
+.status-tersedia {
+    color: #27ae60;
+    font-weight: 600;
+}
+
+.status-terbatas {
+    color: #f39c12;
+    font-weight: 600;
+}
+
+.status-habis {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+/* Section titles */
+section h2 {
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 10px;
+}
+
+/* Grid items */
+.equipment-grid,
+.borrowing-grid {
+    gap: 20px;
+}
+
+.equipment-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.equipment-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px var(--shadow-color);
+}
+
+/* Legend for tables and lists */
+.table-legend,
+.list-legend {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+/* Smooth transitions for all theme changes */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Prevent excessive transitions on hover/focus */
+button,
+a,
+input,
+select,
+textarea,
+.nav-item,
+.stat-card,
+.equipment-card {
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}

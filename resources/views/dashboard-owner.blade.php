@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Dashboard Owner - Sistem Peminjaman Alat</title>
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/dark-mode.css') }}">
 </head>
 <body>
     <nav class="navbar">
@@ -191,6 +192,7 @@
 
     </div>
 
+    <script src="{{ asset('js/dark-mode.js') }}"></script>
     <script src="{{ asset('js/dashboard-owner.js') }}"></script>
 </body>
 </html>

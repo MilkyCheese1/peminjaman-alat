@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Aplikasi Peminjaman Alat</title>
     <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/dark-mode.css') }}">
 </head>
 <body>
     <a href="/" style="position: fixed; top: 20px; left: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; z-index: 1000; transition: all 0.3s ease; width: 40px; height: 40px; border-radius: 50%;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.2)'" onmouseout="this.style.backgroundColor='transparent'">
@@ -113,6 +114,7 @@
         </div>
     </div>
 
+    <script src="{{ asset('js/dark-mode.js') }}"></script>
     <script src="{{ asset('js/auth.js') }}"></script>
 </body>
 </html>
