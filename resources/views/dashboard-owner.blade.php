@@ -7,9 +7,23 @@
     <title>Dashboard Owner - Sistem Peminjaman Alat</title>
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dark-mode.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/splash-loading.css') }}">
 </head>
 <body>
-    <nav class="navbar">
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">LOADING...</div>
+        </div>
+    </div>
+
+    <!-- Loading Bar -->
+    <div id="loadingBar" class="loading-bar">
+        <div class="loading-bar-progress"></div>
+    </div>
+
+    <!-- Navbar -->
         <div class="navbar-brand">
             <h2>Dashboard Owner</h2>
         </div>
@@ -193,6 +207,7 @@
     </div>
 
     <script src="{{ asset('js/dark-mode.js') }}"></script>
+    <script src="{{ asset('js/splash-loading.js') }}"></script>
     <script src="{{ asset('js/dashboard-owner.js') }}"></script>
 </body>
 </html>
