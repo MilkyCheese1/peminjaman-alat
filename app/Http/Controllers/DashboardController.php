@@ -57,6 +57,15 @@ class DashboardController extends Controller
      */
     public function getUsers(Request $request)
     {
+        // Authorization check - admin only
+        $user = Auth::user();
+        if ($user->role !== 'admin') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hanya admin yang dapat melihat daftar user',
+            ], 403);
+        }
+
         $users = User::select('id_user', 'username', 'email', 'phone', 'role', 'is_active', 'created_at')->get();
 
         return response()->json([

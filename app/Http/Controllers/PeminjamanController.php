@@ -8,6 +8,7 @@ use App\Services\BookingValidationService;
 use App\Services\StockManagementService;
 use App\Services\QrCodeService;
 use App\Services\ActivityLogService;
+use App\Services\VerificationCodeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -17,13 +18,16 @@ class PeminjamanController extends Controller
 {
     private $bookingService;
     private $stockService;
+    private $verificationCodeService;
 
     public function __construct(
         BookingValidationService $bookingService,
-        StockManagementService $stockService
+        StockManagementService $stockService,
+        VerificationCodeService $verificationCodeService
     ) {
         $this->bookingService = $bookingService;
         $this->stockService = $stockService;
+        $this->verificationCodeService = $verificationCodeService;
     }
 
     /**
@@ -339,5 +343,234 @@ class PeminjamanController extends Controller
             'count' => count($bookings),
             'bookings' => $bookings,
         ]);
+    }
+
+    /**
+     * Approve peminjaman dan generate kode verifikasi
+     * Status: pending -> booked + generate kode
+     */
+    public function approveAndGenerateCode(Request $request, $id_peminjaman)
+    {
+        $user = Auth::user();
+
+        try {
+            $peminjaman = DB::transaction(function () use ($id_peminjaman, $user) {
+                $peminjaman = Peminjaman::lockForUpdate()->findOrFail($id_peminjaman);
+
+                // Check authorization
+                if ($peminjaman->status !== 'pending') {
+                    throw new \Exception('Hanya peminjaman pending yang bisa diapprove');
+                }
+
+                // Update status ke booked
+                $peminjaman->update([
+                    'status' => 'booked',
+                    'approved_by' => $user->id_user,
+                ]);
+
+                // Generate kode verifikasi
+                $peminjaman = $this->verificationCodeService->createVerificationCode($peminjaman);
+
+                // Log activity
+                ActivityLogService::log(
+                    'APPROVE_WITH_CODE',
+                    'Peminjaman',
+                    $peminjaman->id_peminjaman,
+                    'Peminjaman disetujui dan kode verifikasi ' . $peminjaman->kode_verifikasi . ' dibuat'
+                );
+
+                return $peminjaman;
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Peminjaman disetujui dan kode verifikasi dibuat',
+                'data' => $peminjaman->load(['user', 'alat.kategori']),
+                'kode_verifikasi' => $peminjaman->kode_verifikasi,
+                'expired_at' => $peminjaman->kode_expired_at,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    /**
+     * Regenerate kode verifikasi (customer request)
+     */
+    public function regenerateCode(Request $request, $id_peminjaman)
+    {
+        $user = Auth::user();
+
+        try {
+            $peminjaman = Peminjaman::findOrFail($id_peminjaman);
+
+            // Authorization: hanya customer/pemesan
+            if ($peminjaman->id_user !== $user->id_user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda tidak berhak meregenerasi kode ini',
+                ], 403);
+            }
+
+            // Check status
+            if (!in_array($peminjaman->status, ['booked', 'in_use'])) {
+                throw new \Exception('Hanya peminjaman dengan status booked/in_use yang bisa diregenerate');
+            }
+
+            $peminjaman = $this->verificationCodeService->regenerateCode($peminjaman);
+
+            // Log activity
+            ActivityLogService::log(
+                'REGENERATE_CODE',
+                'Peminjaman',
+                $peminjaman->id_peminjaman,
+                'Kode verifikasi diregenerate menjadi ' . $peminjaman->kode_verifikasi
+            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Kode verifikasi berhasil diregenerate',
+                'kode_verifikasi' => $peminjaman->kode_verifikasi,
+                'expired_at' => $peminjaman->kode_expired_at,
+                'regenerasi_count' => $peminjaman->kode_regenerasi_count,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    /**
+     * Get struk peminjaman dengan kode verifikasi
+     */
+    public function getVerificationStruk(Request $request, $id_peminjaman)
+    {
+        try {
+            $peminjaman = Peminjaman::findOrFail($id_peminjaman);
+
+            // Check authorization: hanya customer/pemesan atau petugas
+            $user = Auth::user();
+            if ($peminjaman->id_user !== $user->id_user && $user->role !== 'petugas') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda tidak berhak melihat struk ini',
+                ], 403);
+            }
+
+            $estructData = $this->verificationCodeService->formatStruk($peminjaman);
+
+            return response()->json([
+                'success' => true,
+                'data' => $estructData,
+                'is_expired' => $this->verificationCodeService->isExpired($peminjaman),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    /**
+     * Verify kode dan checkout (status booked -> in_use)
+     * Dijalankan oleh staff/petugas
+     */
+    public function verifyAndCheckout(Request $request, $id_peminjaman)
+    {
+        $request->validate([
+            'kode_verifikasi' => 'required|string|max:50',
+        ]);
+
+        $user = Auth::user();
+
+        try {
+            $peminjaman = DB::transaction(function () use ($request, $id_peminjaman, $user) {
+                $peminjaman = Peminjaman::lockForUpdate()->findOrFail($id_peminjaman);
+
+                // Verify kode
+                $isValid = $this->verificationCodeService->verifyCode(
+                    $peminjaman,
+                    $request->kode_verifikasi
+                );
+
+                if (!$isValid) {
+                    throw new \Exception('Kode verifikasi tidak valid atau sudah expired');
+                }
+
+                // Status already updated by verifyCode method, but let's reload
+                $peminjaman = Peminjaman::findOrFail($id_peminjaman);
+
+                // Log activity
+                ActivityLogService::log(
+                    'VERIFY_CHECKOUT',
+                    'Peminjaman',
+                    $peminjaman->id_peminjaman,
+                    'Kode verifikasi diverifikasi dan peminjaman dimulai (status: in_use)'
+                );
+
+                return $peminjaman;
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Kode terverifikasi, peminjaman dimulai',
+                'data' => $peminjaman->load(['user', 'alat.kategori']),
+                'status' => $peminjaman->status,
+                'verified_at' => $peminjaman->kode_diverifikasi_at,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    /**
+     * Get detail peminjaman dengan informasi pemesan lengkap
+     * Untuk dashboard petugas
+     */
+    public function getDetailWithBorrower($id_peminjaman)
+    {
+        try {
+            $peminjaman = Peminjaman::with(['user', 'alat.kategori', 'approvedBy', 'statusUpdatedBy'])
+                ->findOrFail($id_peminjaman);
+
+            // Format data struktur
+            $estructData = $this->verificationCodeService->formatStruk($peminjaman);
+
+            return response()->json([
+                'success' => true,
+                'peminjaman' => $peminjaman,
+                'struk_summary' => $estructData,
+                'pemesan_detail' => [
+                    'id_user' => $peminjaman->user->id_user,
+                    'nama' => $peminjaman->user->nama ?? $peminjaman->user->name,
+                    'email' => $peminjaman->user->email,
+                    'telepon' => $peminjaman->user->telepon ?? '-',
+                    'alamat' => $peminjaman->user->alamat ?? '-',
+                    'role' => $peminjaman->user->role,
+                ],
+                'kode_status' => [
+                    'kode' => $peminjaman->kode_verifikasi,
+                    'dibuat_at' => $peminjaman->kode_dibuat_at,
+                    'expired_at' => $peminjaman->kode_expired_at,
+                    'is_expired' => $this->verificationCodeService->isExpired($peminjaman),
+                    'diverifikasi_at' => $peminjaman->kode_diverifikasi_at,
+                    'regenerasi_count' => $peminjaman->kode_regenerasi_count,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
     }
 }

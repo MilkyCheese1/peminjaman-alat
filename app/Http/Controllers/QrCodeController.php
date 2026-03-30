@@ -18,11 +18,9 @@ class QrCodeController extends Controller
     {
         $peminjaman = Peminjaman::with(['user', 'alat.kategori'])->findOrFail($id_peminjaman);
 
-        // Check authorization
+        // Check authorization - pemesan atau petugas
         $user = Auth::user();
-        if ($user->id_user !== $peminjaman->id_user && 
-            !$user->isOwnerOrAdmin() && 
-            $user->role !== 'petugas') {
+        if ($user->id_user !== $peminjaman->id_user && $user->role !== 'petugas') {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized',
@@ -83,7 +81,7 @@ class QrCodeController extends Controller
     }
 
     /**
-     * Approve peminjaman via QR code (hanya untuk Petugas/Admin/Owner)
+     * Approve peminjaman via QR code (Petugas ONLY)
      */
     public function approveViaScan(Request $request)
     {
@@ -93,11 +91,11 @@ class QrCodeController extends Controller
 
         $user = Auth::user();
 
-        // Check authorization - hanya petugas, admin, atau owner
-        if ($user->role !== 'petugas' && $user->role !== 'admin' && !$user->isOwner()) {
+        // Check authorization - only petugas
+        if ($user->role !== 'petugas') {
             return response()->json([
                 'success' => false,
-                'message' => 'Hanya petugas, admin, atau owner yang dapat menyetujui peminjaman',
+                'message' => 'Hanya petugas yang dapat menyetujui peminjaman via QR',
             ], 403);
         }
 

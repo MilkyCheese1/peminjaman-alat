@@ -97,7 +97,7 @@ class DatabaseSeeder extends Seeder
                 'id_alat' => 1,
                 'tgl_peminjaman' => '2026-02-01',
                 'tgl_kembali' => '2026-02-05',
-                'status' => 'dikembalikan',
+                'status' => 'returned',
                 'denda' => 0,
             ],
             [
@@ -105,7 +105,7 @@ class DatabaseSeeder extends Seeder
                 'id_alat' => 2,
                 'tgl_peminjaman' => '2026-02-10',
                 'tgl_kembali' => '2026-02-12',
-                'status' => 'dikembalikan',
+                'status' => 'returned',
                 'denda' => 5000,
             ],
             [
@@ -121,7 +121,7 @@ class DatabaseSeeder extends Seeder
                 'id_alat' => 3,
                 'tgl_peminjaman' => '2026-02-18',
                 'tgl_kembali' => '2026-02-22',
-                'status' => 'disetujui',
+                'status' => 'booked',
                 'denda' => 0,
             ],
             [
@@ -129,7 +129,7 @@ class DatabaseSeeder extends Seeder
                 'id_alat' => 4,
                 'tgl_peminjaman' => '2026-02-20',
                 'tgl_kembali' => '2026-02-25',
-                'status' => 'disetujui',
+                'status' => 'booked',
                 'denda' => 0,
             ],
         ];

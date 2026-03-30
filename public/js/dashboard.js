@@ -95,7 +95,7 @@ async function loadEquipmentList() {
                                 <div style="font-size: 18px; font-weight: bold; color: ${statusColor};">${available}</div>
                             </div>
                         </div>
-                        <button style="padding: 10px; background: #0066cc; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; transition: background 0.3s ease;" onmouseover="this.style.background='#0052a3'" onmouseout="this.style.background='#0066cc'" onclick="alert('Fitur peminjaman: Silakan login dan navigasi ke menu peminjaman');">
+                        <button style="padding: 10px; background: #0066cc; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; transition: background 0.3s ease;" onmouseover="this.style.background='#0052a3'" onmouseout="this.style.background='#0066cc'" onclick="showBorrowModal(${alat.id_alat}, '${alat.nama_alat}');">
                             Pesan Sekarang
                         </button>
                     </div>

@@ -10,27 +10,25 @@ use Illuminate\Support\Facades\Auth;
 class ActivityLogController extends Controller
 {
     /**
-     * Get activity logs
+     * Get activity logs (Admin ONLY)
      * 
-     * Endpoint ini melihat activity logs berdasarkan role:
-     * - Owner: dapat melihat semua activity logs
-     * - Admin: dapat melihat activity logs mereka
-     * - Petugas: dapat melihat activity logs mereka
-     * - Peminjam: dapat melihat activity logs mereka
+     * Endpoint untuk melihat semua activity logs
      */
     public function index(Request $request)
     {
         $user = Auth::user();
         $limit = $request->query('limit', 100);
-        $page = $request->query('page', 1);
 
-        if ($user->isOwner()) {
-            // Owner dapat melihat semua
-            $logs = ActivityLogService::getAllActivityLogs($limit);
-        } else {
-            // User lain hanya melihat miliknya
-            $logs = ActivityLogService::getActivityLogs($user->id_user, $limit);
+        // Authorization: only admin
+        if ($user->role !== 'admin') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hanya admin yang dapat melihat activity logs',
+            ], 403);
         }
+
+        // Admin dapat melihat semua
+        $logs = ActivityLogService::getAllActivityLogs($limit);
 
         return response()->json([
             'success' => true,
@@ -39,7 +37,7 @@ class ActivityLogController extends Controller
     }
 
     /**
-     * Get activity logs untuk model tertentu (Alat atau Peminjaman)
+     * Get activity logs untuk model tertentu (Admin ONLY)
      */
     public function getModelLogs(Request $request, $modelType, $modelId)
     {
@@ -50,11 +48,11 @@ class ActivityLogController extends Controller
         $user = Auth::user();
         $limit = $request->query('limit', 100);
 
-        // Authorization check
-        if (!$user->isOwnerOrAdmin()) {
+        // Authorization check - only admin
+        if ($user->role !== 'admin') {
             return response()->json([
                 'success' => false,
-                'message' => 'Unauthorized',
+                'message' => 'Hanya admin yang dapat melihat activity logs model',
             ], 403);
         }
 
@@ -75,17 +73,17 @@ class ActivityLogController extends Controller
     }
 
     /**
-     * Get activity logs untuk user tertentu
+     * Get activity logs untuk user tertentu (Admin ONLY)
      */
     public function getUserLogs($id_user, Request $request)
     {
         $user = Auth::user();
 
-        // Authorization: owner dapat melihat semua, admin/petugas hanya diri sendiri, peminjam hanya diri sendiri
-        if (!$user->isOwner() && $user->id_user !== $id_user) {
+        // Authorization: only admin
+        if ($user->role !== 'admin') {
             return response()->json([
                 'success' => false,
-                'message' => 'Unauthorized',
+                'message' => 'Hanya admin yang dapat melihat activity logs user',
             ], 403);
         }
 
@@ -99,17 +97,17 @@ class ActivityLogController extends Controller
     }
 
     /**
-     * Get summary of activities
+     * Get summary of activities (Admin ONLY)
      */
     public function getSummary(Request $request)
     {
         $user = Auth::user();
 
-        // Only owner dan admin dapat melihat summary
-        if (!$user->isOwnerOrAdmin()) {
+        // Only admin
+        if ($user->role !== 'admin') {
             return response()->json([
                 'success' => false,
-                'message' => 'Unauthorized',
+                'message' => 'Hanya admin yang dapat melihat summary activity logs',
             ], 403);
         }
 

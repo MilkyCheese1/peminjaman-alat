@@ -41,15 +41,15 @@ class KategoriController extends Controller
     }
 
     /**
-     * Create new category (admin/owner only)
+     * Create new category (admin only)
      */
     public function store(Request $request)
     {
-        // Check authorization
-        if (!Auth::user() || !in_array(Auth::user()->role, ['admin', 'owner'])) {
+        // Check authorization - admin only
+        if (!Auth::user() || Auth::user()->role !== 'admin') {
             return response()->json([
                 'success' => false,
-                'message' => 'Unauthorized',
+                'message' => 'Hanya admin yang dapat membuat kategori',
             ], 403);
         }
 
@@ -67,15 +67,15 @@ class KategoriController extends Controller
     }
 
     /**
-     * Update category (admin/owner only)
+     * Update category (admin only)
      */
     public function update(Request $request, $id)
     {
-        // Check authorization
-        if (!Auth::user() || !in_array(Auth::user()->role, ['admin', 'owner'])) {
+        // Check authorization - admin only
+        if (!Auth::user() || Auth::user()->role !== 'admin') {
             return response()->json([
                 'success' => false,
-                'message' => 'Unauthorized',
+                'message' => 'Hanya admin yang dapat mengubah kategori',
             ], 403);
         }
 
@@ -95,15 +95,15 @@ class KategoriController extends Controller
     }
 
     /**
-     * Delete category (admin/owner only)
+     * Delete category (admin only)
      */
     public function destroy($id)
     {
-        // Check authorization
-        if (!Auth::user() || !in_array(Auth::user()->role, ['admin', 'owner'])) {
+        // Check authorization - admin only
+        if (!Auth::user() || Auth::user()->role !== 'admin') {
             return response()->json([
                 'success' => false,
-                'message' => 'Unauthorized',
+                'message' => 'Hanya admin yang dapat menghapus kategori',
             ], 403);
         }
 

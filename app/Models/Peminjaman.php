@@ -27,6 +27,11 @@ class Peminjaman extends Model
         'approved_by',
         'status_updated_by',
         'status_updated_at',
+        'kode_verifikasi',
+        'kode_dibuat_at',
+        'kode_expired_at',
+        'kode_regenerasi_count',
+        'kode_diverifikasi_at',
     ];
 
     protected $casts = [
@@ -36,6 +41,9 @@ class Peminjaman extends Model
         'buffer_checked' => 'boolean',
         'actual_return_date' => 'datetime',
         'status_updated_at' => 'datetime',
+        'kode_dibuat_at' => 'datetime',
+        'kode_expired_at' => 'datetime',
+        'kode_diverifikasi_at' => 'datetime',
     ];
 
     protected $dates = ['deleted_at'];
@@ -70,5 +78,32 @@ class Peminjaman extends Model
     public function statusUpdatedBy()
     {
         return $this->belongsTo(User::class, 'status_updated_by', 'id_user');
+    }
+
+    /**
+     * Check apakah kode verifikasi sudah expired
+     */
+    public function isKodeExpired(): bool
+    {
+        if (!$this->kode_expired_at) {
+            return false;
+        }
+        return now()->isAfter($this->kode_expired_at);
+    }
+
+    /**
+     * Check apakah kode verifikasi masih berlaku
+     */
+    public function hasValidKode(): bool
+    {
+        return $this->kode_verifikasi && !$this->isKodeExpired();
+    }
+
+    /**
+     * Check apakah kode sudah diverifikasi
+     */
+    public function isKodeVerified(): bool
+    {
+        return $this->kode_diverifikasi_at !== null;
     }
 }

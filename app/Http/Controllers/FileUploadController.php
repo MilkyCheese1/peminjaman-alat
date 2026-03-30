@@ -12,15 +12,16 @@ use Illuminate\Support\Facades\Storage;
 class FileUploadController extends Controller
 {
     /**
-     * Upload gambar untuk alat
+     * Upload gambar untuk alat (admin only)
      */
     public function uploadAlatImage(Request $request, $id)
     {
-        // Check authorization - only admin or owner
-        if (!Auth::user()->isOwnerOrAdmin()) {
+        // Check authorization - only admin
+        $user = Auth::user();
+        if ($user->role !== 'admin') {
             return response()->json([
                 'success' => false,
-                'message' => 'Unauthorized',
+                'message' => 'Hanya admin yang dapat upload gambar alat',
             ], 403);
         }
 
@@ -74,15 +75,16 @@ class FileUploadController extends Controller
     }
 
     /**
-     * Delete alat image
+     * Delete alat image (admin only)
      */
     public function deleteAlatImage($id)
     {
-        // Check authorization
-        if (!Auth::user()->isOwnerOrAdmin()) {
+        // Check authorization - only admin
+        $user = Auth::user();
+        if ($user->role !== 'admin') {
             return response()->json([
                 'success' => false,
-                'message' => 'Unauthorized',
+                'message' => 'Hanya admin yang dapat menghapus gambar alat',
             ], 403);
         }
 

@@ -7,6 +7,7 @@ use App\Models\Kategori;
 use App\Services\BookingValidationService;
 use App\Services\StockManagementService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AlatController extends Controller
 {
@@ -130,6 +131,15 @@ class AlatController extends Controller
      */
     public function store(Request $request)
     {
+        // Authorization check - admin only
+        $user = Auth::user();
+        if ($user->role !== 'admin') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hanya admin yang dapat membuat alat',
+            ], 403);
+        }
+
         $validated = $request->validate([
             'nama_alat' => 'required|string|max:50',
             'id_kategori' => 'required|exists:kategori,id_kategori',
@@ -161,6 +171,15 @@ class AlatController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Authorization check - admin only
+        $user = Auth::user();
+        if ($user->role !== 'admin') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hanya admin yang dapat mengubah alat',
+            ], 403);
+        }
+
         $alat = Alat::findOrFail($id);
 
         $validated = $request->validate([
@@ -196,6 +215,15 @@ class AlatController extends Controller
      */
     public function destroy($id)
     {
+        // Authorization check - admin only
+        $user = Auth::user();
+        if ($user->role !== 'admin') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hanya admin yang dapat menghapus alat',
+            ], 403);
+        }
+
         $alat = Alat::findOrFail($id);
         $alat->delete();
 

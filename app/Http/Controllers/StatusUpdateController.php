@@ -23,17 +23,17 @@ class StatusUpdateController extends Controller
     ];
 
     /**
-     * Update status peminjaman (untuk petugas/admin/owner)
+     * Update status peminjaman (untuk petugas ONLY)
      */
     public function updateStatus(Request $request, $id_peminjaman)
     {
         $user = Auth::user();
         
-        // Check authorization: only petugas, admin, or owner
-        if ($user->role !== 'petugas' && $user->role !== 'admin' && !$user->isOwner()) {
+        // Check authorization: only petugas
+        if ($user->role !== 'petugas') {
             return response()->json([
                 'success' => false,
-                'message' => 'Hanya petugas, admin, atau owner yang dapat mengubah status',
+                'message' => 'Hanya petugas yang dapat mengubah status peminjaman',
             ], 403);
         }
 
@@ -97,17 +97,17 @@ class StatusUpdateController extends Controller
     }
 
     /**
-     * Bulk update status untuk multiple peminjamans
+     * Bulk update status untuk multiple peminjamans (Petugas only)
      */
     public function bulkUpdateStatus(Request $request)
     {
         $user = Auth::user();
         
-        // Check authorization
-        if ($user->role !== 'petugas' && $user->role !== 'admin' && !$user->isOwner()) {
+        // Check authorization: only petugas
+        if ($user->role !== 'petugas') {
             return response()->json([
                 'success' => false,
-                'message' => 'Unauthorized',
+                'message' => 'Hanya petugas yang dapat melakukan bulk update status',
             ], 403);
         }
 
