@@ -1,234 +1,170 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TrustEquip - Sewa Alat Konstruksi & Teknik Mudah</title>
     <link rel="stylesheet" href="<?php echo e(asset('css/style.css')); ?>">
-    <link rel="stylesheet" href="<?php echo e(asset('css/landing.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(asset('css/landing-fullpage.css')); ?>">
     <link rel="stylesheet" href="<?php echo e(asset('css/dark-mode.css')); ?>">
-    <link rel="stylesheet" href="<?php echo e(asset('css/splash-loading.css')); ?>">
 </head>
-<body class="landing">
-    <!-- Splash Screen -->
-    <div id="splashScreen" class="splash-screen">
-        <div class="splash-content">
-            <div class="splash-logo">🛡️</div>
-            <div class="splash-brand-name">TrustEquip</div>
-            <div class="splash-tagline">Sewa Alat Konstruksi & Teknik Mudah</div>
-            <div class="splash-loader">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Loading Screen -->
-    <div id="loadingScreen" class="loading-screen">
-        <div class="loading-content">
-            <div class="loading-spinner"></div>
-            <div class="loading-text">LOADING...</div>
-        </div>
-    </div>
-
-    <!-- Loading Bar -->
-    <div id="loadingBar" class="loading-bar">
-        <div class="loading-bar-progress"></div>
-    </div>
-
+<body class="landing fullpage-scroll">
     <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar-container">
-            <!-- Logo Section -->
             <div class="navbar-brand">
                 <div class="brand-icon">🛡️</div>
                 <h2 class="brand-text">TrustEquip</h2>
             </div>
 
-            <!-- Burger Menu for Mobile -->
             <button class="burger-menu" id="burgerMenu">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
 
-            <!-- Navigation Menu -->
             <ul class="navbar-menu" id="navbarMenu">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#equipment">Equipment</a></li>
-                <li><a href="#how-it-works">How It Works</a></li>
-                <li><a href="#pricing">Pricing</a></li>
-                <li><a href="#contact">Contact Us</a></li>
-                <li><a href="/login" class="btn-login">Sign In</a></li>
-                <li><a href="/register" class="btn-started">Get Started</a></li>
+                <li><a href="#home">Beranda</a></li>
+                <li><a href="#features">Fitur</a></li>
+                <li><a href="/register" class="btn-started">Daftar</a></li>
+                <li><a href="/login" class="btn-login">Masuk</a></li>
+                <li><button class="navbar-dark-mode" id="navbarDarkModeToggle">
+                    <span class="sun">☀️</span>
+                    <span class="moon">🌙</span>
+                </button></li>
             </ul>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="hero-container">
-            <div class="hero-left">
-                <h1>Sewa Alat Mudah,<br>Percaya TrustEquip.</h1>
-                <p>Penyedia sewa peralatan konstruksi, industri, & DIY terpercaya. Aman, Cepat, dan Hemat Biaya.</p>
-                <div class="hero-buttons">
-                    <a href="#equipment" class="btn btn-primary">Cari Alat Sekarang</a>
-                    <a href="/register" class="btn btn-secondary">Daftar Sekarang</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Mengapa TrustEquip Section -->
-    <section id="why-trustequip" class="why-section">
-        <div class="why-container">
-            <h2>Mengapa TrustEquip?</h2>
-            <div class="why-grid">
-                <div class="why-card">
-                    <div class="why-icon">🔧</div>
-                    <h3>Alat Berkualitas</h3>
-                    <p>Peralatan berkualitas tinggi, terawat, dan siap digunakan untuk berbagai kebutuhan.</p>
-                    <a href="#" class="lihat-detail">Lihat Detail ></a>
-                </div>
-                <div class="why-card">
-                    <div class="why-icon">⚡</div>
-                    <h3>Proses Mudah</h3>
-                    <p>Proses peminjaman yang sederhana dan cepat, tanpa ribet dan penuh kepuasan.</p>
-                    <a href="#" class="lihat-detail">Lihat Detail ></a>
-                </div>
-                <div class="why-card">
-                    <div class="why-icon">💰</div>
-                    <h3>Harga Transparan</h3>
-                    <p>Harga yang jelas tanpa biaya tersembunyi, sehingga Anda bisa merencanakan dengan baik.</p>
-                    <a href="#" class="lihat-detail">Lihat Detail ></a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Cara Sewa Alat Section -->
-    <section id="how-it-works" class="how-section">
-        <div class="how-container">
-            <h2>Cara Sewa Alat</h2>
-            <div class="how-grid">
-                <div class="how-step">
-                    <div class="step-number">1</div>
-                    <div class="step-icon">🔍</div>
-                    <h3>Pilih Alat</h3>
-                    <p>Temukan alat yang anda perlukan di katalog lengkap kami.</p>
-                </div>
-                <div class="how-step">
-                    <div class="step-number">2</div>
-                    <div class="step-icon">📋</div>
-                    <h3>Jadwalkan Sewa</h3>
-                    <p>Pilih tanggal mulai dan akhir peminjaman sesuai kebutuhan.</p>
-                </div>
-                <div class="how-step">
-                    <div class="step-number">3</div>
-                    <div class="step-icon">🚚</div>
-                    <h3>Ambil/Kirim Alat</h3>
-                    <p>Ambil alat di lokasi kami atau kami antar ke lokasi Anda.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section id="testimonials" class="testimonials-section">
-        <div class="testimonials-container">
-            <h2>Siap Membangun Proyek Anda?</h2>
-            <div class="testimonials-carousel">
-                <div class="carousel-inner">
-                    <div class="testimonial-card carousel-slide active">
-                        <p class="testimonial-text">"Layanan TrustEquip sangat membantu untuk proyek kami. Prosesnya mudah, alat berkualitas, dan harga sangat kompetitif!"</p>
-                        <div class="testimonial-author">
-                            <img src="https://via.placeholder.com/50" alt="Client" class="author-avatar">
-                            <div class="author-info">
-                                <h4>Budi Santoso</h4>
-                                <p>Kontraktor Bangunan</p>
+    <div class="fullpage-container">
+        <!-- Main Content -->
+        <main class="fullpage-main">
+            <!-- Hero Section -->
+            <section id="home" class="fullpage-section hero-section active">
+                <div class="hero-wrapper">
+                    <div class="hero-content">
+                        <div class="hero-label">TrustEquip Solutions</div>
+                        <h1 class="hero-title">
+                            Sewa Alat Berkualitas,<br>
+                            <span class="gradient-text">Percaya TrustEquip.</span>
+                        </h1>
+                        <p class="hero-description">
+                            Penyedia sewa peralatan konstruksi, industri, & DIY terpercaya dengan system peminjaman yang aman dan mudah.
+                        </p>
+                        <div class="hero-buttons">
+                            <a href="#features" class="btn btn-primary">Mulai Sewa</a>
+                            <a href="#features" class="btn btn-outline">Pelajari Lebih Lanjut</a>
+                        </div>
+                        <div class="hero-features">
+                            <div class="hero-feature-item">
+                                <span class="feature-icon">🔧</span>
+                                <span class="feature-text">Alat Berkualitas</span>
+                            </div>
+                            <div class="hero-feature-item">
+                                <span class="feature-icon">⚡</span>
+                                <span class="feature-text">Proses Cepat</span>
+                            </div>
+                            <div class="hero-feature-item">
+                                <span class="feature-icon">💰</span>
+                                <span class="feature-text">Harga Transparan</span>
                             </div>
                         </div>
                     </div>
-                    <div class="testimonial-card carousel-slide">
-                        <p class="testimonial-text">"Saya sering meminjam alat di TrustEquip untuk project kecil. Selalu puas dengan kualitas dan pelayanannya. Recommended!"</p>
-                        <div class="testimonial-author">
-                            <img src="https://via.placeholder.com/50" alt="Client" class="author-avatar">
-                            <div class="author-info">
-                                <h4>Dewi Lestari</h4>
-                                <p>Tukang Renovasi Rumah</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-card carousel-slide">
-                        <p class="testimonial-text">"Kualitas alat terjamin dan pengiriman sangat cepat. Tim support TrustEquip sangat responsif dan profesional!"</p>
-                        <div class="testimonial-author">
-                            <img src="https://via.placeholder.com/50" alt="Client" class="author-avatar">
-                            <div class="author-info">
-                                <h4>Ahmad Riyadi</h4>
-                                <p>Pengusaha Konstruksi</p>
-                            </div>
+                    <div class="hero-visual">
+                        <div class="visual-placeholder">
+                            <div class="neon-accent"></div>
+                            <div class="glow-orb"></div>
                         </div>
                     </div>
                 </div>
-                <div class="carousel-indicators">
-                    <button class="indicator active" data-slide="0"></button>
-                    <button class="indicator" data-slide="1"></button>
-                    <button class="indicator" data-slide="2"></button>
+            </section>
+
+            <!-- Features Section -->
+            <section id="features" class="fullpage-section features-section">
+                <div class="features-wrapper">
+                    <div class="section-header">
+                        <h2 class="section-title">Kenapa Pilih TrustEquip?</h2>
+                        <p class="section-subtitle">Solusi lengkap untuk kebutuhan sewa peralatan Anda</p>
+                    </div>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon-box">🔒</div>
+                            <h3 class="feature-title">Aman & Terpercaya</h3>
+                            <p class="feature-description">Semua alat terverifikasi dan terawat dengan baik untuk keamanan Anda</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon-box">📱</div>
+                            <h3 class="feature-title">Mudah Digunakan</h3>
+                            <p class="feature-description">Aplikasi intuitif untuk booking, tracking, dan pengembalian alat</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon-box">💳</div>
+                            <h3 class="feature-title">Pembayaran Fleksibel</h3>
+                            <p class="feature-description">Berbagai metode pembayaran dengan harga yang kompetitif dan transparan</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon-box">🚀</div>
+                            <h3 class="feature-title">Pengiriman Cepat</h3>
+                            <p class="feature-description">Pengiriman gratis untuk area tertentu dengan jaminan tepat waktu</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </section>
 
             <!-- CTA Section -->
-            <div class="cta-section">
-                <h3>Siap Membangun Proyek Anda?</h3>
-                <a href="/register" class="btn btn-primary btn-lg">Mulai Sekarang</a>
-            </div>
-        </div>
-    </section>
+            <section id="cta" class="fullpage-section cta-section">
+                <div class="cta-wrapper">
+                    <div class="cta-content">
+                        <h2 class="cta-title">Siap Mulai Menyewa?</h2>
+                        <p class="cta-description">
+                            Bergabunglah dengan ribuan pelanggan yang puas dan rasakan kemudahan sewa alat berkualitas
+                        </p>
+                        <div class="cta-buttons">
+                            <a href="/register" class="btn btn-primary btn-lg">Daftar Sekarang</a>
+                            <a href="/login" class="btn btn-outline btn-lg">Login</a>
+                        </div>
+                        <div class="cta-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">5000+</div>
+                                <div class="stat-label">Pelanggan Aktif</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">10000+</div>
+                                <div class="stat-label">Alat Tersedia</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">150+</div>
+                                <div class="stat-label">Area Layanan</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" id="darkModeToggle">
+        <span class="sun"></span>
+        <span class="moon"></span>
+    </button>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+        <span class="indicator-dot active" data-section="0"></span>
+        <span class="indicator-dot" data-section="1"></span>
+        <span class="indicator-dot" data-section="2"></span>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
-            <div class="footer-section">
-                <h4>TrustEquip</h4>
-                <p>Platform terpercaya untuk sewa alat konstruksi dan teknik berkualitas tinggi.</p>
-            </div>
-            <div class="footer-section">
-                <h4>Menu Navigasi</h4>
-                <ul class="footer-links">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#equipment">Equipment</a></li>
-                    <li><a href="#how-it-works">How It Works</a></li>
-                    <li><a href="#pricing">Pricing</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Kontak Kami</h4>
-                <ul class="footer-links">
-                    <li>Email: support@trustequip.com</li>
-                    <li>Telepon: +62 812 3456 7890</li>
-                    <li>Alamat: Jl. Teknologi No. 1, Jakarta</li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Ikuti Kami</h4>
-                <div class="social-links">
-                    <a href="#" class="social-icon">f</a>
-                    <a href="#" class="social-icon">t</a>
-                    <a href="#" class="social-icon">ig</a>
-                    <a href="#" class="social-icon">in</a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 TrustEquip. Hak Cipta Dilindungi.</p>
+            <p>&copy; 2026 TrustEquip. Semua hak dilindungi.</p>
         </div>
     </footer>
 
-    <script src="<?php echo e(asset('js/main.js')); ?>"></script>
-    <script src="<?php echo e(asset('js/dark-mode.js')); ?>"></script>
-    <script src="<?php echo e(asset('js/splash-loading.js')); ?>"></script>
     <script src="<?php echo e(asset('js/landing.js')); ?>"></script>
+    <script src="<?php echo e(asset('js/fullpage-scroll.js')); ?>"></script>
 </body>
 </html>
 <?php /**PATH C:\laragon\www\peminjaman-alat\resources\views/index.blade.php ENDPATH**/ ?>
