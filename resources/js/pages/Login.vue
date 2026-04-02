@@ -53,6 +53,13 @@
             </button>
           </div>
           <span v-if="errors.password" class="error-message">{{ errors.password }}</span>
+          <div v-if="form.password" class="password-info">
+            <div class="password-length">
+              <span :class="{ valid: form.password.length >= 8, warning: form.password.length < 8 }">
+                {{ form.password.length }}/8-12
+              </span>
+            </div>
+          </div>
         </div>
 
         <!-- Remember Me & Forgot Password -->
@@ -80,15 +87,6 @@
           {{ successMessage }}
         </div>
       </form>
-
-      <!-- Divider -->
-      <div class="divider">atau masuk dengan</div>
-
-      <!-- Social Login -->
-      <div class="social-login">
-        <button type="button" class="social-button google">Google</button>
-        <button type="button" class="social-button github">GitHub</button>
-      </div>
 
       <!-- Register Link -->
       <p class="auth-footer">
@@ -148,8 +146,10 @@ const validateForm = () => {
 
   if (!form.password) {
     errors.password = 'Password tidak boleh kosong'
-  } else if (form.password.length < 6) {
-    errors.password = 'Password minimal 6 karakter'
+  } else if (form.password.length < 8) {
+    errors.password = 'Password minimal 8 karakter'
+  } else if (form.password.length > 12) {
+    errors.password = 'Password maksimal 12 karakter'
   }
 
   return !errors.email && !errors.password
@@ -368,6 +368,35 @@ const handleLogin = async () => {
   }
 }
 
+/* Password Info Styling */
+.password-info {
+  margin-top: 8px;
+  font-size: 0.85rem;
+}
+
+.password-length {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.password-length span {
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.password-length span.valid {
+  color: #28a745;
+  background: rgba(40, 167, 69, 0.1);
+}
+
+.password-length span.warning {
+  color: #ffc107;
+  background: rgba(255, 193, 7, 0.1);
+}
+
 .form-footer {
   display: flex;
   justify-content: space-between;
@@ -428,77 +457,6 @@ const handleLogin = async () => {
 
 .error-banner,
 .success-banner {
-  margin-top: 15px;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  animation: slideDown 0.3s ease-out;
-  text-align: center;
-}
-
-.error-banner {
-  background: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-}
-
-.success-banner {
-  background: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
-}
-
-.divider {
-  text-align: center;
-  margin: 25px 0;
-  color: #999;
-  font-size: 0.9rem;
-  position: relative;
-}
-
-.divider::before,
-.divider::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  width: 40%;
-  height: 1px;
-  background: #e5e5e5;
-}
-
-.divider::before {
-  left: 0;
-}
-
-.divider::after {
-  right: 0;
-}
-
-.social-login {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.social-button {
-  padding: 10px;
-  border: 2px solid #e5e5e5;
-  background: white;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  font-size: 0.9rem;
-}
-
-.social-button:hover {
-  border-color: #0B7285;
-  background: #f8f9fa;
-  transform: translateY(-2px);
-}
-
-.auth-footer {
   text-align: center;
   color: #666;
   font-size: 0.95rem;

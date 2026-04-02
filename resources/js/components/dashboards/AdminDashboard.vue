@@ -39,7 +39,29 @@
       </div>
 
       <section class="section-card">
-        <h3>👥 Aktivitas Pengguna Terbaru</h3>
+        <h3>� Statistik Peminjaman</h3>
+        <div class="stats-grid stats-small">
+          <div class="stat-mini">
+            <p class="stat-label">Total Peminjaman</p>
+            <p class="stat-value">{{ totalBorrowings }}</p>
+          </div>
+          <div class="stat-mini">
+            <p class="stat-label">Menunggu Persetujuan</p>
+            <p class="stat-value">{{ pendingApprovalsCount }}</p>
+          </div>
+          <div class="stat-mini">
+            <p class="stat-label">Terlambat</p>
+            <p class="stat-value">{{ overdueCount }}</p>
+          </div>
+          <div class="stat-mini">
+            <p class="stat-label">Total Denda</p>
+            <p class="stat-value">Rp {{ totalFines.toLocaleString('id-ID') }}</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-card">
+        <h3>�👥 Aktivitas Pengguna Terbaru</h3>
         <table class="table">
           <thead>
             <tr>
@@ -104,11 +126,30 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, computed } from 'vue'
+import { borrowingRecords } from '../../data/borrowingData.js'
 
 defineProps({
   activeTab: String,
   roleColor: String
+})
+
+const totalBorrowings = computed(() => borrowingRecords.length)
+
+const pendingApprovalsCount = computed(() => {
+  return borrowingRecords.filter(b => b.status === 'applied').length
+})
+
+const overdueCount = computed(() => {
+  return borrowingRecords.filter(b => {
+    const now = new Date()
+    const planned = new Date(b.plannedReturnDate)
+    return b.status === 'picked_up' && now > planned
+  }).length
+})
+
+const totalFines = computed(() => {
+  return borrowingRecords.reduce((sum, b) => sum + (b.fineAmount || 0), 0)
 })
 </script>
 
@@ -224,5 +265,32 @@ defineProps({
 .role-badge.customer {
   background: rgba(150, 206, 180, 0.3);
   color: #10b981;
+}
+
+.stats-small {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.stat-mini {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #e0e0e0;
+}
+
+.stat-mini .stat-label {
+  margin: 0;
+  color: #666;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.stat-mini .stat-value {
+  margin: 8px 0 0 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0B7285;
 }
 </style>

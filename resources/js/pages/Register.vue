@@ -65,9 +65,12 @@
             </button>
           </div>
           <span v-if="errors.password" class="error-message">{{ errors.password }}</span>
-          <div class="password-strength">
-            <div class="strength-bar" :class="passwordStrength.level"></div>
-            <span class="strength-text">{{ passwordStrength.text }}</span>
+          <div v-if="form.password" class="password-info">
+            <div class="password-length">
+              <span :class="{ valid: form.password.length >= 8 && form.password.length <= 12, warning: form.password.length < 8 || form.password.length > 12 }">
+                {{ form.password.length }}/8-12 karakter
+              </span>
+            </div>
           </div>
         </div>
 
@@ -104,21 +107,7 @@
               v-model="form.phone"
               type="tel"
               placeholder="+62 812-3456-7890"
-            />
-          </div>
-        </div>
-
-        <!-- School/Institution -->
-        <div class="form-group">
-          <label for="school">Sekolah / Institusi</label>
-          <div class="input-wrapper">
-            <span class="input-icon">🏫</span>
-            <input
-              id="school"
-              v-model="form.school"
-              type="text"
-              placeholder="Nama sekolah Anda"
-              required
+              maxlength="12"
             />
           </div>
         </div>
@@ -164,7 +153,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -179,7 +168,6 @@ const form = reactive({
   password: '',
   confirmPassword: '',
   phone: '',
-  school: '',
   agreeTerms: false
 })
 
@@ -190,23 +178,6 @@ const errors = reactive({
   confirmPassword: '',
   agreeTerms: '',
   general: ''
-})
-
-const passwordStrength = computed(() => {
-  let strength = 'weak'
-  let text = 'Lemah'
-  
-  if (form.password.length >= 8) {
-    if (/[a-z]/.test(form.password) && /[A-Z]/.test(form.password) && /\d/.test(form.password)) {
-      strength = 'strong'
-      text = 'Kuat'
-    } else if (/[a-z]/.test(form.password) && /\d/.test(form.password)) {
-      strength = 'medium'
-      text = 'Sedang'
-    }
-  }
-  
-  return { level: strength, text }
 })
 
 const validateForm = () => {
@@ -229,8 +200,10 @@ const validateForm = () => {
 
   if (!form.password) {
     errors.password = 'Password tidak boleh kosong'
-  } else if (form.password.length < 6) {
-    errors.password = 'Password minimal 6 karakter'
+  } else if (form.password.length < 8) {
+    errors.password = 'Password minimal 8 karakter'
+  } else if (form.password.length > 12) {
+    errors.password = 'Password maksimal 12 karakter'
   }
 
   if (!form.confirmPassword) {
@@ -261,8 +234,7 @@ const handleRegister = async () => {
     localStorage.setItem('newUser', JSON.stringify({
       fullName: form.fullName,
       email: form.email,
-      phone: form.phone,
-      school: form.school
+      phone: form.phone
     }))
     
     // Redirect ke login setelah 2 detik
@@ -444,44 +416,33 @@ const handleRegister = async () => {
   }
 }
 
-.password-strength {
+/* Password Info Styling */
+.password-info {
   margin-top: 8px;
+  font-size: 0.85rem;
 }
 
-.strength-bar {
-  height: 4px;
-  background: #e5e5e5;
-  border-radius: 2px;
-  overflow: hidden;
-  margin-bottom: 4px;
+.password-length {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
-.strength-bar::after {
-  content: '';
-  display: block;
-  height: 100%;
-  width: 0%;
-  transition: width 0.3s ease, background-color 0.3s ease;
+.password-length span {
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
 }
 
-.strength-bar.weak::after {
-  width: 33%;
-  background: #dc3545;
+.password-length span.valid {
+  color: #28a745;
+  background: rgba(40, 167, 69, 0.1);
 }
 
-.strength-bar.medium::after {
-  width: 66%;
-  background: #ffc107;
-}
-
-.strength-bar.strong::after {
-  width: 100%;
-  background: #28a745;
-}
-
-.strength-text {
-  font-size: 0.8rem;
-  color: #666;
+.password-length span.warning {
+  color: #ffc107;
+  background: rgba(255, 193, 7, 0.1);
 }
 
 .checkbox-group {

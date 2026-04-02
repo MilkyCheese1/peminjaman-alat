@@ -51,10 +51,12 @@
                 <p class="user-role">{{ roleLabel }}</p>
               </div>
             </div>
-            <button @click="logout" class="logout-btn" title="Keluar">
-              🚪
-            </button>
           </div>
+
+          <!-- Logout Button - Top Right -->
+          <button @click="logout" class="logout-btn" title="Logout">
+            Keluar
+          </button>
         </div>
       </div>
 
@@ -238,6 +240,7 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   gap: 30px;
+  position: relative;
 }
 
 .logo-section {
@@ -465,18 +468,23 @@ onMounted(() => {
 }
 
 .logout-btn {
-  background: rgba(255, 255, 255, 0.2);
+  background: #dc3545;
   border: none;
   color: white;
-  font-size: 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  padding: 8px 12px;
+  padding: 10px 24px;
   border-radius: 6px;
   transition: all 0.3s ease;
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }
 
 .logout-btn:hover {
-  background: #ef4444;
+  background: #c82333;
+  transform: scale(1.05);
 }
 
 /* ===== NAVIGATION ===== */

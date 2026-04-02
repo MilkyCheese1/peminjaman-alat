@@ -16,7 +16,7 @@ export default defineConfig({
     middlewareMode: false
   },
   build: {
-    outDir: 'public/dist',
+    outDir: 'public/build',
     assetsDir: 'assets',
     manifest: true,
     rollupOptions: {

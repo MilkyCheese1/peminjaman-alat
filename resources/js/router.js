@@ -31,6 +31,10 @@ const routes = [
     path: '/demo-users',
     name: 'DemoUsers',
     component: DemoUsers
+  },
+  {
+    path: '/forgot-password',
+    redirect: '/login'
   }
 ]
 
@@ -40,14 +44,14 @@ const router = createRouter({
 })
 
 // Navigation guard untuk proteksi halaman yang memerlukan autentikasi
-router.beforeEach((to, from, next) => {
+// Updated: Use Vue Router 4 syntax (return instead of next callback)
+router.beforeEach((to, from) => {
   const isAuthenticated = localStorage.getItem('user')
   
   if (to.meta.requiresAuth && !isAuthenticated) {
-    next('/login')
-  } else {
-    next()
+    return '/login'
   }
+  // Implicitly return true if no redirect needed
 })
 
 export default router

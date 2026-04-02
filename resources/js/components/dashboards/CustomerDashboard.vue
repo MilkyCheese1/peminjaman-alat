@@ -98,7 +98,6 @@
             <p>{{ item.desc }}</p>
             <div class="item-stock">Stok: {{ item.stock }}</div>
             <div class="item-footer">
-              <span class="price">Rp {{ item.price }}/hari</span>
               <button class="btn-borrow">Pinjam</button>
             </div>
           </div>
@@ -108,32 +107,31 @@
 
     <!-- MY BORROWINGS TAB -->
     <section v-if="activeTab === 'my-borrowings'" class="tab-content">
-      <div class="section-card">
-        <h3>📦 Riwayat Peminjaman</h3>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Alat</th>
-              <th>Peminjam</th>
-              <th>Tanggal</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>💻 Laptop Dell</td>
-              <td>Ahmad</td>
-              <td>29 Mar - 02 Apr</td>
-              <td><span class="badge active">Aktif</span></td>
-            </tr>
-            <tr>
-              <td>📷 Kamera DSLR</td>
-              <td>Ahmad</td>
-              <td>25 Mar - 31 Mar</td>
-              <td><span class="badge overdue">Overduc</span></td>
-            </tr>
-          </tbody>
-        </table>
+      <BorrowingForm 
+        :customer="currentUser" 
+        @submit="handleNewBorrowRequest"
+      />
+      
+      <div class="section-card" v-if="myBorrowings.length > 0">
+        <h3>📦 Riwayat Peminjaman Saya</h3>
+        <div v-for="bor in myBorrowings" :key="bor.id" class="borrowing-item-card">
+          <div class="item-header">
+            <div class="item-id">{{ bor.id }}</div>
+            <div class="item-status" :style="`background: ${getStatusColor(bor.status)}`">
+              {{ getStatusLabel(bor.status) }}
+            </div>
+          </div>
+          <div class="item-details">
+            <p><strong>Alat:</strong> {{ bor.equipmentName }}</p>
+            <p><strong>Tanggal:</strong> {{ formatDate(bor.borrowDate) }} - {{ formatDate(bor.plannedReturnDate) }}</p>
+            <p v-if="bor.fineAmount > 0"><strong>Denda:</strong> Rp {{ bor.fineAmount.toLocaleString('id-ID') }}</p>
+          </div>
+          <div class="item-actions">
+            <button v-if="bor.status === 'ready_for_pickup'" @click="selectBorrowingDetail(bor)" class="btn-action">✅ Ambil Kode</button>
+            <button v-if="bor.status === 'picked_up'" @click="selectBorrowingDetail(bor)" class="btn-action">📋 Kembalikan</button>
+            <button v-else @click="selectBorrowingDetail(bor)" class="btn-action">👀 Detail</button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -166,31 +164,94 @@
         </div>
       </div>
     </section>
+
+    <!-- Detail Modal -->
+    <div v-if="showDetailModal && selectedBorrowingDetail" class="modal-overlay" @click.self="handleCloseDetailModal">
+      <div class="modal-dialog">
+        <button class="modal-close" @click="handleCloseDetailModal">✕</button>
+        <PickupVerification 
+          v-if="selectedBorrowingDetail.status === 'ready_for_pickup'"
+          :borrowing="selectedBorrowingDetail"
+          @verify="handlePickupVerify"
+          @cancel="handleCloseDetailModal"
+        />
+        <ReturnVerification 
+          v-else-if="selectedBorrowingDetail.status === 'picked_up'"
+          :borrowing="selectedBorrowingDetail"
+          :isStaff="false"
+          @verify-customer="handleReturnCustomerVerify"
+          @cancel="handleCloseDetailModal"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue'
+import { defineProps, ref, computed, onMounted } from 'vue'
+import BorrowingForm from '../borrowing/BorrowingForm.vue'
+import PickupVerification from '../borrowing/PickupVerification.vue'
+import ReturnVerification from '../borrowing/ReturnVerification.vue'
+import { borrowingRecords, getCustomerBorrowings } from '../../data/borrowingData.js'
+import { STATUS_INFO, formatDate } from '../../data/borrowingStatuses.js'
 
-defineProps({
+const props = defineProps({
   activeTab: String,
   roleColor: String
 })
 
 const userName = ref('Ahmad Rizki')
+const currentUser = ref(null)
+const selectedBorrowingDetail = ref(null)
+const showDetailModal = ref(false)
+
+onMounted(() => {
+  const userStr = localStorage.getItem('user')
+  if (userStr) {
+    currentUser.value = JSON.parse(userStr)
+  }
+})
+
+const myBorrowings = computed(() => {
+  if (!currentUser.value) return []
+  return getCustomerBorrowings(currentUser.value.id, borrowingRecords)
+})
+
+const getStatusLabel = (status) => {
+  return STATUS_INFO[status]?.label || status
+}
+
+const getStatusColor = (status) => {
+  return STATUS_INFO[status]?.color || '#999'
+}
+
+const handleNewBorrowRequest = (borrowing) => {
+  borrowingRecords.push(borrowing)
+}
+
+const selectBorrowingDetail = (borrowing) => {
+  selectedBorrowingDetail.value = borrowing
+  showDetailModal.value = true
+}
 
 const recommendedItems = ref([
-  { id: 1, icon: '💻', name: 'Laptop Gaming', desc: 'Gaming terbaru', price: '50000', stock: 5 },
-  { id: 2, icon: '📷', name: 'Kamera 4K', desc: 'Kamera profesional', price: '75000', stock: 3 },
-  { id: 3, icon: '🎙️', name: 'Mic Studio', desc: 'Mikrofon berkualitas', price: '35000', stock: 8 }
+  { id: 1, icon: '💻', name: 'Laptop Gaming', desc: 'Gaming terbaru', stock: 5 },
+  { id: 2, icon: '📷', name: 'Kamera 4K', desc: 'Kamera profesional', stock: 3 },
+  { id: 3, icon: '🎙️', name: 'Mic Studio', desc: 'Mikrofon berkualitas', stock: 8 }
 ])
 
 const allItems = ref([
-  { id: 1, icon: '💻', name: 'Laptop', desc: 'Berbagai model', price: '50000', stock: 10 },
-  { id: 2, icon: '📷', name: 'Kamera', desc: 'DSLR Professional', price: '75000', stock: 5 },
-  { id: 3, icon: '🎬', name: 'Proyektor', desc: 'HD 4K', price: '60000', stock: 8 },
-  { id: 4, icon: '🎙️', name: 'Microphone', desc: 'Studio Set', price: '35000', stock: 12 }
+  { id: 1, icon: '💻', name: 'Laptop', desc: 'Berbagai model', stock: 10 },
+  { id: 2, icon: '📷', name: 'Kamera', desc: 'DSLR Professional', stock: 5 },
+  { id: 3, icon: '🎬', name: 'Proyektor', desc: 'HD 4K', stock: 8 },
+  { id: 4, icon: '🎙️', name: 'Microphone', desc: 'Studio Set', stock: 12 }
 ])
+
+// Modal for borrowing details
+const handleCloseDetailModal = () => {
+  showDetailModal.value = false
+  selectedBorrowingDetail.value = null
+}
 </script>
 
 <style scoped>
@@ -501,5 +562,116 @@ const allItems = ref([
   margin: 10px 0 0 0;
   color: #666;
   font-size: 0.9rem;
+}
+
+/* Borrowing Item Card */
+.borrowing-item-card {
+  background: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
+}
+
+.borrowing-item-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.item-id {
+  font-weight: bold;
+  color: #333;
+  font-family: 'Courier New', monospace;
+}
+
+.item-status {
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.item-details {
+  margin-bottom: 12px;
+}
+
+.item-details p {
+  margin: 6px 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.item-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.btn-action {
+  padding: 6px 12px;
+  background: #0B7285;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-action:hover {
+  background: #089FB3;
+  transform: translateY(-1px);
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-dialog {
+  background: white;
+  border-radius: 10px;
+  padding: 24px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.modal-close:hover {
+  color: #333;
 }
 </style>

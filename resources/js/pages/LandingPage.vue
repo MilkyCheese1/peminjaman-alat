@@ -8,36 +8,36 @@
           🎓 TrustEquip
         </div>
 
-        <!-- Desktop Nav -->
-        <nav class="nav-desktop">
-          <a href="#hero" @click.prevent="scrollToSection(0)" :class="{ 'active': currentSection === 0 }">
-            Home
-          </a>
-          <a href="#products" @click.prevent="scrollToSection(1)" :class="{ 'active': currentSection === 1 }">
-            Produk
-          </a>
-          <a href="#about" @click.prevent="scrollToSection(2)" :class="{ 'active': currentSection === 2 }">
-            Tentang
-          </a>
-          <router-link to="/register" class="nav-link">
-            Mulai
-          </router-link>
-        </nav>
-
-        <!-- Right Controls -->
-        <div class="header-controls">
+        <!-- Dark Mode Toggle & Desktop Nav (Left controls) -->
+        <div class="header-left-controls">
           <!-- Dark Mode Toggle -->
           <button class="theme-toggle" @click="toggleDarkMode" :title="isDarkMode ? 'Light Mode' : 'Dark Mode'">
             {{ isDarkMode ? '☀️' : '🌙' }}
           </button>
 
-          <!-- Mobile Menu Toggle -->
-          <button class="mobile-menu-toggle" @click="isMobileMenuOpen = !isMobileMenuOpen" :class="{ 'active': isMobileMenuOpen }">
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
+          <!-- Desktop Nav -->
+          <nav class="nav-desktop">
+            <a href="#hero" @click.prevent="scrollToSection(0)" :class="{ 'active': currentSection === 0 }">
+              Home
+            </a>
+            <a href="#products" @click.prevent="scrollToSection(1)" :class="{ 'active': currentSection === 1 }">
+              Produk
+            </a>
+            <a href="#about" @click.prevent="scrollToSection(2)" :class="{ 'active': currentSection === 2 }">
+              Tentang
+            </a>
+            <router-link to="/register" class="nav-link nav-link-primary">
+              Mulai
+            </router-link>
+          </nav>
         </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" @click="isMobileMenuOpen = !isMobileMenuOpen" :class="{ 'active': isMobileMenuOpen }">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
 
       <!-- Mobile Menu -->
@@ -46,6 +46,9 @@
         <a href="#products" @click.prevent="scrollToSectionAndCloseMobile(1)">Produk</a>
         <a href="#about" @click.prevent="scrollToSectionAndCloseMobile(2)">Tentang</a>
         <router-link to="/register" class="mobile-link">Mulai</router-link>
+        <button class="mobile-theme-toggle" @click="toggleDarkMode">
+          {{ isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode' }}
+        </button>
       </nav>
     </header>
 
@@ -115,7 +118,6 @@
             <p>{{ product.description }}</p>
             <div class="product-info">
               <span class="stock">Stok: {{ product.stock }}</span>
-              <span class="price">Rp {{ product.price }}/hari</span>
             </div>
             <button class="product-button">Lihat Detail</button>
           </div>
@@ -235,43 +237,37 @@ const products = ref([
     icon: '💻',
     name: 'Laptop',
     description: 'Laptop gaming high-performance untuk project multimedia',
-    stock: 15,
-    price: '50.000'
+    stock: 15
   },
   {
     icon: '📊',
     name: 'Proyektor',
     description: 'Proyektor 4K untuk presentasi profesional',
-    stock: 8,
-    price: '75.000'
+    stock: 8
   },
   {
     icon: '📷',
     name: 'Kamera DSLR',
     description: 'Kamera profesional dengan lensa berkualitas',
-    stock: 12,
-    price: '100.000'
+    stock: 12
   },
   {
     icon: '🎙️',
     name: 'Microphone Set',
     description: 'Studio microphone dengan soundcard profesional',
-    stock: 6,
-    price: '45.000'
+    stock: 6
   },
   {
     icon: '🖥️',
     name: 'Monitor 4K',
     description: 'Monitor ultra-wide untuk editing dan design',
-    stock: 10,
-    price: '60.000'
+    stock: 10
   },
   {
     icon: '⌨️',
     name: 'Keyboard Mekanik',
     description: 'Keyboard RGB mechanical para gamer',
-    stock: 20,
-    price: '35.000'
+    stock: 20
   }
 ])
 

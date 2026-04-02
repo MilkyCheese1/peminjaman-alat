@@ -26,10 +26,10 @@
             </div>
           </div>
           <span class="user-name">{{ userName }}</span>
-          <button @click="handleLogout" class="logout-button">
-            Keluar
-          </button>
         </div>
+        <button @click="handleLogout" class="logout-button" title="Logout">
+          Keluar
+        </button>
       </div>
     </header>
 
@@ -227,6 +227,7 @@ const handleLogout = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 .logo {
@@ -245,19 +246,23 @@ const handleLogout = () => {
 }
 
 .logout-button {
-  background: rgba(255, 255, 255, 0.2);
+  background: #dc3545;
   color: white;
-  border: 2px solid white;
-  padding: 8px 20px;
+  border: none;
+  padding: 10px 24px;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 1rem;
   transition: all 0.3s ease;
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }
 
 .logout-button:hover {
-  background: white;
-  color: #0B7285;
+  background: #c82333;
+  transform: scale(1.05);
 }
 
 .dashboard-content {

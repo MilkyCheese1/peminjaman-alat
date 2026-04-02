@@ -63,9 +63,22 @@
 
     <!-- BORROWINGS TAB -->
     <section v-if="activeTab === 'borrowings'" class="tab-content">
-      <div class="section-card">
-        <h3>📋 Kelola Peminjaman</h3>
-        <p>Proses peminjaman dan pengembalian alat.</p>
+      <BorrowingApprovalDashboard 
+        @approve="handleApprove"
+        @reject="handleReject"
+      />
+      
+      <!-- Verify return modal -->
+      <div v-if="showReturnVerification && selectedBorrowingDetail" class="modal-overlay" @click.self="showReturnVerification = false">
+        <div class="modal-dialog">
+          <button class="modal-close" @click="showReturnVerification = false">✕</button>
+          <ReturnVerification 
+            :borrowing="selectedBorrowingDetail"
+            :isStaff="true"
+            @verify-staff="handleReturnVerify"
+            @cancel="showReturnVerification = false"
+          />
+        </div>
       </div>
     </section>
 
@@ -88,12 +101,34 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, ref } from 'vue'
+import BorrowingApprovalDashboard from '../borrowing/BorrowingApprovalDashboard.vue'
+import ReturnVerification from '../borrowing/ReturnVerification.vue'
+import { borrowingRecords } from '../../data/borrowingData.js'
 
 defineProps({
   activeTab: String,
   roleColor: String
 })
+
+const showReturnVerification = ref(false)
+const selectedBorrowingDetail = ref(null)
+
+const handleApprove = (borrowing) => {
+  const idx = borrowingRecords.findIndex(b => b.id === borrowing.id)
+  if (idx !== -1) borrowingRecords[idx] = borrowing
+}
+
+const handleReject = (borrowing) => {
+  const idx = borrowingRecords.findIndex(b => b.id === borrowing.id)
+  if (idx !== -1) borrowingRecords[idx] = borrowing
+}
+
+const handleReturnVerify = (borrowing) => {
+  const idx = borrowingRecords.findIndex(b => b.id === borrowing.id)
+  if (idx !== -1) borrowingRecords[idx] = borrowing
+  showReturnVerification.value = false
+}
 </script>
 
 <style scoped>
