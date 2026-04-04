@@ -12,28 +12,28 @@
           <div class="stat-icon">👥</div>
           <div class="stat-info">
             <p class="stat-label">Total Pengguna</p>
-            <p class="stat-value">1,523</p>
+            <p class="stat-value">{{ totalUsers }}</p>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon">📦</div>
           <div class="stat-info">
             <p class="stat-label">Total Alat</p>
-            <p class="stat-value">856</p>
+            <p class="stat-value">{{ totalEquipment }}</p>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon">🔄</div>
           <div class="stat-info">
             <p class="stat-label">Transaksi Aktif</p>
-            <p class="stat-value">456</p>
+            <p class="stat-value">{{ activeTransactions }}</p>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon">✅</div>
           <div class="stat-info">
             <p class="stat-label">Kesehatan Sistem</p>
-            <p class="stat-value">99.8%</p>
+            <p class="stat-value">{{ systemHealth }}%</p>
           </div>
         </div>
       </div>
@@ -135,6 +135,29 @@ defineProps({
 })
 
 const totalBorrowings = computed(() => borrowingRecords.length)
+
+const totalUsers = computed(() => {
+  // Estimate based on borrowing records (unique customers)
+  const users = new Set(borrowingRecords.map(b => b.customerId))
+  return Math.max(users.size, 50) // Minimum 50 for demo
+})
+
+const totalEquipment = computed(() => {
+  // Estimate based on unique equipment in system
+  const equipment = new Set(borrowingRecords.map(b => b.equipmentId))
+  return Math.max(equipment.size * 20, 100) // Rough estimate
+})
+
+const activeTransactions = computed(() => {
+  return borrowingRecords.filter(b => b.status === 'picked_up' || b.status === 'approved').length
+})
+
+const systemHealth = computed(() => {
+  // Calculate based on error rate
+  const errorRate = (overdueCount.value / Math.max(totalBorrowings.value, 1)) * 100
+  const health = Math.max(0, 100 - errorRate)
+  return health.toFixed(1)
+})
 
 const pendingApprovalsCount = computed(() => {
   return borrowingRecords.filter(b => b.status === 'applied').length

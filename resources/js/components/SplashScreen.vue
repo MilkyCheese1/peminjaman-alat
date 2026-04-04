@@ -60,11 +60,13 @@ const loadingTexts = [
 
 // Methods
 const onEnter = (el) => {
-  // Trigger animations on enter
+  // Animations triggered automatically via Vue's transition system
+  // Component animations are handled by startAnimation()
 }
 
 const onLeave = (el) => {
-  // Cleanup on leave
+  // Cleanup animations when leaving transition
+  // Reset to initial state for next mount
 }
 
 const startAnimation = () => {

@@ -534,6 +534,7 @@ body {
   align-items: center;
   gap: 10px;
   transition: all 0.3s ease;
+  will-change: transform, box-shadow;
 }
 
 .cta-button.primary {
@@ -591,6 +592,7 @@ body {
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease;
+  will-change: transform;
 }
 
 .card:hover {
@@ -727,6 +729,7 @@ body {
   opacity: 0;
   flex: 0 0 280px;
   min-width: 280px;
+  will-change: transform, box-shadow;
 }
 
 :root[data-theme="dark"] .product-card {

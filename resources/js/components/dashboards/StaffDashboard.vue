@@ -12,28 +12,28 @@
           <div class="stat-icon">📋</div>
           <div class="stat-info">
             <p class="stat-label">Pesanan Menunggu</p>
-            <p class="stat-value">8</p>
+            <p class="stat-value">{{ pendingOrders }}</p>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon">✅</div>
           <div class="stat-info">
             <p class="stat-label">Pesanan Proses</p>
-            <p class="stat-value">12</p>
+            <p class="stat-value">{{ inProcessOrders }}</p>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon">📦</div>
           <div class="stat-info">
             <p class="stat-label">Pengembalian Hari Ini</p>
-            <p class="stat-value">5</p>
+            <p class="stat-value">{{ todayReturns }}</p>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon">⭐</div>
           <div class="stat-info">
             <p class="stat-label">Rating Support</p>
-            <p class="stat-value">4.7/5</p>
+            <p class="stat-value">{{ supportRating }}/5</p>
           </div>
         </div>
       </div>
@@ -101,7 +101,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue'
+import { defineProps, ref, computed } from 'vue'
 import BorrowingApprovalDashboard from '../borrowing/BorrowingApprovalDashboard.vue'
 import ReturnVerification from '../borrowing/ReturnVerification.vue'
 import { borrowingRecords } from '../../data/borrowingData.js'
@@ -113,6 +113,27 @@ defineProps({
 
 const showReturnVerification = ref(false)
 const selectedBorrowingDetail = ref(null)
+
+const pendingOrders = computed(() => {
+  return borrowingRecords.filter(b => b.status === 'applied').length
+})
+
+const inProcessOrders = computed(() => {
+  return borrowingRecords.filter(b => b.status === 'approved' || b.status === 'ready_for_pickup').length
+})
+
+const todayReturns = computed(() => {
+  const today = new Date().toDateString()
+  return borrowingRecords.filter(b => {
+    const returnDate = new Date(b.plannedReturnDate).toDateString()
+    return returnDate === today && b.status === 'picked_up'
+  }).length
+})
+
+const supportRating = computed(() => {
+  // Default rating (would come from feedback system)
+  return (4.7).toFixed(1)
+})
 
 const handleApprove = (borrowing) => {
   const idx = borrowingRecords.findIndex(b => b.id === borrowing.id)

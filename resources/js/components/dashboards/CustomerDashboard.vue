@@ -12,28 +12,28 @@
           <div class="stat-icon">📦</div>
           <div class="stat-info">
             <p class="stat-label">Alat Sedang Dipinjam</p>
-            <p class="stat-value">3</p>
+            <p class="stat-value">{{ borrowingsCount }}</p>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon">✅</div>
           <div class="stat-info">
             <p class="stat-label">Tersedia</p>
-            <p class="stat-value">152</p>
+            <p class="stat-value">{{ availableItemsCount }}</p>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon">⏰</div>
           <div class="stat-info">
             <p class="stat-label">Pengembalian Tertunda</p>
-            <p class="stat-value">1</p>
+            <p class="stat-value">{{ overdueCount }}</p>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon">📊</div>
           <div class="stat-info">
             <p class="stat-label">Riwayat</p>
-            <p class="stat-value">24</p>
+            <p class="stat-value">{{ historyCount }}</p>
           </div>
         </div>
       </div>
@@ -215,6 +215,22 @@ onMounted(() => {
 const myBorrowings = computed(() => {
   if (!currentUser.value) return []
   return getCustomerBorrowings(currentUser.value.id, borrowingRecords)
+})
+
+const borrowingsCount = computed(() => {
+  return myBorrowings.value.filter(b => b.status === 'picked_up').length
+})
+
+const overdueCount = computed(() => {
+  return myBorrowings.value.filter(b => b.status === 'overdue').length
+})
+
+const historyCount = computed(() => {
+  return myBorrowings.value.filter(b => b.status === 'returned' || b.status === 'cancelled').length
+})
+
+const availableItemsCount = computed(() => {
+  return allItems.value.reduce((total, item) => total + item.stock, 0)
 })
 
 const getStatusLabel = (status) => {

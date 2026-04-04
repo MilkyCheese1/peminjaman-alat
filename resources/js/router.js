@@ -46,11 +46,24 @@ const router = createRouter({
 // Navigation guard untuk proteksi halaman yang memerlukan autentikasi
 // Updated: Use Vue Router 4 syntax (return instead of next callback)
 router.beforeEach((to, from) => {
-  const isAuthenticated = localStorage.getItem('user')
+  let isAuthenticated = false
+  
+  try {
+    const userStr = localStorage.getItem('user')
+    if (userStr) {
+      const userData = JSON.parse(userStr)
+      isAuthenticated = !!(userData && userData.id)
+    }
+  } catch (err) {
+    console.warn('Failed to parse user data from localStorage:', err)
+    isAuthenticated = false
+    localStorage.removeItem('user')
+  }
   
   if (to.meta.requiresAuth && !isAuthenticated) {
     return { name: 'Login' }
   }
+  
   // Explicitly allow navigation
   return true
 })
