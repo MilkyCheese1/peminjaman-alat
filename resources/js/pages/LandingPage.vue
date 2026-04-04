@@ -238,6 +238,7 @@ const isScrolled = ref(false)
 const showNavHint = ref(true)
 const carouselContainer = ref(null)
 const carouselPosition = ref(0)
+let carouselWheelTimeout = null
 
 // Computed
 const heroOpacity = computed(() => {
@@ -364,6 +365,9 @@ const scrollCarouselToIndex = (index) => {
 const handleCarouselWheel = (e) => {
   if (!carouselContainer.value) return
   
+  // Debounce wheel events to prevent rapid multiple scrolls
+  if (carouselWheelTimeout !== null) return
+  
   e.preventDefault()
   
   // Check if user is scrolling vertically significantly more than horizontally
@@ -372,11 +376,21 @@ const handleCarouselWheel = (e) => {
     if (Math.abs(e.deltaY) > 10) {
       const direction = e.deltaY > 0 ? 1 : -1
       scrollCarousel(direction)
+      
+      // Set debounce timeout (300ms prevents rapid scrolls)
+      carouselWheelTimeout = setTimeout(() => {
+        carouselWheelTimeout = null
+      }, 300)
     }
   } else {
     // Horizontal scroll
     const direction = e.deltaX > 0 ? 1 : -1
     scrollCarousel(direction)
+    
+    // Set debounce timeout
+    carouselWheelTimeout = setTimeout(() => {
+      carouselWheelTimeout = null
+    }, 300)
   }
 }
 
@@ -431,5 +445,10 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
   window.removeEventListener('keydown', handleKeydown)
+  
+  // Cleanup carousel wheel debounce timeout
+  if (carouselWheelTimeout !== null) {
+    clearTimeout(carouselWheelTimeout)
+  }
 })
 </script>

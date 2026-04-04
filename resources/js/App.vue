@@ -37,7 +37,7 @@ router.afterEach((to, from, failure) => {
   // Hide loading screen after navigation completes
   if (failure) {
     isLoading.value = false
-    loadingMessage.value = 'error loading page'
+    loadingMessage.value = 'Gagal memuat halaman'
     return
   }
   setTimeout(() => {

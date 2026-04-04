@@ -315,12 +315,6 @@ body {
   background: var(--primary-light);
 }
 
-@media (max-width: 768px) {
-  .mobile-theme-toggle {
-    display: block;
-  }
-}
-
 :root[data-theme="dark"] .mobile-theme-toggle {
   background: var(--primary);
   color: white;
@@ -1213,6 +1207,10 @@ body {
 
   .carousel-nav {
     gap: 15px;
+  }
+
+  .mobile-theme-toggle {
+    display: block;
   }
 
   .cta-buttons {
