@@ -111,41 +111,59 @@
           <p>Berbagai alat berkualitas tinggi siap untuk memenuhi kebutuhan Anda</p>
         </div>
 
-        <div class="products-grid">
-          <div class="product-card" v-for="(product, idx) in products" :key="idx" :style="{ 'animation-delay': `${idx * 0.1}s` }">
-            <div class="product-image">{{ product.icon }}</div>
-            <h3>{{ product.name }}</h3>
-            <p>{{ product.description }}</p>
-            <div class="product-info">
-              <span class="stock">Stok: {{ product.stock }}</span>
+        <div class="carousel-container" ref="carouselContainer" @wheel="handleCarouselWheel">
+          <div class="products-carousel">
+            <div class="product-card" v-for="(product, idx) in products" :key="idx" :style="{ 'animation-delay': `${idx * 0.1}s` }">
+              <div class="product-image">{{ product.icon }}</div>
+              <h3>{{ product.name }}</h3>
+              <p>{{ product.description }}</p>
+              <div class="product-info">
+                <span class="stock">Stok: {{ product.stock }}</span>
+              </div>
+              <button class="product-button">Lihat Detail</button>
             </div>
-            <button class="product-button">Lihat Detail</button>
           </div>
+        </div>
+
+        <div class="carousel-nav">
+          <button class="carousel-arrow left" @click="scrollCarousel(-1)" :disabled="carouselPosition <= 0">←</button>
+          <div class="carousel-dots">
+            <span 
+              v-for="(_, idx) in products" 
+              :key="idx" 
+              class="dot"
+              :class="{ 'active': idx === carouselPosition }"
+              @click="scrollCarouselToIndex(idx)"
+            ></span>
+          </div>
+          <button class="carousel-arrow right" @click="scrollCarousel(1)" :disabled="carouselPosition >= products.length - 1">→</button>
         </div>
       </section>
 
       <!-- SECTION 3: CTA -->
       <section class="section cta-section" :class="{ 'active': currentSection === 2 }">
-        <div class="cta-content">
-          <h2>Siap Memulai?</h2>
-          <p>Bergabunglah dengan ribuan pengguna yang telah merasakan kemudahan berbagi alat</p>
-          
-          <div class="cta-features">
-            <div class="feature" v-for="feature in ctaFeatures" :key="feature">
-              <span class="check">✓</span>
-              <span>{{ feature }}</span>
+        <div class="cta-wrapper">
+          <div class="cta-content">
+            <h2>Siap Memulai?</h2>
+            <p>Bergabunglah dengan ribuan pengguna yang telah merasakan kemudahan berbagi alat</p>
+            
+            <div class="cta-features">
+              <div class="feature" v-for="feature in ctaFeatures" :key="feature">
+                <span class="check">✓</span>
+                <span>{{ feature }}</span>
+              </div>
+            </div>
+
+            <div class="cta-buttons">
+              <button class="cta-button primary large">Daftar Sebagai Peminjam</button>
+              <button class="cta-button secondary large">Daftar Sebagai Pemilik</button>
             </div>
           </div>
 
-          <div class="cta-buttons">
-            <button class="cta-button primary large">Daftar Sebagai Peminjam</button>
-            <button class="cta-button secondary large">Daftar Sebagai Pemilik</button>
-          </div>
-        </div>
-
-        <div class="cta-image">
-          <div class="cta-illustration">
-            📦
+          <div class="cta-image">
+            <div class="cta-illustration">
+              📦
+            </div>
           </div>
         </div>
       </section>
@@ -219,6 +237,8 @@ const scrollProgress = ref(0)
 const parallaxOffset = ref(0)
 const isScrolled = ref(false)
 const showNavHint = ref(true)
+const carouselContainer = ref(null)
+const carouselPosition = ref(0)
 
 // Computed
 const heroOpacity = computed(() => {
@@ -315,9 +335,63 @@ const handleScroll = () => {
   })
 }
 
+const scrollCarousel = (direction) => {
+  const newPosition = carouselPosition.value + direction
+  if (newPosition >= 0 && newPosition < products.value.length) {
+    carouselPosition.value = newPosition
+    if (carouselContainer.value) {
+      const cardWidth = carouselContainer.value.querySelector('.product-card').offsetWidth
+      const gap = 30
+      carouselContainer.value.scrollLeft = newPosition * (cardWidth + gap)
+    }
+  }
+}
+
+const scrollCarouselToIndex = (index) => {
+  carouselPosition.value = index
+  if (carouselContainer.value) {
+    const cardWidth = carouselContainer.value.querySelector('.product-card').offsetWidth
+    const gap = 30
+    carouselContainer.value.scrollLeft = index * (cardWidth + gap)
+  }
+}
+
+const handleCarouselWheel = (e) => {
+  if (!carouselContainer.value) return
+  
+  e.preventDefault()
+  
+  // Check if user is scrolling vertically significantly more than horizontally
+  if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+    // Only prevent default if deltaY is significant
+    if (Math.abs(e.deltaY) > 10) {
+      const direction = e.deltaY > 0 ? 1 : -1
+      scrollCarousel(direction)
+    }
+  } else {
+    // Horizontal scroll
+    const direction = e.deltaX > 0 ? 1 : -1
+    scrollCarousel(direction)
+  }
+}
+
 const handleKeydown = (e) => {
   const maxSection = 3 // Footer is the last section (index 3)
   
+  // Handle carousel navigation when in products section
+  if (currentSection.value === 1) {
+    if (e.key === 'ArrowRight') {
+      e.preventDefault()
+      scrollCarousel(1)
+      return
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault()
+      scrollCarousel(-1)
+      return
+    }
+  }
+  
+  // Handle section navigation
   if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
     e.preventDefault()
     if (currentSection.value < maxSection) {

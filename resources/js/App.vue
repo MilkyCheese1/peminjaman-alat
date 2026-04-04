@@ -10,33 +10,34 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
 import SplashScreen from './components/SplashScreen.vue'
 import LoadingScreen from './components/LoadingScreen.vue'
 
 // State
 const isLoading = ref(false)
-const loadingMessage = ref('Memproses...')
+const loadingMessage = ref('Memuat...')
 
 // Router
 const router = useRouter()
 
 // Global loading handler for route transitions
-router.beforeEach((to, from, next) => {
-  // Show loading screen on navigation
-  if (to.name !== from.name) {
+router.beforeEach((to, from) => {
+  // Show loading screen on navigation (except on initial load)
+  if (from.name !== undefined && to.name !== from.name) {
     isLoading.value = true
     loadingMessage.value = 'Memuat halaman...'
   }
-  next()
+  // Return undefined to allow navigation
+  return true
 })
 
 router.afterEach(() => {
   // Hide loading screen after navigation completes
   setTimeout(() => {
     isLoading.value = false
-  }, 300)
+  }, 500)
 })
 </script>
 
