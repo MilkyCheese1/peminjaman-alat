@@ -87,7 +87,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { equipmentList, createBorrowingRequest } from '../../data/borrowingData.js'
 
 const props = defineProps({
@@ -221,10 +221,10 @@ const resetForm = () => {
   validationError.value = ''
 }
 
-// Initialize form
-if (showForm.value) {
+// Initialize form with default return date on component mount
+onMounted(() => {
   form.value.returnDate = getDefaultReturnDate()
-}
+})
 </script>
 
 <style scoped>

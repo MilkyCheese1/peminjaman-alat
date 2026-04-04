@@ -49,9 +49,10 @@ router.beforeEach((to, from) => {
   const isAuthenticated = localStorage.getItem('user')
   
   if (to.meta.requiresAuth && !isAuthenticated) {
-    return '/login'
+    return { name: 'Login' }
   }
-  // Implicitly return true if no redirect needed
+  // Explicitly allow navigation
+  return true
 })
 
 export default router

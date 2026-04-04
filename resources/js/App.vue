@@ -29,15 +29,20 @@ router.beforeEach((to, from) => {
     isLoading.value = true
     loadingMessage.value = 'Memuat halaman...'
   }
-  // Return undefined to allow navigation
+  // Explicitly allow navigation
   return true
 })
 
-router.afterEach(() => {
+router.afterEach((to, from, failure) => {
   // Hide loading screen after navigation completes
+  if (failure) {
+    isLoading.value = false
+    loadingMessage.value = 'error loading page'
+    return
+  }
   setTimeout(() => {
     isLoading.value = false
-  }, 500)
+  }, 300)
 })
 </script>
 

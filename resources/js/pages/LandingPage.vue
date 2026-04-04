@@ -227,7 +227,6 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
 
 // State
 const isDarkMode = ref(false)
@@ -340,9 +339,12 @@ const scrollCarousel = (direction) => {
   if (newPosition >= 0 && newPosition < products.value.length) {
     carouselPosition.value = newPosition
     if (carouselContainer.value) {
-      const cardWidth = carouselContainer.value.querySelector('.product-card').offsetWidth
-      const gap = 30
-      carouselContainer.value.scrollLeft = newPosition * (cardWidth + gap)
+      const cardElement = carouselContainer.value.querySelector('.product-card')
+      if (cardElement) {
+        const cardWidth = cardElement.offsetWidth
+        const gap = 30
+        carouselContainer.value.scrollLeft = newPosition * (cardWidth + gap)
+      }
     }
   }
 }
@@ -350,9 +352,12 @@ const scrollCarousel = (direction) => {
 const scrollCarouselToIndex = (index) => {
   carouselPosition.value = index
   if (carouselContainer.value) {
-    const cardWidth = carouselContainer.value.querySelector('.product-card').offsetWidth
-    const gap = 30
-    carouselContainer.value.scrollLeft = index * (cardWidth + gap)
+    const cardElement = carouselContainer.value.querySelector('.product-card')
+    if (cardElement) {
+      const cardWidth = cardElement.offsetWidth
+      const gap = 30
+      carouselContainer.value.scrollLeft = index * (cardWidth + gap)
+    }
   }
 }
 
@@ -391,13 +396,13 @@ const handleKeydown = (e) => {
     }
   }
   
-  // Handle section navigation
-  if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+  // Handle section navigation - Up/Down for sections, not left/right
+  if (e.key === 'ArrowDown') {
     e.preventDefault()
     if (currentSection.value < maxSection) {
       scrollToSection(currentSection.value + 1)
     }
-  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+  } else if (e.key === 'ArrowUp') {
     e.preventDefault()
     if (currentSection.value > 0) {
       scrollToSection(currentSection.value - 1)

@@ -147,7 +147,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { verifyPickup } from '../../data/borrowingData.js'
-import { formatDate, isValidPickupCode } from '../../data/borrowingStatuses.js'
+import { formatDate, isValidPickupCode, STATUS_INFO } from '../../data/borrowingStatuses.js'
 
 const props = defineProps({
   borrowing: {
