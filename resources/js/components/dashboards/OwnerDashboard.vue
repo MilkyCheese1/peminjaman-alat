@@ -23,10 +23,10 @@
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon">💰</div>
+          <div class="stat-icon">✅</div>
           <div class="stat-info">
-            <p class="stat-label">Pendapatan Bulan Ini</p>
-            <p class="stat-value">Rp 1.2M</p>
+            <p class="stat-label">Peralatan Tersedia</p>
+            <p class="stat-value">33</p>
           </div>
         </div>
         <div class="stat-card">
@@ -63,35 +63,30 @@
 
     <!-- MY ITEMS TAB -->
     <section v-if="activeTab === 'my-items'" class="tab-content">
-      <div class="section-card">
-        <h3>🔧 Alat Saya</h3>
-        <div class="items-list">
-          <div class="item-row">
-            <div class="item-name">💻 Laptop Dell XPS</div>
-            <div class="item-status"><span class="badge" style="background: #10b98126; color: #10b981;">Tersedia</span></div>
-            <div class="item-actions">
-              <button class="btn-small">Edit</button>
-              <button class="btn-small">Hapus</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <EquipmentTable :canEdit="false" />
     </section>
 
     <!-- BORROWINGS TAB -->
     <section v-if="activeTab === 'borrowings'" class="tab-content">
-      <div class="section-card">
-        <h3>📋 Riwayat Peminjaman</h3>
-        <p>Lihat semua pemberi peminjam dan riwayat transaksi.</p>
-      </div>
+      <BorrowingTable :canApprove="false" :canVerifyReturn="false" />
     </section>
 
     <!-- REPORTS TAB -->
     <section v-if="activeTab === 'reports'" class="tab-content">
       <div class="section-card">
         <h3>📊 Laporan</h3>
-        <p>Analisis peminjaman, pendapatan, dan rating.</p>
+        <p>Analisis peminjaman, penggunaan alat, dan statistik pengguna.</p>
       </div>
+    </section>
+
+    <!-- PROFILE TAB -->
+    <section v-if="activeTab === 'profile'" class="tab-content">
+      <ProfileCard />
+    </section>
+
+    <!-- HELP TAB -->
+    <section v-if="activeTab === 'help'" class="tab-content">
+      <HelpCenter />
     </section>
   </div>
 </template>
@@ -99,6 +94,10 @@
 <script setup>
 import { defineProps } from 'vue'
 import { ref } from 'vue'
+import EquipmentTable from '../EquipmentTable.vue'
+import BorrowingTable from '../BorrowingTable.vue'
+import ProfileCard from '../ProfileCard.vue'
+import HelpCenter from '../HelpCenter.vue'
 
 defineProps({
   activeTab: String,

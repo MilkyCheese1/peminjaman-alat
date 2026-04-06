@@ -60,11 +60,11 @@ class User extends Authenticatable
     }
 
     /**
-     * Relationship: User has many Peminjaman
+     * Relationship: User has many Borrowings
      */
-    public function peminjamans()
+    public function borrowings()
     {
-        return $this->hasMany(Peminjaman::class, 'id_user', 'id_user');
+        return $this->hasMany(Borrowing::class, 'id_user', 'id_user');
     }
 
     /**
@@ -73,14 +73,6 @@ class User extends Authenticatable
     public function activityLogs()
     {
         return $this->hasMany(ActivityLog::class, 'id_user', 'id_user');
-    }
-
-    /**
-     * Relationship: User has many approved peminjamans
-     */
-    public function approvedPeminjamans()
-    {
-        return $this->hasMany(Peminjaman::class, 'approved_by', 'id_user');
     }
 
     /**

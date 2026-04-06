@@ -85,18 +85,22 @@
 
     <!-- USERS TAB -->
     <section v-if="activeTab === 'users'" class="tab-content">
-      <div class="section-card">
-        <h3>👥 Manajemen Pengguna</h3>
-        <p>Kelola pengguna sistem, role, dan permission.</p>
-      </div>
+      <UsersTable />
     </section>
 
     <!-- ITEMS TAB -->
     <section v-if="activeTab === 'items'" class="tab-content">
-      <div class="section-card">
-        <h3>📦 Manajemen Alat</h3>
-        <p>Kelola semua alat dalam sistem.</p>
-      </div>
+      <EquipmentTable :canEdit="true" />
+    </section>
+
+    <!-- BORROWINGS TAB -->
+    <section v-if="activeTab === 'borrowings'" class="tab-content">
+      <BorrowingTable :canApprove="true" :canVerifyReturn="true" />
+    </section>
+
+    <!-- RETURNS TAB -->
+    <section v-if="activeTab === 'returns'" class="tab-content">
+      <ReturnsTable />
     </section>
 
     <!-- REPORTS TAB -->
@@ -104,6 +108,14 @@
       <div class="section-card">
         <h3>📊 Laporan Sistem</h3>
         <p>Analisis laporan lengkap aktivitas sistem.</p>
+      </div>
+    </section>
+
+    <!-- ACTIVITY LOGS TAB -->
+    <section v-if="activeTab === 'activity-logs'" class="tab-content">
+      <div class="section-card">
+        <h3>📝 Log Aktivitas</h3>
+        <p>Lihat log aktivitas sistem dan audit trail.</p>
       </div>
     </section>
 
@@ -115,12 +127,9 @@
       </div>
     </section>
 
-    <!-- LOGS TAB -->
-    <section v-if="activeTab === 'logs'" class="tab-content">
-      <div class="section-card">
-        <h3>📝 Log Sistem</h3>
-        <p>Lihat log aktivitas dan error sistem.</p>
-      </div>
+    <!-- HELP TAB -->
+    <section v-if="activeTab === 'help'" class="tab-content">
+      <HelpCenter />
     </section>
   </div>
 </template>
@@ -128,6 +137,11 @@
 <script setup>
 import { defineProps, computed } from 'vue'
 import { borrowingRecords } from '../../data/borrowingData.js'
+import UsersTable from '../UsersTable.vue'
+import EquipmentTable from '../EquipmentTable.vue'
+import BorrowingTable from '../BorrowingTable.vue'
+import ReturnsTable from '../ReturnsTable.vue'
+import HelpCenter from '../HelpCenter.vue'
 
 defineProps({
   activeTab: String,

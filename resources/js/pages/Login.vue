@@ -105,7 +105,6 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { validateUser } from '../data/dummyUsers.js'
 
 const router = useRouter()
 const route = useRoute()
@@ -125,6 +124,9 @@ const errors = reactive({
   password: '',
   general: ''
 })
+
+// Get API base URL from environment
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
 
 // Check for email query parameter on mount
 onMounted(() => {
@@ -161,23 +163,33 @@ const handleLogin = async () => {
   isLoading.value = true
   
   try {
-    // Simulasi API call
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    // Validasi user dari dummy users
-    const validation = validateUser(form.email, form.password)
-    
-    if (!validation.success) {
-      errors.general = validation.message
+    // Call API login endpoint
+    const response = await fetch(`${API_BASE_URL}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        email: form.email,
+        password: form.password
+      })
+    })
+
+    const data = await response.json()
+
+    if (!response.ok || !data.success) {
+      errors.general = data.message || 'Login gagal'
       isLoading.value = false
       return
     }
 
-    const user = validation.user
+    const user = data.data
     successMessage.value = `Selamat datang, ${user.fullname}!`
     
-    // Simpan ke localStorage dengan informasi lengkap
+    // Save to localStorage with complete information
     localStorage.setItem('user', JSON.stringify({
+      id_user: user.id,
       id: user.id,
       fullname: user.fullname,
       email: user.email,
@@ -191,12 +203,13 @@ const handleLogin = async () => {
       rememberMe: form.rememberMe
     }))
     
-    // Redirect ke dashboard setelah 1 detik
+    // Redirect to dashboard after 1 second
     setTimeout(() => {
       router.push('/dashboard')
     }, 1000)
   } catch (error) {
-    errors.general = 'Login gagal. Coba lagi nanti.'
+    console.error('Login error:', error)
+    errors.general = 'Login gagal. Periksa koneksi internet Anda.'
   } finally {
     isLoading.value = false
   }

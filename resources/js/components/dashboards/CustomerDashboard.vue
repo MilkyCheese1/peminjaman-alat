@@ -79,90 +79,24 @@
       </section>
     </section>
 
-    <!-- BROWSE TAB -->
-    <section v-if="activeTab === 'browse'" class="tab-content">
-      <div class="section-card">
-        <h3>🛍️ Jelajahi Alat</h3>
-        <div class="filters">
-          <input type="text" placeholder="Cari alat...">
-          <select>
-            <option>Semua Kategori</option>
-            <option>Elektronik</option>
-            <option>Peralatan</option>
-          </select>
-        </div>
-        <div class="items-grid">
-          <div v-for="item in allItems" :key="item.id" class="item-card">
-            <div class="item-icon">{{ item.icon }}</div>
-            <h4>{{ item.name }}</h4>
-            <p>{{ item.desc }}</p>
-            <div class="item-stock">Stok: {{ item.stock }}</div>
-            <div class="item-footer">
-              <button class="btn-borrow">Pinjam</button>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- EXPLORE TAB -->
+    <section v-if="activeTab === 'explore'" class="tab-content">
+      <EquipmentBrowseComponent />
     </section>
 
     <!-- MY BORROWINGS TAB -->
     <section v-if="activeTab === 'my-borrowings'" class="tab-content">
-      <BorrowingForm 
-        :customer="currentUser" 
-        @submit="handleNewBorrowRequest"
-      />
-      
-      <div class="section-card" v-if="myBorrowings.length > 0">
-        <h3>📦 Riwayat Peminjaman Saya</h3>
-        <div v-for="bor in myBorrowings" :key="bor.id" class="borrowing-item-card">
-          <div class="item-header">
-            <div class="item-id">{{ bor.id }}</div>
-            <div class="item-status" :style="`background: ${getStatusColor(bor.status)}`">
-              {{ getStatusLabel(bor.status) }}
-            </div>
-          </div>
-          <div class="item-details">
-            <p><strong>Alat:</strong> {{ bor.equipmentName }}</p>
-            <p><strong>Tanggal:</strong> {{ formatDate(bor.borrowDate) }} - {{ formatDate(bor.plannedReturnDate) }}</p>
-            <p v-if="bor.fineAmount > 0"><strong>Denda:</strong> Rp {{ bor.fineAmount.toLocaleString('id-ID') }}</p>
-          </div>
-          <div class="item-actions">
-            <button v-if="bor.status === 'ready_for_pickup'" @click="selectBorrowingDetail(bor)" class="btn-action">✅ Ambil Kode</button>
-            <button v-if="bor.status === 'picked_up'" @click="selectBorrowingDetail(bor)" class="btn-action">📋 Kembalikan</button>
-            <button v-else @click="selectBorrowingDetail(bor)" class="btn-action">👀 Detail</button>
-          </div>
-        </div>
-      </div>
+      <BorrowingTable :canApprove="false" :canVerifyReturn="false" :canCreate="true" :currentUserId="currentUser?.id" />
     </section>
 
     <!-- PROFILE TAB -->
     <section v-if="activeTab === 'profile'" class="tab-content">
-      <div class="profile-card">
-        <h3>👤 Profil Saya</h3>
-        <div class="info-group">
-          <p><strong>Nama:</strong> Ahmad Rizki</p>
-          <p><strong>Email:</strong> ahmad@school.id</p>
-          <p><strong>Sekolah:</strong> SMA Negeri 1</p>
-          <p><strong>Rating:</strong> ⭐ 4.8/5</p>
-        </div>
-      </div>
+      <ProfileCard />
     </section>
 
     <!-- HELP TAB -->
     <section v-if="activeTab === 'help'" class="tab-content">
-      <div class="section-card">
-        <h3>❓ Bantuan</h3>
-        <div class="faq-list">
-          <details>
-            <summary>Bagaimana cara meminjam alat?</summary>
-            <p>Klik tombol "Pinjam" pada alat yang ingin dipinjam, kemudian lengkapi formulir peminjaman.</p>
-          </details>
-          <details>
-            <summary>Berapa lama durasi peminjaman?</summary>
-            <p>Durasi standar 3-7 hari tergantung jenis alat, dan dapat diperpanjang jika tersedia.</p>
-          </details>
-        </div>
-      </div>
+      <HelpCenter />
     </section>
 
     <!-- Detail Modal -->
@@ -189,6 +123,12 @@
 
 <script setup>
 import { defineProps, ref, computed, onMounted } from 'vue'
+import BorrowingTable from '../BorrowingTable.vue'
+import EquipmentTable from '../EquipmentTable.vue'
+import EquipmentBrowseComponent from '../EquipmentBrowseComponent.vue'
+
+import ProfileCard from '../ProfileCard.vue'
+import HelpCenter from '../HelpCenter.vue'
 import BorrowingForm from '../borrowing/BorrowingForm.vue'
 import PickupVerification from '../borrowing/PickupVerification.vue'
 import ReturnVerification from '../borrowing/ReturnVerification.vue'

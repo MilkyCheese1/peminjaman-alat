@@ -7,13 +7,17 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('role', 32)->default('customer')->after('password');
+            if (!Schema::hasColumn('users', 'role')) {
+                $table->string('role', 32)->default('customer')->after('password');
+            }
         });
     }
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
+            if (Schema::hasColumn('users', 'role')) {
+                $table->dropColumn('role');
+            }
         });
     }
 };

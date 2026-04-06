@@ -151,6 +151,7 @@ const allowedTabs = computed(() => {
   const tabs = getAllowedTabs(userRole.value)
   const tabsData = {
     overview: { id: 'overview', label: 'Beranda', icon: '🏠' },
+    explore: { id: 'explore', label: 'Jelajahi Alat', icon: '🛍️' },
     browse: { id: 'browse', label: 'Jelajahi Alat', icon: '🛍️' },
     'my-borrowings': { id: 'my-borrowings', label: 'Peminjaman Saya', icon: '📦' },
     'my-items': { id: 'my-items', label: 'Alat Saya', icon: '🔧' },
@@ -158,9 +159,13 @@ const allowedTabs = computed(() => {
     orders: { id: 'orders', label: 'Pesanan', icon: '🛒' },
     users: { id: 'users', label: 'Pengguna', icon: '👥' },
     items: { id: 'items', label: 'Alat', icon: '📦' },
+    returns: { id: 'returns', label: 'Pengembalian', icon: '↩️' },
     reports: { id: 'reports', label: 'Laporan', icon: '📊' },
     settings: { id: 'settings', label: 'Pengaturan', icon: '⚙️' },
-    logs: { id: 'logs', label: 'Log Sistem', icon: '📝' },
+    'activity-logs': { id: 'activity-logs', label: 'Log Aktivitas', icon: '📝' },
+    approvals: { id: 'approvals', label: 'Persetujuan', icon: '✓' },
+    verifications: { id: 'verifications', label: 'Verifikasi', icon: '🔍' },
+    recommendations: { id: 'recommendations', label: 'Rekomendasi', icon: '⭐' },
     profile: { id: 'profile', label: 'Profil', icon: '👤' },
     help: { id: 'help', label: 'Bantuan', icon: '❓' }
   }

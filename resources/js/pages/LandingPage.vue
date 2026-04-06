@@ -258,7 +258,7 @@ const heroOpacity = computed(() => {
 const heroCards = ref([
   { icon: '⚡', title: 'Cepat & Mudah' },
   { icon: '🔒', title: 'Aman Terpercaya' },
-  { icon: '💰', title: 'Harga Terjangkau' }
+  { icon: '✅', title: 'Efisien & Terpercaya' }
 ])
 
 const products = ref([

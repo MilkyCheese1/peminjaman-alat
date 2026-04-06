@@ -63,31 +63,22 @@
 
     <!-- BORROWINGS TAB -->
     <section v-if="activeTab === 'borrowings'" class="tab-content">
-      <BorrowingApprovalDashboard 
-        @approve="handleApprove"
-        @reject="handleReject"
-      />
-      
-      <!-- Verify return modal -->
-      <div v-if="showReturnVerification && selectedBorrowingDetail" class="modal-overlay" @click.self="showReturnVerification = false">
-        <div class="modal-dialog">
-          <button class="modal-close" @click="showReturnVerification = false">✕</button>
-          <ReturnVerification 
-            :borrowing="selectedBorrowingDetail"
-            :isStaff="true"
-            @verify-staff="handleReturnVerify"
-            @cancel="showReturnVerification = false"
-          />
-        </div>
-      </div>
+      <BorrowingTable :canApprove="true" :canVerifyReturn="true" />
     </section>
 
-    <!-- ORDERS TAB -->
+    <!-- APPROVALS TAB -->
+    <section v-if="activeTab === 'approvals'" class="tab-content">
+      <StaffApprovalsComponent />
+    </section>
+
+    <!-- VERIFICATIONS TAB -->
+    <section v-if="activeTab === 'verifications'" class="tab-content">
+      <StaffVerificationsComponent />
+    </section>
+
+    <!-- ORDERS TAB (EQUIPMENT) -->
     <section v-if="activeTab === 'orders'" class="tab-content">
-      <div class="section-card">
-        <h3>🛒 Pesanan</h3>
-        <p>Kelola semua pesanan dari pengguna.</p>
-      </div>
+      <EquipmentTable :canEdit="false" />
     </section>
 
     <!-- REPORTS TAB -->
@@ -97,11 +88,27 @@
         <p>Laporan peminjaman dan aktivitas.</p>
       </div>
     </section>
+
+    <!-- PROFILE TAB -->
+    <section v-if="activeTab === 'profile'" class="tab-content">
+      <ProfileCard />
+    </section>
+
+    <!-- HELP TAB -->
+    <section v-if="activeTab === 'help'" class="tab-content">
+      <HelpCenter />
+    </section>
   </div>
 </template>
 
 <script setup>
 import { defineProps, ref, computed } from 'vue'
+import BorrowingTable from '../BorrowingTable.vue'
+import EquipmentTable from '../EquipmentTable.vue'
+import StaffApprovalsComponent from '../StaffApprovalsComponent.vue'
+import StaffVerificationsComponent from '../StaffVerificationsComponent.vue'
+import ProfileCard from '../ProfileCard.vue'
+import HelpCenter from '../HelpCenter.vue'
 import BorrowingApprovalDashboard from '../borrowing/BorrowingApprovalDashboard.vue'
 import ReturnVerification from '../borrowing/ReturnVerification.vue'
 import { borrowingRecords } from '../../data/borrowingData.js'

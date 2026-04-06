@@ -180,6 +180,9 @@ const errors = reactive({
   general: ''
 })
 
+// Get API base URL from environment
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
+
 const validateForm = () => {
   errors.fullName = ''
   errors.email = ''
@@ -225,24 +228,45 @@ const handleRegister = async () => {
   isLoading.value = true
   
   try {
-    // Simulasi API call
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
+    // Call API register endpoint
+    const response = await fetch(`${API_BASE_URL}/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        fullName: form.fullName,
+        email: form.email,
+        password: form.password,
+        phone: form.phone || null
+      })
+    })
+
+    const data = await response.json()
+
+    if (!response.ok || !data.success) {
+      errors.general = data.message || 'Registrasi gagal'
+      isLoading.value = false
+      return
+    }
+
     successMessage.value = 'Registrasi berhasil! Silakan login untuk melanjutkan...'
     
-    // Simpan ke localStorage
+    // Save to localStorage for reference
     localStorage.setItem('newUser', JSON.stringify({
       fullName: form.fullName,
       email: form.email,
       phone: form.phone
     }))
     
-    // Redirect ke login setelah 2 detik
+    // Redirect to login after 2 seconds
     setTimeout(() => {
       router.push('/login')
     }, 2000)
   } catch (error) {
-    errors.general = 'Registrasi gagal. Coba lagi nanti.'
+    console.error('Registration error:', error)
+    errors.general = 'Registrasi gagal. Periksa koneksi internet Anda.'
   } finally {
     isLoading.value = false
   }

@@ -4,6 +4,7 @@ import Login from './pages/Login.vue'
 import Register from './pages/Register.vue'
 import Dashboard from './pages/DashboardRoleAware.vue'
 import DemoUsers from './pages/DemoUsers.vue'
+import TermsAndConditions from './pages/TermsAndConditions.vue'
 
 const routes = [
   {
@@ -31,6 +32,11 @@ const routes = [
     path: '/demo-users',
     name: 'DemoUsers',
     component: DemoUsers
+  },
+  {
+    path: '/terms',
+    name: 'TermsAndConditions',
+    component: TermsAndConditions
   },
   {
     path: '/forgot-password',
