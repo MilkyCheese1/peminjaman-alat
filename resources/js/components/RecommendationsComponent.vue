@@ -15,7 +15,7 @@
         <div v-else class="rec-grid">
           <div v-for="item in historyBasedRecs" :key="item.id_equipment" class="rec-card">
             <div class="rec-image">
-              <img :src="`/images/equipment/${item.foto || 'placeholder.jpg'}`" :alt="item.nama_alat" />
+              <img v-if="item.gambar" :src="item.gambar" :alt="item.nama_alat" />
             </div>
             <div class="rec-info">
               <h4>{{ item.nama_alat }}</h4>
@@ -39,7 +39,7 @@
         <div class="rec-grid">
           <div v-for="item in popularItems" :key="item.id_equipment" class="rec-card">
             <div class="rec-image">
-              <img :src="`/images/equipment/${item.foto || 'placeholder.jpg'}`" :alt="item.nama_alat" />
+              <img v-if="item.gambar" :src="item.gambar" :alt="item.nama_alat" />
               <div class="popularity-badge">{{ item.borrow_count }} dipinjam</div>
             </div>
             <div class="rec-info">
@@ -63,7 +63,7 @@
         <div class="rec-grid">
           <div v-for="item in newItems" :key="item.id_equipment" class="rec-card">
             <div class="rec-image">
-              <img :src="`/images/equipment/${item.foto || 'placeholder.jpg'}`" :alt="item.nama_alat" />
+              <img v-if="item.gambar" :src="item.gambar" :alt="item.nama_alat" />
               <div class="new-badge">BARU</div>
             </div>
             <div class="rec-info">

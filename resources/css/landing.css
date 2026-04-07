@@ -759,6 +759,24 @@ body {
 .product-image {
   font-size: 3rem;
   margin-bottom: 15px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.product-image .placeholder-image {
+  font-size: 3rem;
 }
 
 .product-card h3 {
@@ -786,40 +804,16 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 10px;
   max-width: 1200px;
   margin: 0 auto;
-}
-
-.carousel-arrow {
-  background: var(--primary);
-  color: white;
-  border: none;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.carousel-arrow:hover:not(:disabled) {
-  background: var(--primary-light);
-  transform: scale(1.1);
-}
-
-.carousel-arrow:disabled {
-  background: rgba(0, 0, 0, 0.2);
-  cursor: not-allowed;
-  opacity: 0.5;
+  padding-top: 20px;
 }
 
 .carousel-dots {
   display: flex;
   gap: 10px;
+  justify-content: center;
 }
 
 .dot {
@@ -1238,14 +1232,8 @@ body {
     font-size: 2.5rem;
   }
 
-  .carousel-arrow {
-    width: 40px;
-    height: 40px;
-    font-size: 1rem;
-  }
-
   .carousel-nav {
-    gap: 15px;
+    gap: 10px;
   }
 
   .mobile-theme-toggle {

@@ -63,20 +63,6 @@
         </div>
       </section>
 
-      <section class="section-card">
-        <h3>⚡ Rekomendasi untuk Anda</h3>
-        <div class="items-grid">
-          <div v-for="item in recommendedItems" :key="item.id" class="item-card">
-            <div class="item-icon">{{ item.icon }}</div>
-            <h4>{{ item.name }}</h4>
-            <p>{{ item.desc }}</p>
-            <div class="item-footer">
-              <span class="price">Rp {{ item.price }}/hari</span>
-              <button class="btn-borrow">Pinjam</button>
-            </div>
-          </div>
-        </div>
-      </section>
     </section>
 
     <!-- EXPLORE TAB -->
@@ -189,12 +175,6 @@ const selectBorrowingDetail = (borrowing) => {
   selectedBorrowingDetail.value = borrowing
   showDetailModal.value = true
 }
-
-const recommendedItems = ref([
-  { id: 1, icon: '💻', name: 'Laptop Gaming', desc: 'Gaming terbaru', stock: 5 },
-  { id: 2, icon: '📷', name: 'Kamera 4K', desc: 'Kamera profesional', stock: 3 },
-  { id: 3, icon: '🎙️', name: 'Mic Studio', desc: 'Mikrofon berkualitas', stock: 8 }
-])
 
 const allItems = ref([
   { id: 1, icon: '💻', name: 'Laptop', desc: 'Berbagai model', stock: 10 },

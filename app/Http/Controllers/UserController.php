@@ -298,65 +298,141 @@ class UserController extends Controller
     public function login(Request $request)
     {
         try {
+            // Log raw request
+            \Log::info('🚀 [LOGIN] RAW REQUEST RECEIVED', [
+                'url' => $request->getPathInfo(),
+                'method' => $request->getMethod(),
+                'content_type' => $request->getContentType(),
+                'headers' => $request->headers->all()
+            ]);
+
+            // Validate input
+            \Log::info('🔍 [LOGIN] Validating input...');
             $validated = $request->validate([
                 'email' => 'required|email',
-                'password' => 'required|string|min:8'
+                'password' => 'required|string|min:6'
+            ]);
+
+            $email = trim($validated['email']);
+            $password = trim($validated['password']);
+
+            \Log::info('✅ [LOGIN] Input validated', [
+                'email' => $email,
+                'password_length' => strlen($password),
+                'timestamp' => now()->toDateTimeString()
             ]);
 
             // Find user by email
-            $user = User::where('email', $validated['email'])->first();
+            \Log::info('🔎 [LOGIN] Searching for user by email: ' . $email);
+            $user = User::where('email', $email)->first();
 
-            // Check if user exists
             if (!$user) {
+                \Log::warning('❌ [LOGIN] User not found', [
+                    'searched_email' => $email,
+                    'available_users' => User::pluck('email')->toArray()
+                ]);
                 return response()->json([
                     'success' => false,
                     'message' => 'Email tidak terdaftar'
                 ], 401);
             }
 
+            \Log::info('✅ [LOGIN] User found', [
+                'id' => $user->id_user,
+                'name' => $user->nama_lengkap,
+                'role' => $user->role,
+                'is_active' => $user->is_active
+            ]);
+
             // Check if user is active
             if (!$user->is_active) {
+                \Log::warning('🚫 [LOGIN] User account inactive', [
+                    'email' => $email,
+                    'id' => $user->id_user
+                ]);
                 return response()->json([
                     'success' => false,
                     'message' => 'Akun Anda telah dinonaktifkan. Hubungi administrator.'
                 ], 403);
             }
 
+            \Log::info('✅ [LOGIN] User is active');
+
             // Verify password
-            if (!Hash::check($validated['password'], $user->password)) {
+            \Log::info('🔐 [LOGIN] Verifying password', [
+                'received_password_length' => strlen($password),
+                'stored_hash_prefix' => substr($user->password, 0, 10)
+            ]);
+
+            $passwordValid = Hash::check($password, $user->password);
+            \Log::info('🔑 [LOGIN] Hash check result', [
+                'valid' => $passwordValid,
+                'method' => 'bcrypt'
+            ]);
+
+            if (!$passwordValid) {
+                \Log::warning('❌ [LOGIN] Password mismatch', [
+                    'email' => $email,
+                    'received_password_length' => strlen($password),
+                    'hash_algo' => substr($user->password, 0, 4)
+                ]);
                 return response()->json([
                     'success' => false,
                     'message' => 'Password salah'
                 ], 401);
             }
 
-            // Return user data (without password)
+            \Log::info('✅ [LOGIN] Password verified successfully');
+
+            // Prepare response
+            $responseData = [
+                'id' => $user->id_user,
+                'fullname' => $user->nama_lengkap,
+                'email' => $user->email,
+                'role' => $user->role,
+                'phone' => $user->phone ?? '',
+                'school' => $user->kota ?? '',
+                'address' => $user->alamat ?? '',
+                'avatar' => '👤',
+                'status' => $user->is_active ? 'active' : 'inactive',
+                'joinDate' => $user->created_at ? $user->created_at->format('d F Y') : null
+            ];
+
+            \Log::info('✨ [LOGIN] LOGIN SUCCESSFUL', [
+                'email' => $email,
+                'role' => $user->role,
+                'response_fields' => array_keys($responseData)
+            ]);
+
             return response()->json([
                 'success' => true,
-                'data' => [
-                    'id' => $user->id_user,
-                    'fullname' => $user->nama_lengkap,
-                    'email' => $user->email,
-                    'role' => $user->role,
-                    'phone' => $user->phone,
-                    'school' => $user->kota, // Using kota as school for compatibility
-                    'address' => $user->alamat,
-                    'avatar' => '👤', // Default avatar
-                    'status' => $user->is_active ? 'active' : 'inactive',
-                    'joinDate' => $user->created_at->format('d F Y')
-                ],
+                'data' => $responseData,
                 'message' => 'Login berhasil'
-            ], 200);
+            ])
+            ->header('Content-Type', 'application/json; charset=UTF-8')
+            ->header('Access-Control-Allow-Origin', 'http://localhost:5173')
+            ->setStatusCode(200);
+
         } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('❌ [LOGIN] Validation exception', [
+                'errors' => $e->errors(),
+                'message' => $e->getMessage()
+            ]);
             return response()->json([
                 'success' => false,
                 'errors' => $e->errors(),
                 'message' => 'Validasi gagal'
             ], 422);
         } catch (\Exception $e) {
+            \Log::error('💥 [LOGIN] Unexpected error', [
+                'message' => $e->getMessage(),
+                'class' => get_class($e),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
             return response()->json([
                 'success' => false,
-                'message' => 'Login gagal: ' . $e->getMessage()
+                'message' => 'Login error: ' . $e->getMessage()
             ], 500);
         }
     }

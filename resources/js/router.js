@@ -3,7 +3,6 @@ import LandingPage from './pages/LandingPage.vue'
 import Login from './pages/Login.vue'
 import Register from './pages/Register.vue'
 import Dashboard from './pages/DashboardRoleAware.vue'
-import DemoUsers from './pages/DemoUsers.vue'
 import TermsAndConditions from './pages/TermsAndConditions.vue'
 
 const routes = [
@@ -27,11 +26,6 @@ const routes = [
     name: 'Dashboard',
     component: Dashboard,
     meta: { requiresAuth: true }
-  },
-  {
-    path: '/demo-users',
-    name: 'DemoUsers',
-    component: DemoUsers
   },
   {
     path: '/terms',
@@ -58,16 +52,35 @@ router.beforeEach((to, from) => {
     const userStr = localStorage.getItem('user')
     if (userStr) {
       const userData = JSON.parse(userStr)
-      isAuthenticated = !!(userData && userData.id)
+      // Check if user has required fields
+      isAuthenticated = !!(userData && userData.id && userData.email && userData.role)
+      
+      if (!isAuthenticated) {
+        console.warn('⚠️ User data incomplete in localStorage:', userData)
+        localStorage.removeItem('user')
+      } else {
+        console.log('✅ User authenticated:', userData.email)
+      }
+    } else {
+      console.log('ℹ️ No user data in localStorage')
     }
   } catch (err) {
-    console.warn('Failed to parse user data from localStorage:', err)
+    console.warn('❌ Failed to parse user data from localStorage:', err)
+    console.warn('Error details:', err.message)
     isAuthenticated = false
     localStorage.removeItem('user')
   }
   
+  // Redirect to login if trying to access protected route
   if (to.meta.requiresAuth && !isAuthenticated) {
+    console.log('🔒 Redirecting to login - route requires auth:', to.path)
     return { name: 'Login' }
+  }
+  
+  // Redirect to landing if already logged in and going to login
+  if (to.name === 'Login' && isAuthenticated) {
+    console.log('↩️ Already authenticated, redirecting to dashboard')
+    return { name: 'Dashboard' }
   }
   
   // Explicitly allow navigation

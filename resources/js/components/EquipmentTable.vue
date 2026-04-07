@@ -191,6 +191,32 @@
             ></textarea>
           </div>
 
+          <div class="form-group">
+            <label>Foto Alat * <span class="required-badge">(Wajib)</span></label>
+            <div class="photo-upload-section">
+              <div v-if="photoPreview" class="photo-preview">
+                <img :src="photoPreview" alt="Preview" />
+                <button type="button" @click="removePhoto" class="btn-remove-photo">✕ Hapus</button>
+              </div>
+              <div v-else class="photo-placeholder">
+                <div class="upload-icon">📷</div>
+                <p>Tidak ada foto dipilih</p>
+              </div>
+              <input
+                ref="fileInput"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                @change="handlePhotoSelect"
+                class="file-input"
+                :required="!showEditModal"
+              />
+              <button type="button" @click="$refs.fileInput.click()" class="btn btn-secondary">
+                📁 Pilih Foto...
+              </button>
+            </div>
+            <small class="file-info">Format: JPG, PNG, WebP. Ukuran maksimal: 5MB</small>
+          </div>
+
           <div v-if="formError" class="alert alert-error">
             {{ formError }}
           </div>
@@ -270,7 +296,11 @@ const formData = ref({
   total_stok: 0,
   fine_per_day: 0,
   deskripsi: '',
+  photo: null,
 })
+
+const photoPreview = ref(null)
+const fileInput = ref(null)
 
 // Computed Properties
 const filteredEquipment = computed(() => {
@@ -346,6 +376,7 @@ const getConditionClass = (kondisi) => {
 
 const openEditModal = (item) => {
   formData.value = { ...item, id_kategori: item.id_kategori }
+  photoPreview.value = item.gambar ? `/storage/${item.gambar}` : null
   showEditModal.value = true
   formError.value = ''
 }
@@ -360,7 +391,9 @@ const closeModals = () => {
     total_stok: 0,
     fine_per_day: 0,
     deskripsi: '',
+    photo: null,
   }
+  photoPreview.value = null
   formError.value = ''
 }
 
@@ -369,8 +402,31 @@ const saveEquipment = async () => {
     isSubmitting.value = true
     formError.value = ''
 
+    // Validate photo field (mandatory)
+    if (!showEditModal.value && !formData.value.photo) {
+      formError.value = 'Gambar alat wajib diunggah!'
+      isSubmitting.value = false
+      return
+    }
+
+    // Create FormData for file upload
+    const submission = new FormData()
+    submission.append('nama_alat', formData.value.nama_alat)
+    submission.append('id_kategori', formData.value.id_kategori || '')
+    submission.append('kondisi', formData.value.kondisi)
+    submission.append('total_stok', formData.value.total_stok)
+    submission.append('fine_per_day', formData.value.fine_per_day)
+    submission.append('deskripsi', formData.value.deskripsi || '')
+    
+    // Only append photo if a new file is selected
+    if (formData.value.photo) {
+      submission.append('photo', formData.value.photo)
+    }
+
     if (showEditModal.value) {
-      const response = await apiClient.put(`/equipment/${formData.value.id_equipment}`, formData.value)
+      const response = await apiClient.post(`/equipment/${formData.value.id_equipment}?_method=PUT`, submission, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
       if (response.data.success) {
         const index = equipment.value.findIndex(
           (e) => e.id_equipment === formData.value.id_equipment
@@ -382,7 +438,9 @@ const saveEquipment = async () => {
         alert('Alat berhasil diperbarui!')
       }
     } else {
-      const response = await apiClient.post('/equipment', formData.value)
+      const response = await apiClient.post('/equipment', submission, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
       if (response.data.success) {
         equipment.value.push(response.data.data)
         closeModals()
@@ -399,6 +457,43 @@ const saveEquipment = async () => {
     }
   } finally {
     isSubmitting.value = false
+  }
+}
+
+const handlePhotoSelect = (event) => {
+  const file = event.target.files[0]
+  if (file) {
+    // Validate file type
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp']
+    if (!validTypes.includes(file.type)) {
+      formError.value = 'Format foto hanya JPG, PNG, atau WebP'
+      return
+    }
+    
+    // Validate file size (max 5MB)
+    const maxSize = 5 * 1024 * 1024
+    if (file.size > maxSize) {
+      formError.value = 'Ukuran foto tidak boleh lebih dari 5MB'
+      return
+    }
+    
+    formData.value.photo = file
+    formError.value = ''
+    
+    // Create preview
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      photoPreview.value = e.target.result
+    }
+    reader.readAsDataURL(file)
+  }
+}
+
+const removePhoto = () => {
+  formData.value.photo = null
+  photoPreview.value = null
+  if (fileInput.value) {
+    fileInput.value.value = ''
   }
 }
 
@@ -954,5 +1049,86 @@ onMounted(() => {
   .btn-action {
     width: 100%;
   }
+}
+
+/* Photo Upload Styles */
+.photo-upload-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.photo-preview {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.photo-preview img {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+  object-fit: cover;
+}
+
+.photo-placeholder {
+  min-height: 150px;
+  border: 2px dashed #0b7285;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f9ff;
+  gap: 10px;
+}
+
+.upload-icon {
+  font-size: 48px;
+}
+
+.photo-placeholder p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.file-input {
+  display: none;
+}
+
+.btn-remove-photo {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.btn-remove-photo:hover {
+  background-color: #c92a2a;
+  color: white;
+}
+
+.file-info {
+  color: #999;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.required-badge {
+  color: #c92a2a;
+  font-weight: bold;
+  font-size: 12px;
 }
 </style>

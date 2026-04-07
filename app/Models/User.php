@@ -45,6 +45,21 @@ class User extends Authenticatable
     ];
 
     /**
+     * The attributes that should be appended for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = ['name'];
+
+    /**
+     * Get name attribute (maps to nama_lengkap)
+     */
+    public function getNameAttribute()
+    {
+        return $this->nama_lengkap ?? $this->username ?? 'User';
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

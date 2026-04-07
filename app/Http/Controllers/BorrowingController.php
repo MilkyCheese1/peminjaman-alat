@@ -18,28 +18,53 @@ class BorrowingController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = Borrowing::with('user', 'equipment', 'returnDetails');
+            // Build query with all needed relationships
+            $query = Borrowing::query();
 
-            // Filter by status
-            if ($request->has('status')) {
-                $query->where('status', $request->status);
+            // Filter by status if provided
+            if ($request->has('status') && !empty($request->status)) {
+                $query->where('borrowings.status', $request->status);
             }
 
-            // Filter by user
-            if ($request->has('user_id')) {
-                $query->where('id_user', $request->user_id);
+            // Filter by user if provided
+            if ($request->has('user_id') && !empty($request->user_id)) {
+                $query->where('borrowings.id_user', $request->user_id);
             }
 
-            $borrowings = $query->orderBy('created_at', 'desc')->get();
+            // Get borrowings with all relationships
+            $borrowings = $query
+                ->with(['user', 'equipment.category'])
+                ->orderBy('borrowings.created_at', 'desc')
+                ->get();
+
+            if ($borrowings->isEmpty()) {
+                return response()->json([
+                    'success' => true,
+                    'data' => [],
+                    'message' => 'No borrowings found'
+                ]);
+            }
+
+            // Format each borrowing
+            $formatted = [];
+            foreach ($borrowings as $borrowing) {
+                $formatted[] = $this->formatBorrowingResponse($borrowing);
+            }
 
             return response()->json([
                 'success' => true,
-                'data' => $borrowings,
-                'message' => 'Borrowings retrieved successfully'
+                'data' => $formatted,
+                'message' => count($formatted) . ' borrowings retrieved successfully'
             ]);
         } catch (\Exception $e) {
+            \Log::error('Error in BorrowingController@index: ' . $e->getMessage(), [
+                'exception' => $e,
+                'trace' => $e->getTraceAsString()
+            ]);
+            
             return response()->json([
                 'success' => false,
+                'data' => [],
                 'message' => 'Failed to retrieve borrowings: ' . $e->getMessage()
             ], 500);
         }
@@ -141,11 +166,11 @@ class BorrowingController extends Controller
     public function show(Borrowing $borrowing)
     {
         try {
-            $borrowing->load('user', 'equipment', 'returnDetails');
+            $borrowing->load('user', 'equipment', 'equipment.category');
 
             return response()->json([
                 'success' => true,
-                'data' => $borrowing,
+                'data' => $this->formatBorrowingResponse($borrowing),
                 'message' => 'Borrowing retrieved successfully'
             ]);
         } catch (\Exception $e) {
@@ -439,13 +464,18 @@ class BorrowingController extends Controller
     {
         try {
             $borrowings = Borrowing::where('id_user', $userId)
-                ->with('equipment', 'returnDetails')
+                ->with('equipment', 'equipment.category', 'user')
                 ->orderBy('created_at', 'desc')
                 ->get();
 
+            // Format response
+            $formattedBorrowings = $borrowings->map(function ($borrowing) {
+                return $this->formatBorrowingResponse($borrowing);
+            });
+
             return response()->json([
                 'success' => true,
-                'data' => $borrowings,
+                'data' => $formattedBorrowings,
                 'message' => 'User borrowings retrieved successfully'
             ]);
         } catch (\Exception $e) {
@@ -465,7 +495,7 @@ class BorrowingController extends Controller
             $now = now();
             $borrowings = Borrowing::where('status', 'picked_up')
                 ->where('planned_return_date', '<', $now)
-                ->with('user', 'equipment')
+                ->with('user', 'equipment', 'equipment.category')
                 ->get();
 
             // Update status to overdue
@@ -473,9 +503,14 @@ class BorrowingController extends Controller
                 $borrowing->update(['status' => 'overdue']);
             }
 
+            // Format response
+            $formattedBorrowings = $borrowings->map(function ($borrowing) {
+                return $this->formatBorrowingResponse($borrowing);
+            });
+
             return response()->json([
                 'success' => true,
-                'data' => $borrowings,
+                'data' => $formattedBorrowings,
                 'message' => 'Overdue borrowings retrieved successfully'
             ]);
         } catch (\Exception $e) {
@@ -485,5 +520,108 @@ class BorrowingController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Format borrowing response for frontend
+     */
+    private function formatBorrowingResponse($borrowing)
+    {
+        try {
+            // Get user info - with defaults
+            $userName = 'Unknown';
+            $userEmail = '';
+            if ($borrowing->user) {
+                $userName = $borrowing->user->name ?? 'Unknown';
+                $userEmail = $borrowing->user->email ?? '';
+            }
+
+            // Get equipment info - with defaults
+            $equipmentName = 'Unknown';
+            $categoryName = '-';
+            if ($borrowing->equipment) {
+                $equipmentName = $borrowing->equipment->name ?? 'Unknown';
+                if ($borrowing->equipment->category) {
+                    $categoryName = $borrowing->equipment->category->name ?? '-';
+                }
+            }
+
+            // Safe date handling with exception safety
+            $borrowDate = date('Y-m-d');
+            $returnDate = date('Y-m-d');
+            $duration = 0;
+
+            // Parse borrow date safely
+            $borrowDateStr = $borrowing->borrow_date;
+            if ($borrowDateStr) {
+                try {
+                    $dt = new \DateTime($borrowDateStr);
+                    $borrowDate = $dt->format('Y-m-d');
+                } catch (\Exception $e) {
+                    \Log::warning('Invalid borrow_date format: ' . $borrowDateStr);
+                }
+            }
+
+            // Parse return date safely
+            $returnDateStr = $borrowing->planned_return_date;
+            if ($returnDateStr) {
+                try {
+                    $dt = new \DateTime($returnDateStr);
+                    $returnDate = $dt->format('Y-m-d');
+                    
+                    // Calculate duration if both dates are valid
+                    if ($borrowDateStr) {
+                        try {
+                            $startDt = new \DateTime($borrowDateStr);
+                            $interval = $startDt->diff($dt);
+                            $duration = (int)$interval->days;
+                            if ($duration < 0) $duration = 0;
+                        } catch (\Exception $e) {
+                            \Log::warning('Could not calculate duration: ' . $e->getMessage());
+                        }
+                    }
+                } catch (\Exception $e) {
+                    \Log::warning('Invalid planned_return_date format: ' . $returnDateStr);
+                }
+            }
+
+            // Build response
+            return [
+                'id_peminjaman' => (int)$borrowing->id_borrowing,
+                'id_user' => (int)$borrowing->id_user,
+                'id_equipment' => (int)$borrowing->id_equipment,
+                'quantity' => (int)($borrowing->quantity ?? 1),
+                'status' => (string)($borrowing->status ?? 'applied'),
+                'nama_peminjam' => (string)$userName,
+                'email_peminjam' => (string)$userEmail,
+                'nama_alat' => (string)$equipmentName,
+                'equipment_name' => (string)$equipmentName,
+                'category_name' => (string)$categoryName,
+                'tanggal_permohonan' => $borrowing->created_at ? $borrowing->created_at->format('Y-m-d H:i:s') : date('Y-m-d H:i:s'),
+                'tanggal_mulai_peminjaman' => $borrowDate,
+                'tanggal_rencana_kembali' => $returnDate,
+                'tanggal_persetujuan' => $borrowing->updated_at ? $borrowing->updated_at->format('Y-m-d H:i:s') : '',
+                'durasi_peminjaman' => (int)$duration,
+                'catatan' => (string)($borrowing->notes ?? ''),
+                'notes' => (string)($borrowing->notes ?? ''),
+                'pickup_code' => $borrowing->pickup_code ?? null,
+                'fine_amount' => (float)($borrowing->fine_amount ?? 0),
+                'fine_paid' => (bool)($borrowing->fine_paid ?? false),
+            ];
+        } catch (\Exception $e) {
+            \Log::error('Error formatting borrowing: ' . $e->getMessage(), [
+                'borrowing_id' => $borrowing->id_borrowing ?? 'unknown',
+                'error' => $e->getMessage()
+            ]);
+            
+            return [
+                'id_peminjaman' => (int)($borrowing->id_borrowing ?? 0),
+                'status' => 'error',
+                'nama_peminjam' => 'Error',
+                'nama_alat' => 'Error loading',
+                'error' => true
+            ];
+        }
+    }
 }
+
 

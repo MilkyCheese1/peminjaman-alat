@@ -10,10 +10,11 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
 import SplashScreen from './components/SplashScreen.vue'
 import LoadingScreen from './components/LoadingScreen.vue'
+import { useSessionRestoration } from './composables/useSessionRestoration.js'
 
 // State
 const isLoading = ref(false)
@@ -21,6 +22,16 @@ const loadingMessage = ref('Memuat...')
 
 // Router
 const router = useRouter()
+
+// Session restoration
+const { initializeSession, getLastRoute, restoreScrollPosition } = useSessionRestoration()
+
+// Initialize session restoration on app mount
+onMounted(() => {
+  initializeSession()
+  // Restore scroll position on page load
+  setTimeout(restoreScrollPosition, 100)
+})
 
 // Global loading handler for route transitions
 router.beforeEach((to, from) => {

@@ -32,7 +32,12 @@
 
         <!-- Password Input -->
         <div class="form-group">
-          <label for="password">Password</label>
+          <label for="password">
+            Password 
+            <span v-if="form.password" class="password-length-hint">
+              ({{ form.password.length }} chars)
+            </span>
+          </label>
           <div class="input-wrapper">
             <span class="input-icon">🔒</span>
             <input
@@ -53,13 +58,6 @@
             </button>
           </div>
           <span v-if="errors.password" class="error-message">{{ errors.password }}</span>
-          <div v-if="form.password" class="password-info">
-            <div class="password-length">
-              <span :class="{ valid: form.password.length >= 8, warning: form.password.length < 8 }">
-                {{ form.password.length }}/8-12
-              </span>
-            </div>
-          </div>
         </div>
 
         <!-- Remember Me & Forgot Password -->
@@ -148,10 +146,8 @@ const validateForm = () => {
 
   if (!form.password) {
     errors.password = 'Password tidak boleh kosong'
-  } else if (form.password.length < 8) {
-    errors.password = 'Password minimal 8 karakter'
-  } else if (form.password.length > 12) {
-    errors.password = 'Password maksimal 12 karakter'
+  } else if (form.password.length < 6) {
+    errors.password = 'Password minimal 6 karakter'
   }
 
   return !errors.email && !errors.password
@@ -161,56 +157,116 @@ const handleLogin = async () => {
   if (!validateForm()) return
 
   isLoading.value = true
+  errors.general = ''
+  
+  console.group('🔐 LOGIN PROCESS STARTED')
+  console.log('📧 Email:', form.email)
+  console.log('🔒 Password length:', form.password.length)
   
   try {
-    // Call API login endpoint
+    const email = form.email.trim()
+    const password = form.password.trim()
+    
+    console.log('📤 Sending to:', `${API_BASE_URL}/login`)
+    console.log('📋 Payload:', { email, passwordLength: password.length })
+    
+    // Simple fetch without credentials - not needed for localStorage auth
     const response = await fetch(`${API_BASE_URL}/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      body: JSON.stringify({
-        email: form.email,
-        password: form.password
-      })
+      body: JSON.stringify({ email, password })
     })
 
-    const data = await response.json()
-
-    if (!response.ok || !data.success) {
-      errors.general = data.message || 'Login gagal'
+    console.log('📨 Response received')
+    console.log('📊 Status:', response.status, `(${response.ok ? '✅ OK' : '❌ ERROR'})`)
+    console.log('🔗 Headers - Content-Type:', response.headers.get('content-type'))
+    
+    let data
+    try {
+      const text = await response.text()
+      console.log('📄 Raw response body:', text.substring(0, 500))
+      data = JSON.parse(text)
+      console.log('✅ Parsed JSON successfully')
+    } catch (parseError) {
+      console.error('❌ JSON parse failed:', parseError.message)
+      errors.general = 'Server error: Invalid response format'
       isLoading.value = false
+      console.groupEnd()
       return
     }
 
-    const user = data.data
-    successMessage.value = `Selamat datang, ${user.fullname}!`
+    console.log('📦 Response data object:', data)
+
+    // Check for success flag first (regardless of HTTP status)
+    if (data.success && data.data) {
+      console.log('✅ API returned success: true')
+      const user = data.data
+      
+      // Validate required fields
+      if (!user.id || !user.email || !user.role) {
+        console.warn('⚠️ Missing required user fields', { id: user.id, email: user.email, role: user.role })
+        errors.general = 'Login gagal - Data user tidak lengkap'
+        isLoading.value = false
+        console.groupEnd()
+        return
+      }
+      
+      console.log('✅ User data complete')
+      console.log('👤 User role:', user.role)
+      
+      successMessage.value = `Selamat datang, ${user.fullname || user.email}!`
+      
+      // Prepare user object for localStorage
+      const userData = {
+        id_user: user.id,
+        id: user.id,
+        fullname: user.fullname || '',
+        email: user.email || '',
+        role: user.role || 'customer',
+        phone: user.phone || '',
+        school: user.school || '',
+        address: user.address || '',
+        avatar: user.avatar || '👤',
+        status: user.status || 'active',
+        joinDate: user.joinDate || new Date().toISOString(),
+        rememberMe: form.rememberMe,
+        loginAt: new Date().toISOString()
+      }
+      
+      console.log('💾 Saving to localStorage...')
+      localStorage.setItem('user', JSON.stringify(userData))
+      const verify = localStorage.getItem('user')
+      if (verify) {
+        console.log('✅ localStorage saved and verified')
+      } else {
+        throw new Error('localStorage save failed')
+      }
+      
+      console.log('✨ Login successful! Redirecting...')
+      console.groupEnd()
+      
+      setTimeout(() => {
+        router.push('/dashboard')
+      }, 1000)
+      return
+    }
     
-    // Save to localStorage with complete information
-    localStorage.setItem('user', JSON.stringify({
-      id_user: user.id,
-      id: user.id,
-      fullname: user.fullname,
-      email: user.email,
-      role: user.role,
-      phone: user.phone,
-      school: user.school,
-      address: user.address,
-      avatar: user.avatar,
-      status: user.status,
-      joinDate: user.joinDate,
-      rememberMe: form.rememberMe
-    }))
+    // If not success, show error
+    const errorMsg = data.message || `Login gagal (Status: ${response.status})`
+    console.error('❌ Login failed:', errorMsg)
+    console.log('📋 Error details:', data)
+    errors.general = errorMsg
     
-    // Redirect to dashboard after 1 second
-    setTimeout(() => {
-      router.push('/dashboard')
-    }, 1000)
   } catch (error) {
-    console.error('Login error:', error)
-    errors.general = 'Login gagal. Periksa koneksi internet Anda.'
+    console.error('❌ Unexpected error:', error)
+    console.error('📍 Error stack:', error.stack)
+    errors.general = `Login error: ${error.message}`
   } finally {
+    console.log('🏁 Login process finished')
+    console.groupEnd()
     isLoading.value = false
   }
 }
@@ -486,6 +542,78 @@ const handleLogin = async () => {
 .auth-link:hover {
   color: #FFBF42;
   text-decoration: underline;
+}
+
+.password-length-hint {
+  font-size: 0.8rem;
+  color: #999;
+  margin-left: 5px;
+}
+
+.test-credentials {
+  background: #f0f8fa;
+  border: 1px solid #c0e9f0;
+  border-radius: 12px;
+  padding: 15px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.test-label {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0 0 10px 0;
+  font-weight: 500;
+}
+
+.test-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.test-btn {
+  background: #e3f2fd;
+  border: 1px solid #90caf9;
+  color: #1976d2;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  overflow: hidden;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.test-btn:hover {
+  background: #bbdefb;
+  border-color: #64b5f6;
+  transform: translateY(-2px);
+}
+
+.test-btn.direct {
+  background: #fff3e0;
+  border-color: #ffb74d;
+  color: #e65100;
+}
+
+.test-btn.direct:hover {
+  background: #ffe0b2;
+  border-color: #ffa726;
+}
+
+.test-btn small {
+  display: block;
+  font-size: 0.75rem;
+  color: #999;
+  margin-top: 3px;
+}
+
+.test-btn.direct small {
+  color: #cc3300;
 }
 
 @media (max-width: 480px) {

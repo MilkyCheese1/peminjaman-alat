@@ -114,11 +114,18 @@
         <div class="carousel-container" ref="carouselContainer" @wheel="handleCarouselWheel">
           <div class="products-carousel">
             <div class="product-card" v-for="(product, idx) in products" :key="idx" :style="{ 'animation-delay': `${idx * 0.1}s` }">
-              <div class="product-image">{{ product.icon }}</div>
-              <h3>{{ product.name }}</h3>
-              <p>{{ product.description }}</p>
+              <div class="product-image">
+                <img 
+                  v-if="product.gambar" 
+                  :src="product.gambar" 
+                  :alt="product.nama_alat"
+                  onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23ddd%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23999%22 font-family=%22Arial%22 font-size=%2216%22%3ENo Image%3C/text%3E%3C/svg%3E'"
+                />
+                <div v-else class="placeholder-image">📦</div>
+              </div>
+              <h3>{{ product.nama_alat }}</h3>
               <div class="product-info">
-                <span class="stock">Stok: {{ product.stock }}</span>
+                <span class="stock">Stok: {{ product.total_stok }}</span>
               </div>
               <button class="product-button">Lihat Detail</button>
             </div>
@@ -126,17 +133,15 @@
         </div>
 
         <div class="carousel-nav">
-          <button class="carousel-arrow left" @click="scrollCarousel(-1)" :disabled="carouselPosition <= 0">←</button>
           <div class="carousel-dots">
             <span 
-              v-for="(_, idx) in products" 
-              :key="idx" 
+              v-for="dotIdx in totalDots" 
+              :key="dotIdx - 1" 
               class="dot"
-              :class="{ 'active': idx === carouselPosition }"
-              @click="scrollCarouselToIndex(idx)"
+              :class="{ 'active': Math.floor(carouselPosition / cardsPerDot) === dotIdx - 1 }"
+              @click="scrollCarouselToIndex(dotIdx - 1)"
             ></span>
           </div>
-          <button class="carousel-arrow right" @click="scrollCarousel(1)" :disabled="carouselPosition >= products.length - 1">→</button>
         </div>
       </section>
 
@@ -236,6 +241,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import apiClient from '../config/api.js'
 
 // State
 const isDarkMode = ref(false)
@@ -247,11 +253,17 @@ const isScrolled = ref(false)
 const showNavHint = ref(true)
 const carouselContainer = ref(null)
 const carouselPosition = ref(0)
+const cardsPerDot = 2 // 1 dot represents 2 cards
 let carouselWheelTimeout = null
+let autoScrollInterval = null
 
 // Computed
 const heroOpacity = computed(() => {
   return Math.max(0, 1 - (parallaxOffset.value / 300))
+})
+
+const totalDots = computed(() => {
+  return Math.ceil(products.value.length / cardsPerDot)
 })
 
 // Data
@@ -261,44 +273,25 @@ const heroCards = ref([
   { icon: '✅', title: 'Efisien & Terpercaya' }
 ])
 
-const products = ref([
-  {
-    icon: '💻',
-    name: 'Laptop',
-    description: 'Laptop gaming high-performance untuk project multimedia',
-    stock: 15
-  },
-  {
-    icon: '📊',
-    name: 'Proyektor',
-    description: 'Proyektor 4K untuk presentasi profesional',
-    stock: 8
-  },
-  {
-    icon: '📷',
-    name: 'Kamera DSLR',
-    description: 'Kamera profesional dengan lensa berkualitas',
-    stock: 12
-  },
-  {
-    icon: '🎙️',
-    name: 'Microphone Set',
-    description: 'Studio microphone dengan soundcard profesional',
-    stock: 6
-  },
-  {
-    icon: '🖥️',
-    name: 'Monitor 4K',
-    description: 'Monitor ultra-wide untuk editing dan design',
-    stock: 10
-  },
-  {
-    icon: '⌨️',
-    name: 'Keyboard Mekanik',
-    description: 'Keyboard RGB mechanical para gamer',
-    stock: 20
+const products = ref([])
+const isLoadingProducts = ref(false)
+
+// Fetch equipment from API
+const fetchEquipment = async () => {
+  isLoadingProducts.value = true
+  try {
+    const response = await apiClient.get('/equipment')
+    if (response.data && response.data.data) {
+      products.value = response.data.data
+    }
+  } catch (error) {
+    console.error('Error fetching equipment:', error)
+    // Fallback jika API error
+    products.value = []
+  } finally {
+    isLoadingProducts.value = false
   }
-])
+}
 
 const ctaFeatures = ref([
   'Proses registrasi hanya 2 menit',
@@ -345,34 +338,55 @@ const handleScroll = () => {
 }
 
 const scrollCarousel = (direction) => {
-  const newPosition = carouselPosition.value + direction
-  if (newPosition >= 0 && newPosition < products.value.length) {
-    carouselPosition.value = newPosition
-    if (carouselContainer.value) {
-      const cardElement = carouselContainer.value.querySelector('.product-card')
-      if (cardElement) {
-        const cardWidth = cardElement.offsetWidth
-        const gap = 30
-        carouselContainer.value.scrollLeft = newPosition * (cardWidth + gap)
-      }
-    }
+  // Pause auto-scroll when user interacts
+  if (autoScrollInterval) {
+    clearInterval(autoScrollInterval)
+    startAutoScroll()
   }
+  
+  const step = direction > 0 ? cardsPerDot : -cardsPerDot
+  let newPosition = carouselPosition.value + step
+  
+  // Loop: jika sudah di ujung, kembali ke awal dengan smooth scroll
+  if (newPosition >= products.value.length) {
+    newPosition = 0
+  } else if (newPosition < 0) {
+    newPosition = products.value.length - cardsPerDot
+  }
+  
+  scrollToPosition(newPosition)
 }
 
-const scrollCarouselToIndex = (index) => {
-  carouselPosition.value = index
+const scrollToPosition = (position) => {
+  carouselPosition.value = position
   if (carouselContainer.value) {
     const cardElement = carouselContainer.value.querySelector('.product-card')
     if (cardElement) {
       const cardWidth = cardElement.offsetWidth
       const gap = 30
-      carouselContainer.value.scrollLeft = index * (cardWidth + gap)
+      carouselContainer.value.scrollLeft = position * (cardWidth + gap)
     }
   }
 }
 
+const scrollCarouselToIndex = (dotIndex) => {
+  if (autoScrollInterval) {
+    clearInterval(autoScrollInterval)
+    startAutoScroll()
+  }
+  
+  const position = dotIndex * cardsPerDot
+  scrollToPosition(position)
+}
+
 const handleCarouselWheel = (e) => {
   if (!carouselContainer.value) return
+  
+  // Pause auto-scroll when user interacts
+  if (autoScrollInterval) {
+    clearInterval(autoScrollInterval)
+    startAutoScroll()
+  }
   
   // Debounce wheel events to prevent rapid multiple scrolls
   if (carouselWheelTimeout !== null) return
@@ -401,6 +415,12 @@ const handleCarouselWheel = (e) => {
       carouselWheelTimeout = null
     }, 300)
   }
+}
+
+const startAutoScroll = () => {
+  autoScrollInterval = setInterval(() => {
+    scrollCarousel(1)
+  }, 2000)
 }
 
 const handleKeydown = (e) => {
@@ -435,6 +455,9 @@ const handleKeydown = (e) => {
 
 // Lifecycle
 onMounted(() => {
+  // Fetch equipment data from API
+  fetchEquipment()
+  
   window.addEventListener('scroll', handleScroll)
   window.addEventListener('keydown', handleKeydown)
 
@@ -449,15 +472,23 @@ onMounted(() => {
   setTimeout(() => {
     showNavHint.value = false
   }, 5000)
+
+  // Start auto-scroll carousel after products load
+  setTimeout(() => {
+    startAutoScroll()
+  }, 500)
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
   window.removeEventListener('keydown', handleKeydown)
   
-  // Cleanup carousel wheel debounce timeout
+  // Cleanup timers
   if (carouselWheelTimeout !== null) {
     clearTimeout(carouselWheelTimeout)
+  }
+  if (autoScrollInterval) {
+    clearInterval(autoScrollInterval)
   }
 })
 </script>

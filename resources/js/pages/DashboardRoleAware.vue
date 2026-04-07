@@ -97,15 +97,17 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { getAllowedTabs, getRoleColor, getRoleLabel } from '../data/rolePermissions.js'
+import { useSessionRestoration } from '../composables/useSessionRestoration.js'
 import CustomerDashboard from '../components/dashboards/CustomerDashboard.vue'
 import OwnerDashboard from '../components/dashboards/OwnerDashboard.vue'
 import StaffDashboard from '../components/dashboards/StaffDashboard.vue'
 import AdminDashboard from '../components/dashboards/AdminDashboard.vue'
 
 const router = useRouter()
+const { saveState, getState } = useSessionRestoration()
 
 // State
 const activeTab = ref('overview')
@@ -180,6 +182,8 @@ const clearNotifications = () => {
 
 const logout = () => {
   localStorage.removeItem('user')
+  const { clearSession } = useSessionRestoration()
+  clearSession()
   router.push('/login')
 }
 
@@ -193,15 +197,21 @@ onMounted(() => {
       userRole.value = user.role || 'customer'
       userInitial.value = userName.value.charAt(0).toUpperCase()
       
-      // Reset to first allowed tab
+      // Restore active tab from session, or use first allowed tab
       const tabs = getAllowedTabs(userRole.value)
       if (tabs.length > 0) {
-        activeTab.value = tabs[0]
+        const savedTab = getState('activeTab')
+        activeTab.value = (savedTab && tabs.includes(savedTab)) ? savedTab : tabs[0]
       }
     } catch (e) {
       userName.value = 'User'
     }
   }
+})
+
+// Save active tab whenever it changes
+watch(activeTab, (newTab) => {
+  saveState('activeTab', newTab)
 })
 </script>
 

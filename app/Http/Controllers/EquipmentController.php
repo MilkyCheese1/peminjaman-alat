@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Equipment;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class EquipmentController extends Controller
 {
@@ -29,6 +30,7 @@ class EquipmentController extends Controller
                         'deskripsi' => $item->description,
                         'total_stok' => $item->quantity,
                         'kondisi' => $item->condition,
+                        'gambar' => $item->photo ? config('app.url') . '/storage/' . $item->photo : null,
                         'fine_per_day' => $item->fine_per_day,
                         'available_quantity' => $available,
                         'category' => $item->category ? [
@@ -78,6 +80,7 @@ class EquipmentController extends Controller
                 'kondisi' => 'required_without:condition|in:baik,sedang,rusak,good,fair,poor',
                 'condition' => 'required_without:kondisi|in:good,fair,poor,baik,sedang,rusak',
                 'fine_per_day' => 'nullable|numeric|min:0',
+                'photo' => 'required|image|mimes:jpeg,png,webp|max:5120', // max 5MB
             ]);
 
             // Map field names to database columns
@@ -90,6 +93,14 @@ class EquipmentController extends Controller
                 'is_available' => true,
                 'fine_per_day' => $validated['fine_per_day'] ?? 50000,
             ];
+
+            // Handle photo upload
+            if ($request->hasFile('photo')) {
+                $photoFile = $request->file('photo');
+                // Store in public disk under equipment folder
+                $photoPath = $photoFile->store('equipment', 'public');
+                $data['photo'] = $photoPath;
+            }
 
             $equipment = Equipment::create($data);
             $equipment->load('category');
@@ -161,6 +172,7 @@ class EquipmentController extends Controller
                 'kondisi' => 'in:baik,sedang,rusak,good,fair,poor',
                 'condition' => 'in:good,fair,poor,baik,sedang,rusak',
                 'fine_per_day' => 'nullable|numeric|min:0',
+                'photo' => 'nullable|image|mimes:jpeg,png,webp|max:5120', // max 5MB, optional for updates
             ]);
 
             // Map field names to database columns
@@ -192,6 +204,17 @@ class EquipmentController extends Controller
                 $data['fine_per_day'] = $validated['fine_per_day'];
             }
 
+            // Handle photo upload
+            if ($request->hasFile('photo')) {
+                // Delete old photo if exists
+                if ($equipment->photo && Storage::disk('public')->exists($equipment->photo)) {
+                    Storage::disk('public')->delete($equipment->photo);
+                }
+                // Store new photo
+                $photoFile = $request->file('photo');
+                $photoPath = $photoFile->store('equipment', 'public');
+                $data['photo'] = $photoPath;
+            }
 
             $equipment->update($data);
             $equipment->load('category');
@@ -299,6 +322,7 @@ class EquipmentController extends Controller
             'deskripsi' => $equipment->description,
             'total_stok' => $equipment->quantity,
             'kondisi' => $equipment->condition,
+            'gambar' => $equipment->photo ? config('app.url') . '/storage/' . $equipment->photo : null,
             'fine_per_day' => $equipment->fine_per_day,
             'available_quantity' => $available,
             'category' => $equipment->category ? [

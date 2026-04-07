@@ -45,7 +45,7 @@
     <div v-else class="equipment-grid">
       <div v-for="item in filteredEquipment" :key="item.id_equipment" class="equipment-card">
         <div class="card-image">
-          <img :src="`/images/equipment/${item.foto || 'placeholder.jpg'}`" :alt="item.nama_alat" />
+          <img v-if="item.gambar" :src="item.gambar" :alt="item.nama_alat" />
           <div class="stock-badge" :class="{ unavailable: item.available_quantity === 0 }">
             {{ item.available_quantity > 0 ? `${item.available_quantity} tersedia` : 'Tidak tersedia' }}
           </div>
@@ -104,7 +104,7 @@
         </div>
         <div class="modal-body">
           <div class="modal-image">
-            <img :src="`/images/equipment/${selectedEquipment?.foto || 'placeholder.jpg'}`" :alt="selectedEquipment?.nama_alat" />
+            <img v-if="selectedEquipment?.gambar" :src="selectedEquipment?.gambar" :alt="selectedEquipment?.nama_alat" />
           </div>
           <div class="modal-info">
             <div class="info-row">
@@ -159,9 +159,12 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import apiClient from '@/config/api'
+import { useSessionRestoration } from '@/composables/useSessionRestoration.js'
 import BorrowingFormComponent from './BorrowingFormComponent.vue'
+
+const { saveState, getState } = useSessionRestoration()
 
 const equipment = ref([])
 const categories = ref([])
@@ -288,8 +291,30 @@ const onBorrowingSuccess = () => {
 }
 
 onMounted(() => {
+  // Restore filter state from session
+  const savedSearch = getState('browse_searchQuery', '')
+  const savedCategory = getState('browse_selectedCategory', '')
+  const savedSort = getState('browse_sortBy', 'nama')
+  
+  searchQuery.value = savedSearch
+  selectedCategory.value = savedCategory
+  sortBy.value = savedSort
+  
   loadEquipment()
   loadCategories()
+})
+
+// Save filter/search state whenever it changes
+watch(searchQuery, (newValue) => {
+  saveState('browse_searchQuery', newValue)
+})
+
+watch(selectedCategory, (newValue) => {
+  saveState('browse_selectedCategory', newValue)
+})
+
+watch(sortBy, (newValue) => {
+  saveState('browse_sortBy', newValue)
 })
 </script>
 
