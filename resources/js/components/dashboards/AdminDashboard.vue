@@ -135,7 +135,8 @@
 </template>
 
 <script setup>
-import { defineProps, computed } from 'vue'
+import { defineProps, computed, ref, onMounted } from 'vue'
+import apiClient from '../../config/api'
 import { borrowingRecords } from '../../data/borrowingData.js'
 import UsersTable from '../UsersTable.vue'
 import EquipmentTable from '../EquipmentTable.vue'
@@ -148,22 +149,35 @@ defineProps({
   roleColor: String
 })
 
-const totalBorrowings = computed(() => borrowingRecords.length)
+const users = ref([])
+const equipment = ref([])
+const borrowings = ref([])
 
-const totalUsers = computed(() => {
-  // Estimate based on borrowing records (unique customers)
-  const users = new Set(borrowingRecords.map(b => b.customerId))
-  return Math.max(users.size, 50) // Minimum 50 for demo
+// Load data from API on mount
+onMounted(async () => {
+  try {
+    const [usersRes, equipmentRes, borrowingsRes] = await Promise.all([
+      apiClient.get('/users').catch(() => ({ data: { data: [] } })),
+      apiClient.get('/equipment').catch(() => ({ data: { data: [] } })),
+      apiClient.get('/borrowings').catch(() => ({ data: { data: [] } }))
+    ])
+    
+    users.value = usersRes.data?.data || []
+    equipment.value = equipmentRes.data?.data || []
+    borrowings.value = borrowingsRes.data?.data || []
+  } catch (error) {
+    console.error('Error loading admin dashboard data:', error)
+  }
 })
 
-const totalEquipment = computed(() => {
-  // Estimate based on unique equipment in system
-  const equipment = new Set(borrowingRecords.map(b => b.equipmentId))
-  return Math.max(equipment.size * 20, 100) // Rough estimate
-})
+const totalBorrowings = computed(() => borrowings.value.length || borrowingRecords.length)
+
+const totalUsers = computed(() => users.value.length || 4)
+
+const totalEquipment = computed(() => equipment.value.length || 8)
 
 const activeTransactions = computed(() => {
-  return borrowingRecords.filter(b => b.status === 'picked_up' || b.status === 'approved').length
+  return (borrowings.value || borrowingRecords).filter(b => b.status === 'picked_up' || b.status === 'approved').length
 })
 
 const systemHealth = computed(() => {
@@ -174,19 +188,19 @@ const systemHealth = computed(() => {
 })
 
 const pendingApprovalsCount = computed(() => {
-  return borrowingRecords.filter(b => b.status === 'applied').length
+  return (borrowings.value || borrowingRecords).filter(b => b.status === 'applied').length
 })
 
 const overdueCount = computed(() => {
-  return borrowingRecords.filter(b => {
+  return (borrowings.value || borrowingRecords).filter(b => {
     const now = new Date()
-    const planned = new Date(b.plannedReturnDate)
+    const planned = new Date(b.tanggal_rencana_kembali || b.planned_return_date || b.plannedReturnDate)
     return b.status === 'picked_up' && now > planned
   }).length
 })
 
 const totalFines = computed(() => {
-  return borrowingRecords.reduce((sum, b) => sum + (b.fineAmount || 0), 0)
+  return (borrowings.value || borrowingRecords).reduce((sum, b) => sum + (b.fine_amount || b.fineAmount || 0), 0)
 })
 </script>
 

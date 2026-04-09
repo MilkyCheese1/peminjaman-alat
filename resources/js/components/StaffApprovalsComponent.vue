@@ -28,7 +28,7 @@
       <div v-else class="borrowing-item" v-for="borrowing in pendingBorrowings" :key="borrowing.id_peminjaman">
         <div class="item-header">
           <div class="item-title">
-            <h3>{{ borrowing.nama_alat || borrowing.equipment_name }}</h3>
+            <h3>{{ borrowing.equipment?.nama_alat || borrowing.nama_alat || borrowing.equipment_name || 'N/A' }}</h3>
             <span class="category">{{ borrowing.category_name }}</span>
           </div>
           <div class="item-date">
@@ -47,7 +47,7 @@
           </div>
           <div class="detail-row">
             <span class="label">Tgl. Rencana Kembali:</span>
-            <span class="value">{{ formatDate(borrowing.tanggal_rencana_kembali) }}</span>
+            <span class="value">{{ formatDate(borrowing.tanggal_rencana_kembali || borrowing.planned_return_date) }}</span>
           </div>
           <div class="detail-row" v-if="borrowing.catatan">
             <span class="label">Catatan:</span>
@@ -139,7 +139,7 @@ const formatDate = (dateString) => {
 
 const approveBorrowing = async (borrowing) => {
   try {
-    const response = await apiClient.patch(`/borrowings/${borrowing.id_peminjaman}/approve`, {})
+    const response = await apiClient.post(`/borrowings/${borrowing.id_peminjaman}/approve`, {})
     if (response.data.success) {
       // Remove from list
       borrowings.value = borrowings.value.filter(b => b.id_peminjaman !== borrowing.id_peminjaman)
@@ -170,7 +170,7 @@ const confirmReject = async () => {
   }
 
   try {
-    const response = await apiClient.patch(`/borrowings/${selectedBorrowing.value.id_peminjaman}/reject`, {
+    const response = await apiClient.post(`/borrowings/${selectedBorrowing.value.id_peminjaman}/reject`, {
       alasan_penolakan: rejectReason.value
     })
     if (response.data.success) {

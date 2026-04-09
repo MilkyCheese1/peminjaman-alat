@@ -59,18 +59,18 @@
           <tr v-for="(item, index) in filteredReturns" :key="item.id_peminjaman">
             <td>{{ index + 1 }}</td>
             <td><strong>#{{ item.id_peminjaman }}</strong></td>
-            <td>{{ item.user?.nama_lengkap || 'N/A' }}</td>
-            <td>{{ item.equipment?.nama_alat || 'N/A' }}</td>
-            <td>{{ formatDate(item.tanggal_rencana_kembali) }}</td>
-            <td>{{ formatDate(item.tanggal_kembali) || '-' }}</td>
+            <td>{{ item.user?.nama_lengkap || item.nama_peminjam || 'N/A' }}</td>
+            <td>{{ item.equipment?.nama_alat || item.nama_alat || 'N/A' }}</td>
+            <td>{{ formatDate(item.tanggal_rencana_kembali || item.planned_return_date) }}</td>
+            <td>{{ formatDate(item.actual_return_date || item.tanggal_kembali) || '-' }}</td>
             <td>
               <span :class="['condition-badge', getConditionClass(item.returnDetails?.kondisi)]">
                 {{ getConditionLabel(item.returnDetails?.kondisi) }}
               </span>
             </td>
             <td>
-              <span :class="['status-badge', getStatusClass(item.tanggal_kembali, item.tanggal_rencana_kembali, item.returnDetails?.kondisi)]">
-                {{ getReturnStatus(item.tanggal_kembali, item.tanggal_rencana_kembali, item.returnDetails?.kondisi) }}
+              <span :class="['status-badge', getStatusClass(item.actual_return_date || item.tanggal_kembali, item.tanggal_rencana_kembali || item.planned_return_date, item.returnDetails?.kondisi)]">
+                {{ getReturnStatus(item.actual_return_date || item.tanggal_kembali, item.tanggal_rencana_kembali || item.planned_return_date, item.returnDetails?.kondisi) }}
               </span>
             </td>
           </tr>
@@ -95,16 +95,18 @@ const isLoading = ref(false)
 
 const filteredReturns = computed(() => {
   return borrowings.value
-    .filter(b => b.status === 'returned' || b.tanggal_kembali)
+    .filter(b => b.status === 'returned' || b.actual_return_date || b.tanggal_kembali)
     .filter(b => {
       const matchSearch =
-        b.user?.nama_lengkap?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-        b.equipment?.nama_alat?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+        (b.user?.nama_lengkap || b.nama_peminjam || '')?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+        (b.equipment?.nama_alat || b.nama_alat || '')?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
         b.id_peminjaman?.toString().includes(searchQuery.value)
 
       let matchStatus = true
       if (statusFilter.value) {
-        const returnStatus = getReturnStatus(b.tanggal_kembali, b.tanggal_rencana_kembali, b.returnDetails?.kondisi)
+        const actualReturnDate = b.actual_return_date || b.tanggal_kembali
+        const plannedReturnDate = b.tanggal_rencana_kembali || b.planned_return_date
+        const returnStatus = getReturnStatus(actualReturnDate, plannedReturnDate, b.returnDetails?.kondisi)
         if (statusFilter.value === 'on_time') {
           matchStatus = returnStatus.includes('Tepat')
         } else if (statusFilter.value === 'late') {
@@ -119,23 +121,25 @@ const filteredReturns = computed(() => {
 })
 
 const totalReturns = computed(() => {
-  return borrowings.value.filter(b => b.tanggal_kembali).length
+  return borrowings.value.filter(b => b.actual_return_date || b.tanggal_kembali).length
 })
 
 const onTimeCount = computed(() => {
   return borrowings.value.filter(b => {
-    if (!b.tanggal_kembali) return false
-    const returnDate = new Date(b.tanggal_kembali)
-    const dueDate = new Date(b.tanggal_rencana_kembali)
+    const actualReturnDate = b.actual_return_date || b.tanggal_kembali
+    if (!actualReturnDate) return false
+    const returnDate = new Date(actualReturnDate)
+    const dueDate = new Date(b.tanggal_rencana_kembali || b.planned_return_date)
     return returnDate <= dueDate
   }).length
 })
 
 const lateCount = computed(() => {
   return borrowings.value.filter(b => {
-    if (!b.tanggal_kembali) return false
-    const returnDate = new Date(b.tanggal_kembali)
-    const dueDate = new Date(b.tanggal_rencana_kembali)
+    const actualReturnDate = b.actual_return_date || b.tanggal_kembali
+    if (!actualReturnDate) return false
+    const returnDate = new Date(actualReturnDate)
+    const dueDate = new Date(b.tanggal_rencana_kembali || b.planned_return_date)
     return returnDate > dueDate
   }).length
 })

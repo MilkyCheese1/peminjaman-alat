@@ -41,24 +41,41 @@
       <section class="section-card">
         <div class="section-header">
           <h3>📋 Peminjaman Aktif</h3>
-          <a href="#" class="view-all">Lihat Semua</a>
+          <a href="#" class="view-all" @click="activeTab = 'my-borrowings'">Lihat Semua</a>
         </div>
-        <div class="borrowing-list">
-          <div class="borrow-item">
-            <span class="icon">💻</span>
+        
+        <!-- Loading State -->
+        <div v-if="loadingActiveBorrowings" class="loading-state">
+          <p>📦 Memuat data peminjaman aktif...</p>
+        </div>
+        
+        <!-- No Active Borrowings -->
+        <div v-else-if="activeBorrowings.length === 0" class="empty-state">
+          <p>✓ Tidak ada peminjaman aktif saat ini</p>
+        </div>
+        
+        <!-- Active Borrowings List -->
+        <div v-else class="borrowing-list">
+          <div v-for="borrowing in activeBorrowings.slice(0, 3)" :key="borrowing.id_peminjaman" class="borrow-item">
+            <span class="icon">{{ getEquipmentIcon(borrowing.equipment?.category?.nama_kategori) }}</span>
             <div class="info">
-              <h4>Laptop Dell XPS 15</h4>
-              <p>📅 29 Mar - 02 Apr 2026</p>
+              <h4>{{ borrowing.equipment?.nama_alat || borrowing.nama_alat }}</h4>
+              <p>📅 {{ formatDate(borrowing.tanggal_peminjaman || borrowing.borrow_date) }} - {{ formatDate(borrowing.tanggal_rencana_kembali || borrowing.planned_return_date) }}</p>
+              <p v-if="borrowing.kode_verifikasi" class="code-detail">🔑 Kode: {{ borrowing.kode_verifikasi }}</p>
+              <p v-if="borrowing.pickup_code" class="code-detail">📍 Pickup: {{ borrowing.pickup_code }}</p>
+              <p v-if="borrowing.fine_amount > 0" class="fine-detail">⚠️ Denda: Rp {{ formatCurrency(borrowing.fine_amount) }}</p>
             </div>
-            <button class="btn-small">Detail</button>
-          </div>
-          <div class="borrow-item">
-            <span class="icon">📷</span>
-            <div class="info">
-              <h4>Kamera DSLR Canon 6D</h4>
-              <p>📅 25 Mar - 31 Mar 2026 (OVERDUC)</p>
+            <div class="actions">
+              <span :class="['status-badge', isOverdue(borrowing) ? 'overdue' : 'active']">
+                {{ isOverdue(borrowing) ? '🔴 OVERDUE' : '🟢 Active' }}
+              </span>
+              <button v-if="isOverdue(borrowing)" class="btn-small warning" @click="handleExtendBorrowing(borrowing)">
+                Perpanjang
+              </button>
+              <button v-else class="btn-small" @click="selectBorrowingDetail(borrowing)">
+                Detail
+              </button>
             </div>
-            <button class="btn-small warning">Perpanjang</button>
           </div>
         </div>
       </section>
@@ -109,6 +126,7 @@
 
 <script setup>
 import { defineProps, ref, computed, onMounted } from 'vue'
+import apiClient from '../../config/api'
 import BorrowingTable from '../BorrowingTable.vue'
 import EquipmentTable from '../EquipmentTable.vue'
 import EquipmentBrowseComponent from '../EquipmentBrowseComponent.vue'
@@ -130,13 +148,38 @@ const userName = ref('Ahmad Rizki')
 const currentUser = ref(null)
 const selectedBorrowingDetail = ref(null)
 const showDetailModal = ref(false)
+const activeBorrowings = ref([])
+const loadingActiveBorrowings = ref(false)
 
 onMounted(() => {
   const userStr = localStorage.getItem('user')
   if (userStr) {
     currentUser.value = JSON.parse(userStr)
+    userName.value = currentUser.value.fullname || currentUser.value.username || 'User'
+    loadActiveBorrowings()
   }
 })
+
+// Fetch active borrowings from API
+const loadActiveBorrowings = async () => {
+  if (!currentUser.value?.id_user && !currentUser.value?.id) return
+  
+  loadingActiveBorrowings.value = true
+  try {
+    const userId = currentUser.value.id_user || currentUser.value.id
+    const response = await apiClient.get(`/borrowings/user/${userId}`)
+    
+    if (response.data && response.data.data) {
+      // Filter to only ACTIVE borrowings (status = picked_up)
+      activeBorrowings.value = response.data.data.filter(b => b.status === 'picked_up')
+    }
+  } catch (error) {
+    console.error('Error loading active borrowings:', error)
+    activeBorrowings.value = []
+  } finally {
+    loadingActiveBorrowings.value = false
+  }
+}
 
 const myBorrowings = computed(() => {
   if (!currentUser.value) return []
@@ -144,11 +187,11 @@ const myBorrowings = computed(() => {
 })
 
 const borrowingsCount = computed(() => {
-  return myBorrowings.value.filter(b => b.status === 'picked_up').length
+  return activeBorrowings.value.length
 })
 
 const overdueCount = computed(() => {
-  return myBorrowings.value.filter(b => b.status === 'overdue').length
+  return activeBorrowings.value.filter(b => isOverdue(b)).length
 })
 
 const historyCount = computed(() => {
@@ -158,6 +201,42 @@ const historyCount = computed(() => {
 const availableItemsCount = computed(() => {
   return allItems.value.reduce((total, item) => total + item.stock, 0)
 })
+
+// Check if borrowing is overdue
+const isOverdue = (borrowing) => {
+  if (!borrowing) return false
+  const plannedReturnDate = new Date(borrowing.tanggal_rencana_kembali || borrowing.planned_return_date)
+  const now = new Date()
+  return now > plannedReturnDate
+}
+
+// Format date for display
+const formatDateDisplay = (dateStr) => {
+  if (!dateStr) return '-'
+  const date = new Date(dateStr)
+  const options = { day: 'numeric', month: 'short', year: 'numeric' }
+  return date.toLocaleDateString('id-ID', options)
+}
+
+// Format currency
+const formatCurrency = (value) => {
+  if (!value) return '0'
+  return value.toLocaleString('id-ID')
+}
+
+// Get equipment icon based on category
+const getEquipmentIcon = (category) => {
+  const categoryIcons = {
+    'Elektronik': '💻',
+    'Kamera': '📷',
+    'Audio': '🎙️',
+    'Proyektor': '🎬',
+    'Alat Tulis': '📝',
+    'Furniture': '🪑',
+    'Lainnya': '📦'
+  }
+  return categoryIcons[category] || '📦'
+}
 
 const getStatusLabel = (status) => {
   return STATUS_INFO[status]?.label || status
@@ -174,6 +253,12 @@ const handleNewBorrowRequest = (borrowing) => {
 const selectBorrowingDetail = (borrowing) => {
   selectedBorrowingDetail.value = borrowing
   showDetailModal.value = true
+}
+
+// Handle extend borrowing request (future feature)
+const handleExtendBorrowing = (borrowing) => {
+  alert(`Fitur perpanjangan untuk ${borrowing.equipment?.nama_alat || borrowing.nama_alat} akan segera tersedia.`)
+  // TODO: Implement borrowing extension API call
 }
 
 const allItems = ref([
@@ -314,6 +399,7 @@ const handleCloseDetailModal = () => {
 
 .borrow-item .icon {
   font-size: 2rem;
+  min-width: 40px;
 }
 
 .borrow-item .info {
@@ -323,12 +409,70 @@ const handleCloseDetailModal = () => {
 .borrow-item h4 {
   margin: 0 0 5px 0;
   color: #1a1a2e;
+  font-weight: 600;
 }
 
 .borrow-item p {
   margin: 0;
   font-size: 0.85rem;
   color: #666;
+}
+
+.code-detail {
+  font-family: 'Courier New', monospace;
+  background: #e8f5f9;
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: #0B7285;
+  font-weight: 500;
+  margin-top: 3px;
+}
+
+.fine-detail {
+  color: #FF9F1C;
+  font-weight: 600;
+  margin-top: 3px;
+}
+
+.borrow-item .actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  min-width: 160px;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-badge.active {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge.overdue {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+  background: #f8f9fa;
+  border-radius: 8px;
 }
 
 .items-grid {

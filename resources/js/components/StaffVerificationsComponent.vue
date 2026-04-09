@@ -28,7 +28,7 @@
       <div v-else class="borrowing-item" v-for="borrowing in pendingVerifications" :key="borrowing.id_peminjaman">
         <div class="item-header">
           <div class="item-title">
-            <h3>{{ borrowing.nama_alat || borrowing.equipment_name }}</h3>
+            <h3>{{ borrowing.equipment?.nama_alat || borrowing.nama_alat || borrowing.equipment_name || 'N/A' }}</h3>
             <span class="category">{{ borrowing.category_name }}</span>
           </div>
           <div class="item-date">
@@ -47,7 +47,7 @@
           </div>
           <div class="detail-row">
             <span class="label">Tanggal Seharusnya Kembali:</span>
-            <span class="value">{{ formatDate(borrowing.tanggal_rencana_kembali) }}</span>
+            <span class="value">{{ formatDate(borrowing.tanggal_rencana_kembali || borrowing.planned_return_date) }}</span>
           </div>
           <div class="detail-row">
             <span class="label">Status Keterlambatan:</span>
@@ -158,7 +158,7 @@ const getConditionIcon = (condition) => {
 
 const isOverdue = (borrowing) => {
   const returnDate = new Date(borrowing.tanggal_kembali_aktual)
-  const dueDate = new Date(borrowing.tanggal_rencana_kembali)
+  const dueDate = new Date(borrowing.tanggal_rencana_kembali || borrowing.planned_return_date)
   return returnDate > dueDate
 }
 

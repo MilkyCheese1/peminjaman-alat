@@ -121,7 +121,7 @@ const loadUserProfile = async () => {
             active: borrowings.filter(b => b.status === 'picked_up').length,
             overdue: borrowings.filter(b => {
               const now = new Date()
-              const dueDate = new Date(b.tanggal_rencana_kembali)
+              const dueDate = new Date(b.tanggal_rencana_kembali || b.planned_return_date)
               return b.status === 'picked_up' && now > dueDate
             }).length
           }

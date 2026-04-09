@@ -102,7 +102,8 @@
 </template>
 
 <script setup>
-import { defineProps, ref, computed } from 'vue'
+import { defineProps, ref, computed, onMounted } from 'vue'
+import apiClient from '../../config/api'
 import BorrowingTable from '../BorrowingTable.vue'
 import EquipmentTable from '../EquipmentTable.vue'
 import StaffApprovalsComponent from '../StaffApprovalsComponent.vue'
@@ -120,26 +121,46 @@ defineProps({
 
 const showReturnVerification = ref(false)
 const selectedBorrowingDetail = ref(null)
+const borrowings = ref([])
+
+// Load borrowings from API
+onMounted(async () => {
+  try {
+    const response = await apiClient.get('/borrowings')
+    borrowings.value = response.data?.data || []
+  } catch (error) {
+    console.error('Error loading staff borrowings:', error)
+    borrowings.value = []
+  }
+})
 
 const pendingOrders = computed(() => {
-  return borrowingRecords.filter(b => b.status === 'applied').length
+  return (borrowings.value || borrowingRecords).filter(b => b.status === 'applied').length
 })
 
 const inProcessOrders = computed(() => {
-  return borrowingRecords.filter(b => b.status === 'approved' || b.status === 'ready_for_pickup').length
+  return (borrowings.value || borrowingRecords).filter(b => b.status === 'approved' || b.status === 'ready_for_pickup').length
 })
 
 const todayReturns = computed(() => {
   const today = new Date().toDateString()
-  return borrowingRecords.filter(b => {
-    const returnDate = new Date(b.plannedReturnDate).toDateString()
+  return (borrowings.value || borrowingRecords).filter(b => {
+    const returnDate = new Date(b.tanggal_rencana_kembali || b.planned_return_date || b.plannedReturnDate).toDateString()
     return returnDate === today && b.status === 'picked_up'
   }).length
 })
 
 const supportRating = computed(() => {
-  // Default rating (would come from feedback system)
-  return (4.7).toFixed(1)
+  // Calculate from overdue percentage
+  const overdue = (borrowings.value || borrowingRecords).filter(b => {
+    const now = new Date()
+    const planned = new Date(b.tanggal_rencana_kembali || b.planned_return_date || b.plannedReturnDate)
+    return b.status === 'picked_up' && now > planned
+  }).length
+  
+  const total = Math.max((borrowings.value || borrowingRecords).length, 1)
+  const rating = Math.max(3.0, 5.0 - (overdue / total))
+  return rating.toFixed(1)
 })
 
 const handleApprove = (borrowing) => {

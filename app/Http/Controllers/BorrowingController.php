@@ -584,8 +584,8 @@ class BorrowingController extends Controller
                 }
             }
 
-            // Build response
-            return [
+            // Build response with relationships
+            $response = [
                 'id_peminjaman' => (int)$borrowing->id_borrowing,
                 'id_user' => (int)$borrowing->id_user,
                 'id_equipment' => (int)$borrowing->id_equipment,
@@ -597,6 +597,7 @@ class BorrowingController extends Controller
                 'equipment_name' => (string)$equipmentName,
                 'category_name' => (string)$categoryName,
                 'tanggal_permohonan' => $borrowing->created_at ? $borrowing->created_at->format('Y-m-d H:i:s') : date('Y-m-d H:i:s'),
+                'tanggal_peminjaman' => $borrowDate,
                 'tanggal_mulai_peminjaman' => $borrowDate,
                 'tanggal_rencana_kembali' => $returnDate,
                 'tanggal_persetujuan' => $borrowing->updated_at ? $borrowing->updated_at->format('Y-m-d H:i:s') : '',
@@ -606,7 +607,50 @@ class BorrowingController extends Controller
                 'pickup_code' => $borrowing->pickup_code ?? null,
                 'fine_amount' => (float)($borrowing->fine_amount ?? 0),
                 'fine_paid' => (bool)($borrowing->fine_paid ?? false),
+                'kode_verifikasi' => $borrowing->kode_verifikasi ?? null,
             ];
+
+            // Add user relationship
+            if ($borrowing->user) {
+                $response['user'] = [
+                    'id_user' => $borrowing->user->id_user,
+                    'nama_lengkap' => $borrowing->user->name ?? $borrowing->user->nama_lengkap ?? 'Unknown',
+                    'email' => $borrowing->user->email ?? '',
+                    'phone' => $borrowing->user->phone ?? '',
+                    'role' => $borrowing->user->role ?? '',
+                ];
+            }
+
+            // Add equipment relationship
+            if ($borrowing->equipment) {
+                $equipment = $borrowing->equipment;
+                $response['equipment'] = [
+                    'id_equipment' => $equipment->id_equipment,
+                    'nama_alat' => $equipment->name ?? 'Unknown',
+                    'name' => $equipment->name ?? 'Unknown',
+                    'description' => $equipment->description ?? '',
+                    'deskripsi' => $equipment->description ?? '',
+                    'quantity' => $equipment->quantity ?? 0,
+                    'total_stok' => $equipment->quantity ?? 0,
+                    'condition' => $equipment->condition ?? '',
+                    'kondisi' => $equipment->condition ?? '',
+                    'photo' => $equipment->photo ?? '',
+                    'gambar' => $equipment->photo ?? '',
+                    'fine_per_day' => $equipment->fine_per_day ?? '50000.00',
+                    'is_available' => $equipment->is_available ?? true,
+                ];
+
+                // Add category if available
+                if ($equipment->category) {
+                    $response['equipment']['category'] = [
+                        'id_category' => $equipment->category->id_category ?? null,
+                        'nama_kategori' => $equipment->category->name ?? '',
+                        'name' => $equipment->category->name ?? '',
+                    ];
+                }
+            }
+
+            return $response;
         } catch (\Exception $e) {
             \Log::error('Error formatting borrowing: ' . $e->getMessage(), [
                 'borrowing_id' => $borrowing->id_borrowing ?? 'unknown',

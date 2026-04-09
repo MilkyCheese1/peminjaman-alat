@@ -67,10 +67,10 @@
             <td>
               <strong>#{{ borrowing.id_peminjaman }}</strong>
             </td>
-            <td>{{ borrowing.user?.nama_lengkap || 'N/A' }}</td>
-            <td>{{ borrowing.equipment?.nama_alat || 'N/A' }}</td>
-            <td>{{ formatDate(borrowing.tanggal_peminjaman) }}</td>
-            <td>{{ formatDate(borrowing.tanggal_rencana_kembali) }}</td>
+            <td>{{ borrowing.user?.nama_lengkap || borrowing.nama_peminjam || 'N/A' }}</td>
+            <td>{{ borrowing.equipment?.nama_alat || borrowing.nama_alat || 'N/A' }}</td>
+            <td>{{ formatDate(borrowing.tanggal_peminjaman || borrowing.borrow_date) }}</td>
+            <td>{{ formatDate(borrowing.tanggal_rencana_kembali || borrowing.planned_return_date) }}</td>
             <td>
               <span :class="['status-badge', borrowing.status]">
                 {{ getStatusLabel(borrowing.status) }}
@@ -158,15 +158,15 @@
             <h4>Informasi Alat</h4>
             <div class="info-row">
               <span class="label">Nama Alat:</span>
-              <span>{{ selectedBorrowing.equipment?.nama_alat }}</span>
+              <span>{{ selectedBorrowing.equipment?.nama_alat || selectedBorrowing.nama_alat || 'N/A' }}</span>
             </div>
             <div class="info-row">
               <span class="label">Kategori:</span>
-              <span>{{ selectedBorrowing.equipment?.category?.nama_kategori }}</span>
+              <span>{{ selectedBorrowing.equipment?.category?.nama_kategori || selectedBorrowing.category_name || '-' }}</span>
             </div>
             <div class="info-row">
               <span class="label">Denda/Hari:</span>
-              <span>Rp {{ (selectedBorrowing.equipment?.fine_per_day || 0).toLocaleString('id-ID') }}</span>
+              <span>Rp {{ (selectedBorrowing.equipment?.fine_per_day || 50000).toLocaleString('id-ID') }}</span>
             </div>
           </div>
 
@@ -174,15 +174,15 @@
             <h4>Informasi Peminjaman</h4>
             <div class="info-row">
               <span class="label">Tanggal Pinjam:</span>
-              <span>{{ formatDate(selectedBorrowing.tanggal_peminjaman) }}</span>
+              <span>{{ formatDate(selectedBorrowing.tanggal_peminjaman || selectedBorrowing.borrow_date) }}</span>
             </div>
             <div class="info-row">
               <span class="label">Tanggal Rencana Kembali:</span>
-              <span>{{ formatDate(selectedBorrowing.tanggal_rencana_kembali) }}</span>
+              <span>{{ formatDate(selectedBorrowing.tanggal_rencana_kembali || selectedBorrowing.planned_return_date) }}</span>
             </div>
-            <div class="info-row" v-if="selectedBorrowing.tanggal_kembali">
+            <div class="info-row" v-if="selectedBorrowing.actual_return_date || selectedBorrowing.tanggal_kembali">
               <span class="label">Tanggal Kembali Aktual:</span>
-              <span>{{ formatDate(selectedBorrowing.tanggal_kembali) }}</span>
+              <span>{{ formatDate(selectedBorrowing.actual_return_date || selectedBorrowing.tanggal_kembali) }}</span>
             </div>
             <div class="info-row">
               <span class="label">Status:</span>
@@ -192,11 +192,15 @@
                 </span>
               </span>
             </div>
+            <div class="info-row" v-if="selectedBorrowing.fine_amount > 0">
+              <span class="label">Denda Terhitung:</span>
+              <span>Rp {{ selectedBorrowing.fine_amount.toLocaleString('id-ID') }}</span>
+            </div>
           </div>
 
-          <div class="detail-section" v-if="selectedBorrowing.kode_pickup">
+          <div class="detail-section" v-if="selectedBorrowing.pickup_code">
             <h4>Kode Pickup</h4>
-            <div class="pickup-code">{{ selectedBorrowing.kode_pickup }}</div>
+            <div class="pickup-code">{{ selectedBorrowing.pickup_code }}</div>
           </div>
         </div>
 
@@ -214,8 +218,8 @@
           <button @click="closeModals()" class="btn-close">✕</button>
         </div>
         <div class="modal-body">
-          <p>Kode pengambilan untuk alat <strong>{{ selectedBorrowing.equipment?.nama_alat }}</strong>:</p>
-          <div class="pickup-code">{{ selectedBorrowing.kode_pickup }}</div>
+          <p>Kode pengambilan untuk alat <strong>{{ selectedBorrowing.equipment?.nama_alat || selectedBorrowing.nama_alat }}</strong>:</p>
+          <div class="pickup-code">{{ selectedBorrowing.pickup_code || 'Belum ada kode' }}</div>
           <p class="note">Berikan kode ini kepada staff untuk pengambilan alat</p>
         </div>
         <div class="modal-footer">
@@ -237,15 +241,15 @@
             <h4>Alat yang Dikembalikan</h4>
             <div class="info-row">
               <span class="label">Nama Alat:</span>
-              <span>{{ selectedBorrowing.equipment?.nama_alat }}</span>
+              <span>{{ selectedBorrowing.equipment?.nama_alat || selectedBorrowing.nama_alat }}</span>
             </div>
             <div class="info-row">
               <span class="label">Dipinjam Sejak:</span>
-              <span>{{ formatDate(selectedBorrowing.tanggal_peminjaman) }}</span>
+              <span>{{ formatDate(selectedBorrowing.tanggal_peminjaman || selectedBorrowing.borrow_date) }}</span>
             </div>
             <div class="info-row">
-              <span class="label">Rencananya Dikembalikan:</span>
-              <span>{{ formatDate(selectedBorrowing.tanggal_rencana_kembali) }}</span>
+              <span class="label\">Rencananya Dikembalikan:</span>
+              <span>{{ formatDate(selectedBorrowing.tanggal_rencana_kembali || selectedBorrowing.planned_return_date) }}</span>
             </div>
           </div>
 
@@ -346,8 +350,8 @@ const returnData = ref({
 const filteredBorrowings = computed(() => {
   return borrowings.value.filter((borrowing) => {
     const matchSearch =
-      borrowing.user?.nama_lengkap?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      borrowing.equipment?.nama_alat?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      (borrowing.user?.nama_lengkap || borrowing.nama_peminjam || '')?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      (borrowing.equipment?.nama_alat || borrowing.nama_alat || '')?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       borrowing.id_peminjaman?.toString().includes(searchQuery.value)
 
     const matchStatus = !statusFilter.value || borrowing.status === statusFilter.value
@@ -369,7 +373,7 @@ const activeCount = computed(() => {
 const overdueCount = computed(() => {
   const now = new Date()
   return borrowings.value.filter((b) => {
-    const dueDate = new Date(b.tanggal_rencana_kembali)
+    const dueDate = new Date(b.tanggal_rencana_kembali || b.planned_return_date)
     return b.status === 'picked_up' && now > dueDate
   }).length
 })
@@ -445,7 +449,7 @@ const closeModals = () => {
 const calculateFine = () => {
   if (!selectedBorrowing.value) return 0
   
-  const dueDate = new Date(selectedBorrowing.value.tanggal_rencana_kembali)
+  const dueDate = new Date(selectedBorrowing.value.tanggal_rencana_kembali || selectedBorrowing.value.planned_return_date)
   const returnDate = new Date(returnData.value.tanggal_kembali)
   
   if (returnDate <= dueDate) return 0

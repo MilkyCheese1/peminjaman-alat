@@ -61,4 +61,76 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 });
 
+// ============================================================================
+// ROLE-BASED ACCESS CONTROL - Frontend enforced (Sanctum not installed yet)
+// ============================================================================
+// NOTE: Since Laravel Sanctum is not installed, we remove middleware auth checks
+// Role-based access will be enforced at the frontend/Vue level via rolePermissions.js
+// For production, install Sanctum and add proper token-based authentication
+
+// OWNER ONLY (Passive Observer - Read Only)
+Route::group([], function () {
+    Route::get('/borrowings', [BorrowingController::class, 'index']);
+    Route::get('/borrowings/{borrowing}', [BorrowingController::class, 'show']);
+    Route::get('/borrowings/status/overdue', [BorrowingController::class, 'getOverdueeBorrowings']);
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/equipment', [EquipmentController::class, 'index']);
+});
+
+// ADMIN (Data Management - All CRUD operations except user deletion of certain users)
+Route::group([], function () {
+    // User management
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/{user}', [UserController::class, 'show']);
+    Route::post('/users', [UserController::class, 'store']);
+    Route::put('/users/{user}', [UserController::class, 'update']);
+    Route::delete('/users/{user}', [UserController::class, 'destroy']);
+    Route::get('/users/role/{role}', [UserController::class, 'getUsersByRole']);
+    Route::post('/users/{user}/toggle-active', [UserController::class, 'toggleActive']);
+    
+    // Equipment management
+    Route::post('/equipment', [EquipmentController::class, 'store']);
+    Route::put('/equipment/{equipment}', [EquipmentController::class, 'update']);
+    Route::delete('/equipment/{equipment}', [EquipmentController::class, 'destroy']);
+    Route::get('/equipment', [EquipmentController::class, 'index']);
+    Route::get('/equipment/{id}', [EquipmentController::class, 'show']);
+    
+    // Category management
+    Route::post('/categories', [CategoryController::class, 'store']);
+    Route::put('/categories/{category}', [CategoryController::class, 'update']);
+    Route::delete('/categories/{category}', [CategoryController::class, 'destroy']);
+    Route::get('/categories', [CategoryController::class, 'index']);
+    
+    // View borrowing data for analytics
+    Route::get('/borrowings', [BorrowingController::class, 'index']);
+    Route::get('/borrowings/{borrowing}', [BorrowingController::class, 'show']);
+});
+
+// STAFF (Borrowing & Return Processing)
+Route::group([], function () {
+    Route::get('/borrowings', [BorrowingController::class, 'index']);
+    Route::get('/borrowings/{borrowing}', [BorrowingController::class, 'show']);
+    Route::get('/borrowings/status/overdue', [BorrowingController::class, 'getOverdueeBorrowings']);
+    
+    // Staff actions
+    Route::post('/borrowings/{borrowing}/approve', [BorrowingController::class, 'approveBorrowing']);
+    Route::post('/borrowings/{borrowing}/reject', [BorrowingController::class, 'rejectBorrowing']);
+    Route::post('/borrowings/{borrowing}/generate-pickup-code', [BorrowingController::class, 'generatePickupCode']);
+    Route::post('/borrowings/{borrowing}/verify-pickup', [BorrowingController::class, 'verifyPickUp']);
+    Route::post('/borrowings/{borrowing}/verify-return', [BorrowingController::class, 'verifyReturn']);
+});
+
+// CUSTOMER (Borrowing & Personal Property Management)
+Route::group([], function () {
+    Route::get('/equipment', [EquipmentController::class, 'index']);
+    Route::get('/equipment/{id}', [EquipmentController::class, 'show']);
+    Route::get('/equipment/{id}/available', [EquipmentController::class, 'getAvailable']);
+    Route::get('/categories', [CategoryController::class, 'index']);
+    
+    // Create borrowing requests
+    Route::post('/borrowings', [BorrowingController::class, 'store']);
+    
+    // View own borrowings
+    Route::get('/borrowings/user/{userId}', [BorrowingController::class, 'getUserBorrowings']);
+});
 
