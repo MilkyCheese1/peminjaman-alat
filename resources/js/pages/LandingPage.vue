@@ -65,15 +65,15 @@
             
             <div class="hero-stats">
               <div class="stat">
-                <div class="stat-number">500+</div>
+                <div class="stat-number">{{ statistics.total_equipment }}+</div>
                 <div class="stat-label">Alat Tersedia</div>
               </div>
               <div class="stat">
-                <div class="stat-number">2000+</div>
+                <div class="stat-number">{{ statistics.total_active_users }}+</div>
                 <div class="stat-label">Pengguna Aktif</div>
               </div>
               <div class="stat">
-                <div class="stat-number">98%</div>
+                <div class="stat-number">{{ statistics.satisfaction_rate }}%</div>
                 <div class="stat-label">Kepuasan</div>
               </div>
             </div>
@@ -273,8 +273,37 @@ const heroCards = ref([
   { icon: '✅', title: 'Efisien & Terpercaya' }
 ])
 
+// Statistics state
+const statistics = ref({
+  total_equipment: 500,
+  total_active_users: 2000,
+  satisfaction_rate: 98
+})
+const isLoadingStats = ref(false)
+
 const products = ref([])
 const isLoadingProducts = ref(false)
+
+// Fetch statistics from API
+const fetchStatistics = async () => {
+  isLoadingStats.value = true
+  try {
+    const response = await apiClient.get('/statistics/dashboard')
+    if (response.data && response.data.data) {
+      statistics.value = response.data.data
+    }
+  } catch (error) {
+    console.error('Error fetching statistics:', error)
+    // Gunakan default values jika API error
+    statistics.value = {
+      total_equipment: 500,
+      total_active_users: 2000,
+      satisfaction_rate: 98
+    }
+  } finally {
+    isLoadingStats.value = false
+  }
+}
 
 // Fetch equipment from API
 const fetchEquipment = async () => {
@@ -455,7 +484,8 @@ const handleKeydown = (e) => {
 
 // Lifecycle
 onMounted(() => {
-  // Fetch equipment data from API
+  // Fetch statistics and equipment data from API
+  fetchStatistics()
   fetchEquipment()
   
   window.addEventListener('scroll', handleScroll)

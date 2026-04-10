@@ -6,6 +6,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\StatisticsController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,9 +30,67 @@ Route::get('/health', function () {
     ]);
 });
 
+// Statistics Routes (Public)
+Route::get('/statistics/dashboard', [StatisticsController::class, 'getDashboardStats']);
+Route::get('/statistics/detailed', [StatisticsController::class, 'getDetailedStats']);
+Route::post('/statistics/clear-cache', [StatisticsController::class, 'clearCache']);
+
 // Authentication Routes (Public)
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
+
+
+// ======================================================================
+// NOTIFICATION ROUTES - Fully Reconstructed
+// ======================================================================
+
+Route::prefix('notifications')->group(function () {
+    // Development endpoints (accessible with ?user_id=X when app.debug = true)
+    if (config('app.debug')) {
+        // Retrieval Endpoints
+        Route::get('/', [NotificationController::class, 'index']);
+        Route::get('/grouped', [NotificationController::class, 'grouped']);
+        Route::get('/{id}', [NotificationController::class, 'show']);
+        Route::get('/unread/count', [NotificationController::class, 'unreadCount']);
+        
+        // Update/Modify Endpoints
+        Route::post('/{id}/mark-read', [NotificationController::class, 'markAsRead']);
+        Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead']);
+        Route::post('/mark-category-read', [NotificationController::class, 'markCategoryAsRead']);
+        Route::post('/{id}/archive', [NotificationController::class, 'archive']);
+        Route::post('/archive-category', [NotificationController::class, 'archiveCategory']);
+        Route::delete('/{id}', [NotificationController::class, 'destroy']);
+        Route::post('/{id}/restore', [NotificationController::class, 'restore']);
+        Route::delete('/clear-all', [NotificationController::class, 'clearAll']);
+        
+        // Preference Endpoints
+        Route::get('/preferences', [NotificationController::class, 'preferences']);
+        Route::put('/preferences', [NotificationController::class, 'updatePreferences']);
+    }
+
+    // Protected endpoints (for authenticated users)
+    Route::middleware('auth:sanctum')->group(function () {
+        // Retrieval Endpoints
+        Route::get('/', [NotificationController::class, 'index']);
+        Route::get('/grouped', [NotificationController::class, 'grouped']);
+        Route::get('/{id}', [NotificationController::class, 'show']);
+        Route::get('/unread/count', [NotificationController::class, 'unreadCount']);
+        
+        // Update/Modify Endpoints
+        Route::post('/{id}/mark-read', [NotificationController::class, 'markAsRead']);
+        Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead']);
+        Route::post('/mark-category-read', [NotificationController::class, 'markCategoryAsRead']);
+        Route::post('/{id}/archive', [NotificationController::class, 'archive']);
+        Route::post('/archive-category', [NotificationController::class, 'archiveCategory']);
+        Route::delete('/{id}', [NotificationController::class, 'destroy']);
+        Route::post('/{id}/restore', [NotificationController::class, 'restore']);
+        Route::delete('/clear-all', [NotificationController::class, 'clearAll']);
+        
+        // Preference Endpoints
+        Route::get('/preferences', [NotificationController::class, 'preferences']);
+        Route::put('/preferences', [NotificationController::class, 'updatePreferences']);
+    });
+});
 
 // Category Routes
 Route::apiResource('categories', CategoryController::class);

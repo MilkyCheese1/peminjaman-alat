@@ -12,29 +12,7 @@
         </div>
         
         <div class="header-actions">
-          <!-- Notifications -->
-          <div class="notification-container">
-            <button class="notif-btn" @click="showNotifications = !showNotifications">
-              🔔
-              <span class="notif-badge" v-if="unreadCount > 0">{{ unreadCount }}</span>
-            </button>
-            <div v-if="showNotifications" class="notif-dropdown">
-              <div class="notif-header">
-                <h3>Notifikasi ({{ notifications.length }})</h3>
-                <button @click="clearNotifications" class="clear-btn">Hapus Semua</button>
-              </div>
-              <div class="notif-items">
-                <div v-for="notif in notifications" :key="notif.id" class="notif-item" :class="{ unread: !notif.read }">
-                  <div class="notif-icon">{{ notif.icon }}</div>
-                  <div class="notif-text">
-                    <p class="notif-title">{{ notif.title }}</p>
-                    <p class="notif-desc">{{ notif.desc }}</p>
-                    <p class="notif-time">{{ notif.time }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <!-- Notifications - TODO: Implement later -->
 
           <!-- Search -->
           <div class="search-box">
@@ -419,35 +397,9 @@ const profileForm = ref({
   address: 'Jl. Pendidikan No. 1'
 })
 
-// Notifications
-const notifications = ref([
-  {
-    id: 1,
-    icon: '📦',
-    title: 'Siap Diambil',
-    desc: 'Laptop Dell XPS siap untuk diambil',
-    time: '2 jam yang lalu',
-    read: false
-  },
-  {
-    id: 2,
-    icon: '⏰',
-    title: 'Pengembalian Tertunda',
-    desc: 'Kamera DSLR Canon harus dikembalikan hari ini',
-    time: '5 jam yang lalu',
-    read: false
-  },
-  {
-    id: 3,
-    icon: '✅',
-    title: 'Peminjaman Dikonfirmasi',
-    desc: 'Proyektor 4K telah dikonfirmasi',
-    time: '1 hari yang lalu',
-    read: true
-  }
-])
-
-const unreadCount = computed(() => notifications.value.filter(n => !n.read).length)
+// Notifications - Handled by NotificationPanel component
+// No need for dummy data here anymore
+const showNotifications = ref(false) // Can be removed if not used elsewhere
 
 // Active Borrowings
 const activeBorrowings = ref([
@@ -577,10 +529,6 @@ const faqs = ref([
 ])
 
 // Methods
-const clearNotifications = () => {
-  notifications.value = []
-}
-
 const logout = () => {
   localStorage.removeItem('user')
   router.push('/login')
@@ -600,9 +548,11 @@ onMounted(() => {
       const email = user.email || 'user@email.com'
       userName.value = email.split('@')[0] || 'User'
       userInitial.value = userName.value.charAt(0).toUpperCase()
+      userId.value = user.id_user || user.id || 3
       profileForm.value.email = email
     } catch (e) {
       userName.value = 'User'
+      userId.value = 3
     }
   }
 })
