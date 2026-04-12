@@ -296,9 +296,9 @@ const fetchStatistics = async () => {
     console.error('Error fetching statistics:', error)
     // Gunakan default values jika API error
     statistics.value = {
-      total_equipment: 500,
-      total_active_users: 2000,
-      satisfaction_rate: 98
+      total_equipment: 0,
+      total_active_users: 0,
+      satisfaction_rate: 0
     }
   } finally {
     isLoadingStats.value = false
