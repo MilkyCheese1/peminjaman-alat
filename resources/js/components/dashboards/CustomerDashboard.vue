@@ -18,7 +18,7 @@
         <div class="stat-card">
           <div class="stat-icon">✅</div>
           <div class="stat-info">
-            <p class="stat-label">Tersedia</p>
+            <p class="stat-label">Alat Tersedia</p>
             <p class="stat-value">{{ availableItemsCount }}</p>
           </div>
         </div>
@@ -150,6 +150,7 @@ const selectedBorrowingDetail = ref(null)
 const showDetailModal = ref(false)
 const activeBorrowings = ref([])
 const loadingActiveBorrowings = ref(false)
+const availableEquipmentCount = ref(0)
 
 onMounted(() => {
   const userStr = localStorage.getItem('user')
@@ -157,6 +158,7 @@ onMounted(() => {
     currentUser.value = JSON.parse(userStr)
     userName.value = currentUser.value.fullname || currentUser.value.username || 'User'
     loadActiveBorrowings()
+    loadAvailableEquipment()
   }
 })
 
@@ -199,8 +201,27 @@ const historyCount = computed(() => {
 })
 
 const availableItemsCount = computed(() => {
-  return allItems.value.reduce((total, item) => total + item.stock, 0)
+  return availableEquipmentCount.value
 })
+
+// Load available equipment from API
+const loadAvailableEquipment = async () => {
+  try {
+    const response = await fetch('http://localhost:8000/api/statistics/dashboard')
+    if (response.ok) {
+      const data = await response.json()
+      console.log('📊 Dashboard stats response:', data)
+      if (data.success && data.data && data.data.total_equipment !== undefined) {
+        availableEquipmentCount.value = data.data.total_equipment
+        console.log('✅ Available equipment count:', availableEquipmentCount.value)
+      }
+    } else {
+      console.error('❌ Failed to fetch equipment count, status:', response.status)
+    }
+  } catch (error) {
+    console.error('❌ Error loading available equipment:', error)
+  }
+}
 
 // Check if borrowing is overdue
 const isOverdue = (borrowing) => {
@@ -261,6 +282,7 @@ const handleExtendBorrowing = (borrowing) => {
   // TODO: Implement borrowing extension API call
 }
 
+// Dummy data (kept for reference but not used for available count)
 const allItems = ref([
   { id: 1, icon: '💻', name: 'Laptop', desc: 'Berbagai model', stock: 10 },
   { id: 2, icon: '📷', name: 'Kamera', desc: 'DSLR Professional', stock: 5 },
