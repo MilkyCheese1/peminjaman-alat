@@ -298,7 +298,6 @@ const handleRegister = async () => {
       router.push('/login')
     }, 2000)
   } catch (error) {
-    console.error('Registration error:', error)
     errors.general = 'Registrasi gagal. Periksa koneksi internet Anda.'
   } finally {
     isLoading.value = false

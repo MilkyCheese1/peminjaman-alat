@@ -56,30 +56,21 @@ router.beforeEach((to, from) => {
       isAuthenticated = !!(userData && userData.id && userData.email && userData.role)
       
       if (!isAuthenticated) {
-        console.warn('⚠️ User data incomplete in localStorage:', userData)
         localStorage.removeItem('user')
-      } else {
-        console.log('✅ User authenticated:', userData.email)
       }
-    } else {
-      console.log('ℹ️ No user data in localStorage')
     }
   } catch (err) {
-    console.warn('❌ Failed to parse user data from localStorage:', err)
-    console.warn('Error details:', err.message)
     isAuthenticated = false
     localStorage.removeItem('user')
   }
   
   // Redirect to login if trying to access protected route
   if (to.meta.requiresAuth && !isAuthenticated) {
-    console.log('🔒 Redirecting to login - route requires auth:', to.path)
     return { name: 'Login' }
   }
   
   // Redirect to landing if already logged in and going to login
   if (to.name === 'Login' && isAuthenticated) {
-    console.log('↩️ Already authenticated, redirecting to dashboard')
     return { name: 'Dashboard' }
   }
   

@@ -11,7 +11,7 @@ export function useSessionRestoration() {
       try {
         router = useRouter()
       } catch (err) {
-        console.warn('Router not available in current context:', err.message)
+        // Router not available in current context
       }
     }
     return router
@@ -22,7 +22,7 @@ export function useSessionRestoration() {
       try {
         route = useRoute()
       } catch (err) {
-        console.warn('Route not available in current context:', err.message)
+        // Route not available in current context
       }
     }
     return route
@@ -42,7 +42,7 @@ export function useSessionRestoration() {
       state[key] = value
       sessionStorage.setItem(SESSION_KEY, JSON.stringify(state))
     } catch (err) {
-      console.warn('Failed to save session state:', err)
+      // Silently fail
     }
   }
 
@@ -54,7 +54,6 @@ export function useSessionRestoration() {
       const state = JSON.parse(sessionStorage.getItem(SESSION_KEY) || '{}')
       return state[key] !== undefined ? state[key] : defaultValue
     } catch (err) {
-      console.warn('Failed to restore session state:', err)
       return defaultValue
     }
   }
@@ -74,7 +73,7 @@ export function useSessionRestoration() {
       positions[routePath] = scrollTop
       sessionStorage.setItem(SCROLL_KEY, JSON.stringify(positions))
     } catch (err) {
-      console.warn('Failed to save scroll position:', err)
+      // Silently fail
     }
   }
 
@@ -94,7 +93,7 @@ export function useSessionRestoration() {
         window.scrollTo(0, scrollTop)
       }, 0)
     } catch (err) {
-      console.warn('Failed to restore scroll position:', err)
+      // Silently fail
     }
   }
 
@@ -106,7 +105,7 @@ export function useSessionRestoration() {
       sessionStorage.removeItem(SESSION_KEY)
       sessionStorage.removeItem(SCROLL_KEY)
     } catch (err) {
-      console.warn('Failed to clear session:', err)
+      // Silently fail
     }
   }
 
@@ -121,7 +120,7 @@ export function useSessionRestoration() {
       sessionStorage.setItem('last_route', currentRoute.path)
       sessionStorage.setItem('last_route_name', currentRoute.name || '')
     } catch (err) {
-      console.warn('Failed to save last route:', err)
+      // Silently fail
     }
   }
 

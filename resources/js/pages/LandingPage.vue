@@ -291,7 +291,6 @@ const fetchStatistics = async () => {
       statistics.value = response.data.data
     }
   } catch (error) {
-    console.error('Error fetching statistics:', error)
     // Gunakan default values jika API error
     statistics.value = {
       total_equipment: 0,
@@ -312,7 +311,6 @@ const fetchEquipment = async () => {
       products.value = response.data.data
     }
   } catch (error) {
-    console.error('Error fetching equipment:', error)
     // Fallback jika API error
     products.value = []
   } finally {

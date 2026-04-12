@@ -121,9 +121,11 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useToast } from '../composables/useToast'
 
 const router = useRouter()
 const route = useRoute()
+const { success: showSuccess, error: showError } = useToast()
 const isLoading = ref(false)
 const showPassword = ref(false)
 const focusedInput = ref(null)
@@ -177,18 +179,10 @@ const handleLogin = async () => {
   isLoading.value = true
   errors.general = ''
   
-  console.group('🔐 LOGIN PROCESS STARTED')
-  console.log('📧 Email:', form.email)
-  console.log('🔒 Password length:', form.password.length)
-  
   try {
     const email = form.email.trim()
     const password = form.password.trim()
     
-    console.log('📤 Sending to:', `${API_BASE_URL}/login`)
-    console.log('📋 Payload:', { email, passwordLength: password.length })
-    
-    // Simple fetch without credentials - not needed for localStorage auth
     const response = await fetch(`${API_BASE_URL}/login`, {
       method: 'POST',
       headers: {
@@ -198,46 +192,29 @@ const handleLogin = async () => {
       body: JSON.stringify({ email, password })
     })
 
-    console.log('📨 Response received')
-    console.log('📊 Status:', response.status, `(${response.ok ? '✅ OK' : '❌ ERROR'})`)
-    console.log('🔗 Headers - Content-Type:', response.headers.get('content-type'))
-    
     let data
     try {
       const text = await response.text()
-      console.log('📄 Raw response body:', text.substring(0, 500))
       data = JSON.parse(text)
-      console.log('✅ Parsed JSON successfully')
     } catch (parseError) {
-      console.error('❌ JSON parse failed:', parseError.message)
       errors.general = 'Server error: Invalid response format'
+      showError('Server error: Format respons tidak valid')
       isLoading.value = false
-      console.groupEnd()
       return
     }
 
-    console.log('📦 Response data object:', data)
-
-    // Check for success flag first (regardless of HTTP status)
     if (data.success && data.data) {
-      console.log('✅ API returned success: true')
       const user = data.data
       
-      // Validate required fields
       if (!user.id || !user.email || !user.role) {
-        console.warn('⚠️ Missing required user fields', { id: user.id, email: user.email, role: user.role })
         errors.general = 'Login gagal - Data user tidak lengkap'
+        showError('Login gagal - Data user tidak lengkap')
         isLoading.value = false
-        console.groupEnd()
         return
       }
       
-      console.log('✅ User data complete')
-      console.log('👤 User role:', user.role)
-      
       successMessage.value = `Selamat datang, ${user.fullname || user.email}!`
       
-      // Prepare user object for localStorage
       const userData = {
         id_user: user.id,
         id: user.id,
@@ -254,17 +231,8 @@ const handleLogin = async () => {
         loginAt: new Date().toISOString()
       }
       
-      console.log('💾 Saving to localStorage...')
       localStorage.setItem('user', JSON.stringify(userData))
-      const verify = localStorage.getItem('user')
-      if (verify) {
-        console.log('✅ localStorage saved and verified')
-      } else {
-        throw new Error('localStorage save failed')
-      }
-      
-      console.log('✨ Login successful! Redirecting...')
-      console.groupEnd()
+      showSuccess(`Selamat datang, ${user.fullname || user.email}!`)
       
       setTimeout(() => {
         router.push('/dashboard')
@@ -272,19 +240,14 @@ const handleLogin = async () => {
       return
     }
     
-    // If not success, show error
     const errorMsg = data.message || `Login gagal (Status: ${response.status})`
-    console.error('❌ Login failed:', errorMsg)
-    console.log('📋 Error details:', data)
     errors.general = errorMsg
+    showError(errorMsg)
     
   } catch (error) {
-    console.error('❌ Unexpected error:', error)
-    console.error('📍 Error stack:', error.stack)
     errors.general = `Login error: ${error.message}`
+    showError(`Login error: ${error.message}`)
   } finally {
-    console.log('🏁 Login process finished')
-    console.groupEnd()
     isLoading.value = false
   }
 }

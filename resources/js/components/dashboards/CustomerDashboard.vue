@@ -176,7 +176,6 @@ const loadActiveBorrowings = async () => {
       activeBorrowings.value = response.data.data.filter(b => b.status === 'picked_up')
     }
   } catch (error) {
-    console.error('Error loading active borrowings:', error)
     activeBorrowings.value = []
   } finally {
     loadingActiveBorrowings.value = false
@@ -210,16 +209,12 @@ const loadAvailableEquipment = async () => {
     const response = await fetch('http://localhost:8000/api/statistics/dashboard')
     if (response.ok) {
       const data = await response.json()
-      console.log('📊 Dashboard stats response:', data)
       if (data.success && data.data && data.data.total_equipment !== undefined) {
         availableEquipmentCount.value = data.data.total_equipment
-        console.log('✅ Available equipment count:', availableEquipmentCount.value)
       }
-    } else {
-      console.error('❌ Failed to fetch equipment count, status:', response.status)
     }
   } catch (error) {
-    console.error('❌ Error loading available equipment:', error)
+    // Silently fail with default value
   }
 }
 
@@ -278,7 +273,6 @@ const selectBorrowingDetail = (borrowing) => {
 
 // Handle extend borrowing request (future feature)
 const handleExtendBorrowing = (borrowing) => {
-  alert(`Fitur perpanjangan untuk ${borrowing.equipment?.nama_alat || borrowing.nama_alat} akan segera tersedia.`)
   // TODO: Implement borrowing extension API call
 }
 
