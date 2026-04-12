@@ -16,7 +16,6 @@
         <div class="form-group">
           <label for="fullname">Nama Lengkap</label>
           <div class="input-wrapper">
-            <span class="input-icon">👤</span>
             <input
               id="fullname"
               v-model="form.fullName"
@@ -32,7 +31,6 @@
         <div class="form-group">
           <label for="email">Email</label>
           <div class="input-wrapper">
-            <span class="input-icon">📧</span>
             <input
               id="email"
               v-model="form.email"
@@ -48,7 +46,6 @@
         <div class="form-group">
           <label for="password">Password</label>
           <div class="input-wrapper">
-            <span class="input-icon">🔒</span>
             <input
               id="password"
               v-model="form.password"
@@ -60,8 +57,26 @@
               type="button"
               class="password-toggle"
               @click="showPassword = !showPassword"
+              :title="showPassword ? 'Sembunyikan password' : 'Tampilkan password'"
             >
-              {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+              <!-- Open Eye Icon -->
+              <svg v-if="showPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="eye-icon">
+                <!-- Outer eye shape -->
+                <ellipse cx="12" cy="12" rx="9" ry="6" stroke="#666666" stroke-width="1.5" fill="none"/>
+                <!-- Inner circle (iris) -->
+                <circle cx="12" cy="12" r="3" stroke="#666666" stroke-width="1.5" fill="#666666"/>
+                <!-- Pupil -->
+                <circle cx="12" cy="12" r="1.5" fill="#999999"/>
+              </svg>
+              <!-- Closed Eye Icon -->
+              <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="eye-icon">
+                <!-- Left eye closed -->
+                <path d="M4 12c1.5 1.5 3.5 2 5 2" stroke="#666666" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                <!-- Right eye closed -->
+                <path d="M20 12c-1.5 1.5-3.5 2-5 2" stroke="#666666" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                <!-- Slash line -->
+                <line x1="3" y1="4" x2="21" y2="20" stroke="#666666" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
             </button>
           </div>
           <span v-if="errors.password" class="error-message">{{ errors.password }}</span>
@@ -78,7 +93,6 @@
         <div class="form-group">
           <label for="confirm-password">Konfirmasi Password</label>
           <div class="input-wrapper">
-            <span class="input-icon">🔐</span>
             <input
               id="confirm-password"
               v-model="form.confirmPassword"
@@ -90,8 +104,26 @@
               type="button"
               class="password-toggle"
               @click="showConfirmPassword = !showConfirmPassword"
+              :title="showConfirmPassword ? 'Sembunyikan password' : 'Tampilkan password'"
             >
-              {{ showConfirmPassword ? '👁️' : '👁️‍🗨️' }}
+              <!-- Open Eye Icon -->
+              <svg v-if="showConfirmPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="eye-icon">
+                <!-- Outer eye shape -->
+                <ellipse cx="12" cy="12" rx="9" ry="6" stroke="#666666" stroke-width="1.5" fill="none"/>
+                <!-- Inner circle (iris) -->
+                <circle cx="12" cy="12" r="3" stroke="#666666" stroke-width="1.5" fill="#666666"/>
+                <!-- Pupil -->
+                <circle cx="12" cy="12" r="1.5" fill="#999999"/>
+              </svg>
+              <!-- Closed Eye Icon -->
+              <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="eye-icon">
+                <!-- Left eye closed -->
+                <path d="M4 12c1.5 1.5 3.5 2 5 2" stroke="#666666" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                <!-- Right eye closed -->
+                <path d="M20 12c-1.5 1.5-3.5 2-5 2" stroke="#666666" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                <!-- Slash line -->
+                <line x1="3" y1="4" x2="21" y2="20" stroke="#666666" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
             </button>
           </div>
           <span v-if="errors.confirmPassword" class="error-message">{{ errors.confirmPassword }}</span>
@@ -101,7 +133,6 @@
         <div class="form-group">
           <label for="phone">Nomor Telepon</label>
           <div class="input-wrapper">
-            <span class="input-icon">📱</span>
             <input
               id="phone"
               v-model="form.phone"
@@ -146,8 +177,10 @@
     </div>
 
     <!-- Back to Landing -->
-    <router-link to="/" class="back-button">
-      ← Kembali ke halaman utama
+    <router-link to="/" class="back-button" title="Kembali ke halaman utama">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 18L9 12L15 6" stroke="#0B7285" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </router-link>
   </div>
 </template>
@@ -306,11 +339,20 @@ const handleRegister = async () => {
   font-weight: 500;
   transition: all 0.3s ease;
   z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.back-button svg {
+  width: 24px;
+  height: 24px;
 }
 
 .back-button:hover {
-  color: #089FB3;
-  transform: translateX(-5px);
+  transform: scale(1.15);
 }
 
 .auth-card {
@@ -391,7 +433,7 @@ const handleRegister = async () => {
 
 .input-wrapper input {
   width: 100%;
-  padding: 12px 12px 12px 45px;
+  padding: 12px;
   border: 2px solid #e5e5e5;
   border-radius: 8px;
   font-size: 1rem;
@@ -412,13 +454,19 @@ const handleRegister = async () => {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 1.1rem;
-  padding: 0;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: opacity 0.3s ease;
 }
 
 .password-toggle:hover {
   opacity: 0.7;
+}
+
+.eye-icon {
+  display: block;
 }
 
 .error-message {

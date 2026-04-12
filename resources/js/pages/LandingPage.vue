@@ -80,8 +80,7 @@
 
             <div class="hero-buttons">
               <button class="cta-button primary" @click="scrollToSection(3)">
-                Daftar Sekarang
-                <span class="arrow">→</span>
+                Daftar
               </button>
               <router-link to="/login" class="cta-button secondary">Masuk</router-link>
             </div>
@@ -160,8 +159,7 @@
             </div>
 
             <div class="cta-buttons">
-              <button class="cta-button primary large">Daftar Sebagai Peminjam</button>
-              <button class="cta-button secondary large">Daftar Sebagai Pemilik</button>
+              <router-link to="/register" class="cta-button primary large">Mulai</router-link>
             </div>
           </div>
 

@@ -70,7 +70,7 @@
           <div class="stat-card">
             <div class="stat-icon">✅</div>
             <div class="stat-info">
-              <p class="stat-label">Tersedia untuk Dipinjam</p>
+              <p class="stat-label">Alat Tersedia</p>
               <p class="stat-value">{{ stats.available }}</p>
             </div>
           </div>
@@ -367,6 +367,7 @@ const showNotifications = ref(false)
 const editMode = ref(false)
 const userName = ref('User')
 const userInitial = ref('U')
+const userId = ref(3)
 const memberSince = ref('01 Januari 2026')
 
 // Tabs
@@ -555,7 +556,38 @@ onMounted(() => {
       userId.value = 3
     }
   }
+
+  // Fetch available equipment count from statistics API
+  fetchAvailableEquipment()
 })
+
+// Fetch available equipment from API
+const fetchAvailableEquipment = async () => {
+  try {
+    const API_URL = 'http://localhost:8000/api/statistics/dashboard'
+    console.log('📊 Fetching statistics from:', API_URL)
+    
+    const response = await fetch(API_URL)
+    console.log('📡 Response status:', response.status)
+    
+    if (response.ok) {
+      const data = await response.json()
+      console.log('📦 Received data:', data)
+      
+      if (data.success && data.data) {
+        const equipmentCount = data.data.total_equipment
+        console.log('✅ Equipment count:', equipmentCount)
+        stats.value.available = equipmentCount
+      } else {
+        console.warn('⚠️ Unexpected response format:', data)
+      }
+    } else {
+      console.error('❌ API error, status:', response.status)
+    }
+  } catch (error) {
+    console.error('❌ Error fetching available equipment:', error)
+  }
+}
 </script>
 
 <style scoped>

@@ -20,9 +20,9 @@ class StatisticsController extends Controller
         try {
             // Gunakan cache untuk 2 jam (7200 detik)
             $statistics = Cache::remember('dashboard_statistics', 7200, function () {
-                // 1. Hitung total equipment yang tersedia
+                // 1. Hitung total JENIS equipment (distinct count)
                 $totalEquipment = Equipment::where('is_available', true)
-                    ->sum('quantity');
+                    ->count();
 
                 // 2. Hitung total pengguna aktif
                 $totalActiveUsers = User::where('is_active', true)
