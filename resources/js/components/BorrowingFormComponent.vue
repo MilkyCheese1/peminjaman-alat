@@ -245,6 +245,7 @@
 import { ref, computed } from 'vue'
 import apiClient from '@/config/api'
 import html2canvas from 'html2canvas'
+import { useToast } from '@/composables/useToast'
 
 const props = defineProps({
   showModal: Boolean,
@@ -268,6 +269,7 @@ const dateError = ref('')
 const showVerificationCode = ref(false)
 const verificationCode = ref('')
 const isDataTouched = ref(false)
+const { success: showSuccess, error: showError } = useToast()
 
 const minReturnDate = computed(() => {
   const tomorrow = new Date()
@@ -359,15 +361,11 @@ const submitBorrowingRequest = async () => {
 
     const user = JSON.parse(userStr)
 
-    // Debug: log user object to check structure
-    console.log('User object from localStorage:', user)
-
     // Handle both id_user and id (for backward compatibility)
     const userId = user.id_user || user.id
 
     if (!userId) {
       formError.value = 'Error: User ID tidak ditemukan. Silakan login ulang.'
-      console.error('No user ID found in localStorage:', user)
       return
     }
 
@@ -376,7 +374,6 @@ const submitBorrowingRequest = async () => {
 
     if (!equipmentId) {
       formError.value = 'Error: Equipment ID tidak ditemukan'
-      console.error('Equipment object:', props.selectedEquipment)
       return
     }
 
@@ -390,8 +387,6 @@ const submitBorrowingRequest = async () => {
       catatan: borrowingForm.value.catatan,
     }
 
-    console.log('Submitting borrowing request with payload:', payload)
-
     const response = await apiClient.post('/borrowings', payload)
 
     if (response.data.success) {
@@ -400,7 +395,6 @@ const submitBorrowingRequest = async () => {
       emit('success', response.data.data)
     }
   } catch (error) {
-    console.error('Error details:', error.response?.data)
     formError.value = 'Gagal mengirim permohonan: ' + (error.response?.data?.message || error.message)
   } finally {
     isSubmitting.value = false
@@ -410,9 +404,9 @@ const submitBorrowingRequest = async () => {
 const copyToClipboard = async () => {
   try {
     await navigator.clipboard.writeText(verificationCode.value)
-    alert('✅ Kode telah disalin ke clipboard')
+    showSuccess('✅ Kode telah disalin ke clipboard')
   } catch (err) {
-    alert('❌ Gagal menyalin kode')
+    showError('❌ Gagal menyalin kode')
   }
 }
 
@@ -430,7 +424,7 @@ const downloadAsImage = async () => {
     link.download = `kode-verifikasi-${verificationCode.value}.png`
     link.click()
   } catch (error) {
-    alert('❌ Gagal mengunduh gambar: ' + error.message)
+    showError('❌ Gagal mengunduh gambar: ' + error.message)
   }
 }
 

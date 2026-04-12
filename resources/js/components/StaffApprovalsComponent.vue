@@ -93,11 +93,13 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import apiClient from '@/config/api'
+import { useToast } from '@/composables/useToast'
 
 const borrowings = ref([])
 const showRejectModal = ref(false)
 const rejectReason = ref('')
 const selectedBorrowing = ref(null)
+const { success: showSuccess, error: showError } = useToast()
 
 const pendingBorrowings = computed(() => {
   return borrowings.value.filter(b => b.status === 'applied')
@@ -124,7 +126,7 @@ const loadBorrowings = async () => {
       borrowings.value = response.data.data
     }
   } catch (error) {
-    console.error('Error loading borrowings:', error)
+    // Error handling
   }
 }
 
@@ -143,11 +145,10 @@ const approveBorrowing = async (borrowing) => {
     if (response.data.success) {
       // Remove from list
       borrowings.value = borrowings.value.filter(b => b.id_peminjaman !== borrowing.id_peminjaman)
-      alert('Peminjaman berhasil disetujui!')
+      showSuccess('Peminjaman berhasil disetujui!')
     }
   } catch (error) {
-    console.error('Error approving borrowing:', error)
-    alert('Gagal menyetujui peminjaman: ' + (error.response?.data?.message || error.message))
+    showError('Gagal menyetujui peminjaman: ' + (error.response?.data?.message || error.message))
   }
 }
 
@@ -165,7 +166,7 @@ const closeRejectModal = () => {
 
 const confirmReject = async () => {
   if (!rejectReason.value.trim()) {
-    alert('Silakan masukkan alasan penolakan')
+    showError('Silakan masukkan alasan penolakan')
     return
   }
 
@@ -176,11 +177,10 @@ const confirmReject = async () => {
     if (response.data.success) {
       borrowings.value = borrowings.value.filter(b => b.id_peminjaman !== selectedBorrowing.value.id_peminjaman)
       closeRejectModal()
-      alert('Peminjaman berhasil ditolak!')
+      showSuccess('Peminjaman berhasil ditolak!')
     }
   } catch (error) {
-    console.error('Error rejecting borrowing:', error)
-    alert('Gagal menolak peminjaman: ' + (error.response?.data?.message || error.message))
+    showError('Gagal menolak peminjaman: ' + (error.response?.data?.message || error.message))
   }
 }
 

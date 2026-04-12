@@ -162,6 +162,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import apiClient from '@/config/api'
 import { useSessionRestoration } from '@/composables/useSessionRestoration.js'
+import { useToast } from '@/composables/useToast'
 import BorrowingFormComponent from './BorrowingFormComponent.vue'
 
 const { saveState, getState } = useSessionRestoration()
@@ -174,6 +175,7 @@ const sortBy = ref('nama')
 const showDetailModal = ref(false)
 const showBorrowingModal = ref(false)
 const selectedEquipment = ref(null)
+const { error: showError } = useToast()
 
 const today = computed(() => {
   const d = new Date()
@@ -223,7 +225,7 @@ const loadEquipment = async () => {
       equipment.value = response.data.data
     }
   } catch (error) {
-    console.error('Error loading equipment:', error)
+    // Silently handle equipment loading error
   }
 }
 
@@ -234,7 +236,7 @@ const loadCategories = async () => {
       categories.value = response.data.data
     }
   } catch (error) {
-    console.error('Error loading categories:', error)
+    // Silently handle category loading error
   }
 }
 
@@ -273,7 +275,7 @@ const closeDetailModal = () => {
 
 const selectEquipmentForBorrowing = (item) => {
   if (item.available_quantity === 0) {
-    alert('Alat ini tidak tersedia saat ini')
+    showError('Alat ini tidak tersedia saat ini')
     return
   }
   selectedEquipment.value = item

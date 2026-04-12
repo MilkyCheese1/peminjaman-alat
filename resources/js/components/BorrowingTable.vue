@@ -308,6 +308,7 @@
 <script setup>
 import { ref, computed, onMounted, defineProps } from 'vue'
 import apiClient from '@/config/api'
+import { useToast } from '@/composables/useToast'
 
 const props = defineProps({
   canApprove: {
@@ -345,6 +346,7 @@ const returnData = ref({
   catatan_kondisi: '',
   tanggal_kembali: new Date().toISOString().split('T')[0],
 })
+const { success: showSuccess, error: showError } = useToast()
 
 // Computed Properties
 const filteredBorrowings = computed(() => {
@@ -387,8 +389,7 @@ const loadBorrowings = async () => {
       borrowings.value = response.data.data
     }
   } catch (error) {
-    console.error('Error loading borrowings:', error)
-    alert('Gagal memuat data peminjaman')
+    showError('Gagal memuat data peminjaman')
   } finally {
     isLoading.value = false
   }
@@ -471,10 +472,10 @@ const approveBorrowing = async (borrowing) => {
       if (index > -1) {
         borrowings.value[index] = response.data.data
       }
-      alert('Peminjaman berhasil disetujui!')
+      showSuccess('Peminjaman berhasil disetujui!')
     }
   } catch (error) {
-    alert(error.response?.data?.message || 'Gagal menyetujui peminjaman')
+    showError(error.response?.data?.message || 'Gagal menyetujui peminjaman')
   }
 }
 
@@ -488,10 +489,10 @@ const rejectBorrowing = async (borrowing) => {
       if (index > -1) {
         borrowings.value[index] = response.data.data
       }
-      alert('Peminjaman berhasil ditolak!')
+      showSuccess('Peminjaman berhasil ditolak!')
     }
   } catch (error) {
-    alert(error.response?.data?.message || 'Gagal menolak peminjaman')
+    showError(error.response?.data?.message || 'Gagal menolak peminjaman')
   }
 }
 
@@ -520,7 +521,7 @@ const verifyReturn = async () => {
         borrowings.value[index] = response.data.data
       }
       closeModals()
-      alert('Pengembalian berhasil diverifikasi!')
+      showSuccess('Pengembalian berhasil diverifikasi!')
     }
   } catch (error) {
     formError.value = error.response?.data?.message || 'Gagal memverifikasi pengembalian'

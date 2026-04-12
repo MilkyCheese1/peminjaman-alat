@@ -104,6 +104,7 @@
 <script setup>
 import { defineProps, ref, computed, onMounted } from 'vue'
 import apiClient from '../../config/api'
+import { useToast } from '../../composables/useToast'
 import BorrowingTable from '../BorrowingTable.vue'
 import EquipmentTable from '../EquipmentTable.vue'
 import StaffApprovalsComponent from '../StaffApprovalsComponent.vue'
@@ -122,6 +123,7 @@ defineProps({
 const showReturnVerification = ref(false)
 const selectedBorrowingDetail = ref(null)
 const borrowings = ref([])
+const { error: showError } = useToast()
 
 // Load borrowings from API
 onMounted(async () => {
@@ -129,7 +131,7 @@ onMounted(async () => {
     const response = await apiClient.get('/borrowings')
     borrowings.value = response.data?.data || []
   } catch (error) {
-    console.error('Error loading staff borrowings:', error)
+    // Silently handle staff borrowings loading error
     borrowings.value = []
   }
 })

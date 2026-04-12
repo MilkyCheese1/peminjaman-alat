@@ -269,6 +269,7 @@
 <script setup>
 import { ref, computed, onMounted, defineProps } from 'vue'
 import apiClient from '@/config/api'
+import { useToast } from '@/composables/useToast'
 
 const props = defineProps({
   canEdit: {
@@ -301,6 +302,7 @@ const formData = ref({
 
 const photoPreview = ref(null)
 const fileInput = ref(null)
+const { success: showSuccess, error: showError } = useToast()
 
 // Computed Properties
 const filteredEquipment = computed(() => {
@@ -343,8 +345,7 @@ const loadEquipment = async () => {
       equipment.value = response.data.data
     }
   } catch (error) {
-    console.error('Error loading equipment:', error)
-    alert('Gagal memuat data alat')
+    showError('Gagal memuat data alat')
   } finally {
     isLoading.value = false
   }
@@ -357,7 +358,7 @@ const loadCategories = async () => {
       categories.value = response.data.data
     }
   } catch (error) {
-    console.error('Error loading categories:', error)
+    // Silently handle category loading error
   }
 }
 
@@ -435,7 +436,7 @@ const saveEquipment = async () => {
           equipment.value[index] = response.data.data
         }
         closeModals()
-        alert('Alat berhasil diperbarui!')
+        showSuccess('Alat berhasil diperbarui!')
       }
     } else {
       const response = await apiClient.post('/equipment', submission, {
@@ -444,7 +445,7 @@ const saveEquipment = async () => {
       if (response.data.success) {
         equipment.value.push(response.data.data)
         closeModals()
-        alert('Alat berhasil ditambahkan!')
+        showSuccess('Alat berhasil ditambahkan!')
       }
     }
   } catch (error) {
@@ -511,10 +512,10 @@ const deleteEquipmentConfirm = async () => {
         (e) => e.id_equipment !== deleteEquipment.value.id_equipment
       )
       showDeleteConfirm.value = false
-      alert('Alat berhasil dihapus!')
+      showSuccess('Alat berhasil dihapus!')
     }
   } catch (error) {
-    alert(error.response?.data?.message || 'Gagal menghapus alat')
+    showError(error.response?.data?.message || 'Gagal menghapus alat')
   } finally {
     isSubmitting.value = false
   }

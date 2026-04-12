@@ -103,11 +103,13 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import apiClient from '@/config/api'
+import { useToast } from '@/composables/useToast'
 
 const borrowings = ref([])
 const selectedCondition = ref({})
 const verificationNotes = ref({})
 const conditionOptions = ['Baik', 'Sedang', 'Rusak']
+const { success: showSuccess, error: showError } = useToast()
 
 const pendingVerifications = computed(() => {
   return borrowings.value.filter(b => b.status === 'picked_up')
@@ -134,7 +136,7 @@ const loadBorrowings = async () => {
       borrowings.value = response.data.data
     }
   } catch (error) {
-    console.error('Error loading borrowings:', error)
+    // Error handling
   }
 }
 
@@ -166,7 +168,7 @@ const verifyReturn = async (borrowing) => {
   const condition = selectedCondition.value[borrowing.id_peminjaman]
   
   if (!condition) {
-    alert('Pilih kondisi alat terlebih dahulu')
+    showError('Pilih kondisi alat terlebih dahulu')
     return
   }
 
@@ -178,11 +180,10 @@ const verifyReturn = async (borrowing) => {
     
     if (response.data.success) {
       borrowings.value = borrowings.value.filter(b => b.id_peminjaman !== borrowing.id_peminjaman)
-      alert('Pengembalian berhasil diverifikasi!')
+      showSuccess('Pengembalian berhasil diverifikasi!')
     }
   } catch (error) {
-    console.error('Error verifying return:', error)
-    alert('Gagal memverifikasi pengembalian: ' + (error.response?.data?.message || error.message))
+    showError('Gagal memverifikasi pengembalian: ' + (error.response?.data?.message || error.message))
   }
 }
 

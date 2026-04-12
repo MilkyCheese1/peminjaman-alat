@@ -96,11 +96,13 @@
 import { ref, computed, onMounted } from 'vue'
 import apiClient from '@/config/api'
 import BorrowingFormComponent from './BorrowingFormComponent.vue'
+import { useToast } from '@/composables/useToast'
 
 const equipment = ref([])
 const userBorrowingHistory = ref([])
 const showBorrowingModal = ref(false)
 const selectedEquipment = ref(null)
+const { error: showError } = useToast()
 
 const today = computed(() => {
   const d = new Date()
@@ -143,7 +145,7 @@ const loadEquipment = async () => {
       equipment.value = response.data.data
     }
   } catch (error) {
-    console.error('Error loading equipment:', error)
+    // Silently handle equipment loading error
   }
 }
 
@@ -158,13 +160,13 @@ const loadUserBorrowingHistory = async () => {
       userBorrowingHistory.value = response.data.data
     }
   } catch (error) {
-    console.error('Error loading borrowing history:', error)
+    // Silently handle borrowing history loading error
   }
 }
 
 const borrowEquipment = (item) => {
   if (item.available_quantity === 0) {
-    alert('Alat ini tidak tersedia saat ini')
+    showError('Alat ini tidak tersedia saat ini')
     return
   }
   selectedEquipment.value = item

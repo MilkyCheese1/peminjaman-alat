@@ -277,6 +277,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import apiClient from '@/config/api'
+import { useToast } from '@/composables/useToast'
 
 const users = ref([])
 const searchQuery = ref('')
@@ -288,6 +289,7 @@ const isLoading = ref(false)
 const isSubmitting = ref(false)
 const formError = ref('')
 const deleteUser = ref(null)
+const { success: showSuccess, error: showError } = useToast()
 
 const formData = ref({
   username: '',
@@ -340,8 +342,7 @@ const loadUsers = async () => {
       users.value = response.data.data
     }
   } catch (error) {
-    console.error('Error loading users:', error)
-    alert('Gagal memuat data pengguna')
+    showError('Gagal memuat data pengguna')
   } finally {
     isLoading.value = false
   }
@@ -402,14 +403,14 @@ const saveUser = async () => {
           users.value[index] = response.data.data
         }
         closeModals()
-        alert('Pengguna berhasil diperbarui!')
+        showSuccess('Pengguna berhasil diperbarui!')
       }
     } else {
       const response = await apiClient.post('/users', payload)
       if (response.data.success) {
         users.value.push(response.data.data)
         closeModals()
-        alert('Pengguna berhasil ditambahkan!')
+        showSuccess('Pengguna berhasil ditambahkan!')
       }
     }
   } catch (error) {
@@ -439,10 +440,10 @@ const deleteUserConfirm = async () => {
         (u) => u.id_user !== deleteUser.value.id_user
       )
       showDeleteConfirm.value = false
-      alert('Pengguna berhasil dihapus!')
+      showSuccess('Pengguna berhasil dihapus!')
     }
   } catch (error) {
-    alert(error.response?.data?.message || 'Gagal menghapus pengguna')
+    showError(error.response?.data?.message || 'Gagal menghapus pengguna')
   } finally {
     isSubmitting.value = false
   }
@@ -458,7 +459,7 @@ const toggleUserActive = async (user) => {
       }
     }
   } catch (error) {
-    alert('Gagal mengubah status pengguna')
+    showError('Gagal mengubah status pengguna')
   }
 }
 

@@ -87,11 +87,13 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import apiClient from '@/config/api'
+import { useToast } from '@/composables/useToast'
 
 const borrowings = ref([])
 const searchQuery = ref('')
 const statusFilter = ref('')
 const isLoading = ref(false)
+const { error: showError } = useToast()
 
 const filteredReturns = computed(() => {
   return borrowings.value
@@ -156,7 +158,7 @@ const loadBorrowings = async () => {
       borrowings.value = response.data.data
     }
   } catch (error) {
-    console.error('Error loading borrowings:', error)
+    // Silently handle borrowings loading error
   } finally {
     isLoading.value = false
   }

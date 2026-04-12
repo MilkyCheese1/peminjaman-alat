@@ -137,6 +137,7 @@
 <script setup>
 import { defineProps, computed, ref, onMounted } from 'vue'
 import apiClient from '../../config/api'
+import { useToast } from '../../composables/useToast'
 import { borrowingRecords } from '../../data/borrowingData.js'
 import UsersTable from '../UsersTable.vue'
 import EquipmentTable from '../EquipmentTable.vue'
@@ -152,6 +153,7 @@ defineProps({
 const users = ref([])
 const equipment = ref([])
 const borrowings = ref([])
+const { error: showError } = useToast()
 
 // Load data from API on mount
 onMounted(async () => {
@@ -166,7 +168,7 @@ onMounted(async () => {
     equipment.value = equipmentRes.data?.data || []
     borrowings.value = borrowingsRes.data?.data || []
   } catch (error) {
-    console.error('Error loading admin dashboard data:', error)
+    // Silently handle dashboard data loading error
   }
 })
 

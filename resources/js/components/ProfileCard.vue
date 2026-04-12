@@ -77,9 +77,11 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import apiClient from '@/config/api'
+import { useToast } from '@/composables/useToast'
 
 const userInfo = ref(null)
 const borrowingStats = ref({ total: 0, active: 0, overdue: 0 })
+const { warning: showWarning } = useToast()
 
 const roleLabel = computed(() => {
   const roles = {
@@ -129,12 +131,12 @@ const loadUserProfile = async () => {
       }
     }
   } catch (error) {
-    console.error('Error loading profile:', error)
+    // Silently handle profile loading error
   }
 }
 
 const editProfile = () => {
-  alert('Fitur edit profil sedang dalam pengembangan')
+  showWarning('Fitur edit profil sedang dalam pengembangan')
 }
 
 const logout = () => {
