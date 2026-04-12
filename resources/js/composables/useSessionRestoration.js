@@ -2,8 +2,32 @@ import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 export function useSessionRestoration() {
-  const router = useRouter()
-  const route = useRoute()
+  // Lazy initialization - only get router/route when first needed
+  let router = null
+  let route = null
+  
+  const getRouter = () => {
+    if (!router) {
+      try {
+        router = useRouter()
+      } catch (err) {
+        console.warn('Router not available in current context:', err.message)
+      }
+    }
+    return router
+  }
+
+  const getRoute = () => {
+    if (!route) {
+      try {
+        route = useRoute()
+      } catch (err) {
+        console.warn('Route not available in current context:', err.message)
+      }
+    }
+    return route
+  }
+
   const scrollPositions = ref({})
 
   const SESSION_KEY = 'app_session_state'
@@ -39,7 +63,10 @@ export function useSessionRestoration() {
    * Save scroll position for current route
    */
   function saveScrollPosition() {
-    const routePath = route.path
+    const currentRoute = getRoute()
+    if (!currentRoute) return
+    
+    const routePath = currentRoute.path
     const scrollTop = window.scrollY || window.pageYOffset || document.documentElement.scrollTop
     
     try {
@@ -55,9 +82,12 @@ export function useSessionRestoration() {
    * Restore scroll position for current route
    */
   function restoreScrollPosition() {
+    const currentRoute = getRoute()
+    if (!currentRoute) return
+    
     try {
       const positions = JSON.parse(sessionStorage.getItem(SCROLL_KEY) || '{}')
-      const scrollTop = positions[route.path] || 0
+      const scrollTop = positions[currentRoute.path] || 0
       
       // Use nextTick to ensure DOM is ready
       setTimeout(() => {
@@ -84,9 +114,12 @@ export function useSessionRestoration() {
    * Save last visited route
    */
   function saveLastRoute() {
+    const currentRoute = getRoute()
+    if (!currentRoute) return
+    
     try {
-      sessionStorage.setItem('last_route', route.path)
-      sessionStorage.setItem('last_route_name', route.name || '')
+      sessionStorage.setItem('last_route', currentRoute.path)
+      sessionStorage.setItem('last_route_name', currentRoute.name || '')
     } catch (err) {
       console.warn('Failed to save last route:', err)
     }
@@ -111,8 +144,11 @@ export function useSessionRestoration() {
    * Initialize session restoration
    */
   function initializeSession() {
+    const currentRoute = getRoute()
+    if (!currentRoute) return
+
     // Watch for route changes and save scroll position
-    watch(() => route.path, () => {
+    watch(() => currentRoute.path, () => {
       saveLastRoute()
       // Restore scroll position after a small delay for DOM update
       setTimeout(restoreScrollPosition, 100)
