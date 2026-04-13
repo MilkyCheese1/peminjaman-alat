@@ -183,7 +183,7 @@ export const rolePermissions = {
       view_borrowing_history: true,   // ✓ Lihat riwayat peminjaman sendiri
       extend_borrowing: true      // ✓ Minta perpanjangan (future feature)
     },
-    dashboardTabs: ['overview', 'explore', 'my-borrowings', 'recommendations', 'profile', 'help']
+    dashboardTabs: ['overview', 'explore', 'my-borrowings', 'profile', 'help']
   }
 }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-wrapper">
     <!-- Header -->
-    <header class="dash-header">
+    <header class="dash-header" ref="headerElement" :style="isMobileView ? { transform: `translateY(${headerTranslateY}px)` } : {}">
       <div class="header-top">
         <div class="logo-section">
           <div class="logo-icon">🎓</div>
@@ -34,12 +34,6 @@
                 </div>
               </div>
             </div>
-          </div>
-
-          <!-- Search -->
-          <div class="search-box">
-            <input type="text" placeholder="Cari alat...">
-            <button>🔍</button>
           </div>
 
           <!-- User Menu -->
@@ -97,7 +91,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getAllowedTabs, getRoleColor, getRoleLabel } from '../data/rolePermissions.js'
 import { useSessionRestoration } from '../composables/useSessionRestoration.js'
@@ -115,6 +109,11 @@ const showNotifications = ref(false)
 const userName = ref('User')
 const userRole = ref('customer')
 const userInitial = ref('U')
+const headerTranslateY = ref(0)
+const lastScrollY = ref(0)
+const isMobileView = ref(window.innerWidth < 576)
+const headerElement = ref(null)
+const headerHeight = ref(0) // Will be set after mount
 
 // Notifications
 const notifications = ref([
@@ -167,7 +166,6 @@ const allowedTabs = computed(() => {
     'activity-logs': { id: 'activity-logs', label: 'Log Aktivitas', icon: '📝' },
     approvals: { id: 'approvals', label: 'Persetujuan', icon: '✓' },
     verifications: { id: 'verifications', label: 'Verifikasi', icon: '🔍' },
-    recommendations: { id: 'recommendations', label: 'Rekomendasi', icon: '⭐' },
     profile: { id: 'profile', label: 'Profil', icon: '👤' },
     help: { id: 'help', label: 'Bantuan', icon: '❓' }
   }
@@ -207,11 +205,81 @@ onMounted(() => {
       userName.value = 'User'
     }
   }
+  
+  // Set actual header height after render
+  if (headerElement.value) {
+    headerHeight.value = headerElement.value.offsetHeight
+  }
+  
+  // Add scroll and resize listeners with passive option
+  window.addEventListener('scroll', handleScroll, { passive: true })
+  window.addEventListener('resize', handleResize, { passive: true })
 })
 
 // Save active tab whenever it changes
 watch(activeTab, (newTab) => {
   saveState('activeTab', newTab)
+})
+
+// Handle scroll behavior for mobile
+const handleScroll = () => {
+  // Only handle for mobile
+  if (!isMobileView.value || headerHeight.value === 0) return
+  
+  const currentScrollY = window.scrollY
+  
+  // If at the very top, fully show header
+  if (currentScrollY <= 0) {
+    headerTranslateY.value = 0
+    lastScrollY.value = 0
+    return
+  }
+  
+  // Calculate scroll direction
+  const diff = currentScrollY - lastScrollY.value
+  
+  // Only update if significant scroll (to avoid micro-movements)
+  if (Math.abs(diff) < 1) {
+    return
+  }
+  
+  // Calculate new position (INVERTED: subtract diff instead of add)
+  // Scroll DOWN (diff positive) → translate negative (hide navbar)
+  // Scroll UP (diff negative) → translate positive (show navbar)
+  let newTranslateY = headerTranslateY.value - diff
+  
+  // Clamp between 0 (fully visible) and -headerHeight (fully hidden)
+  newTranslateY = Math.max(-headerHeight.value, Math.min(0, newTranslateY))
+  
+  headerTranslateY.value = newTranslateY
+  lastScrollY.value = currentScrollY
+}
+
+// Handle window resize
+const handleResize = () => {
+  const wasMobile = isMobileView.value
+  isMobileView.value = window.innerWidth < 576
+  
+  // If changed from desktop to mobile or vice versa
+  if (wasMobile !== isMobileView.value) {
+    headerTranslateY.value = 0
+    lastScrollY.value = 0
+    
+    // Update header height for new layout
+    if (isMobileView.value && headerElement.value) {
+      setTimeout(() => {
+        if (headerElement.value) {
+          headerHeight.value = headerElement.value.offsetHeight
+        }
+      }, 0)
+    }
+  }
+}
+
+// Lifecycle
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('resize', handleResize)
 })
 </script>
 
@@ -242,9 +310,16 @@ watch(activeTab, (newTab) => {
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
   color: white;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  position: sticky;
-  top: 0;
   z-index: 100;
+}
+
+/* Desktop: sticky */
+@media (min-width: 577px) {
+  .dash-header {
+    position: sticky;
+    top: 0;
+    transition: transform 0.3s ease-in-out;
+  }
 }
 
 .header-top {
@@ -416,34 +491,6 @@ watch(activeTab, (newTab) => {
   color: #999;
 }
 
-.search-box {
-  display: flex;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.search-box input {
-  background: none;
-  border: none;
-  color: white;
-  padding: 8px 12px;
-  width: 200px;
-  outline: none;
-}
-
-.search-box input::placeholder {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.search-box button {
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  padding: 8px 12px;
-}
-
 .user-section {
   display: flex;
   align-items: center;
@@ -552,17 +599,100 @@ watch(activeTab, (newTab) => {
     width: 100%;
   }
 
-  .search-box,
-  .search-box input {
-    width: 100%;
-  }
-
   .dash-nav {
     flex-wrap: wrap;
   }
 
   .dash-main {
     padding: 15px;
+  }
+}
+
+/* ===== MOBILE NAVBAR BEHAVIOR (576px and below) ===== */
+@media (max-width: 576px) {
+  .dash-header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0;
+    right: 0;
+    width: 100%;
+    will-change: transform;
+    transform-origin: top;
+    /* transform will be set via inline style for scroll behavior */
+  }
+  
+  .header-top {
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .logo-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .logo-icon {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    min-width: 0;
+  }
+
+  .logo-text h1 {
+    font-size: 1rem;
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .logo-text p {
+    font-size: 0.65rem;
+    opacity: 0.9;
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .header-actions {
+    display: none !important;
+  }
+  
+  .dash-nav {
+    padding: 0;
+    background: rgba(0, 0, 0, 0.15);
+    min-height: 45px;
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .dash-main {
+    padding-top: 140px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 15px;
+    margin-top: 10px;
+  }
+
+  .tab-btn {
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Ensure header stays on top */
+  .notification-container,
+  .user-section,
+  .logout-btn {
+    display: none !important;
   }
 }
 </style>

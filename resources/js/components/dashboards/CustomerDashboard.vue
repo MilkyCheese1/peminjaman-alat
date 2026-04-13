@@ -54,29 +54,83 @@
           <p>✓ Tidak ada peminjaman aktif saat ini</p>
         </div>
         
-        <!-- Active Borrowings List -->
-        <div v-else class="borrowing-list">
-          <div v-for="borrowing in activeBorrowings.slice(0, 3)" :key="borrowing.id_peminjaman" class="borrow-item">
-            <span class="icon">{{ getEquipmentIcon(borrowing.equipment?.category?.nama_kategori) }}</span>
-            <div class="info">
-              <h4>{{ borrowing.equipment?.nama_alat || borrowing.nama_alat }}</h4>
-              <p>📅 {{ formatDate(borrowing.tanggal_peminjaman || borrowing.borrow_date) }} - {{ formatDate(borrowing.tanggal_rencana_kembali || borrowing.planned_return_date) }}</p>
-              <p v-if="borrowing.kode_verifikasi" class="code-detail">🔑 Kode: {{ borrowing.kode_verifikasi }}</p>
-              <p v-if="borrowing.pickup_code" class="code-detail">📍 Pickup: {{ borrowing.pickup_code }}</p>
-              <p v-if="borrowing.fine_amount > 0" class="fine-detail">⚠️ Denda: Rp {{ formatCurrency(borrowing.fine_amount) }}</p>
-            </div>
-            <div class="actions">
-              <span :class="['status-badge', isOverdue(borrowing) ? 'overdue' : 'active']">
-                {{ isOverdue(borrowing) ? '🔴 OVERDUE' : '🟢 Active' }}
-              </span>
-              <button v-if="isOverdue(borrowing)" class="btn-small warning" @click="handleExtendBorrowing(borrowing)">
-                Perpanjang
-              </button>
-              <button v-else class="btn-small" @click="selectBorrowingDetail(borrowing)">
-                Detail
-              </button>
-            </div>
+        <!-- Filter & Sort Controls -->
+        <div v-else class="table-controls">
+          <div class="filter-group">
+            <label>Filter Status:</label>
+            <select v-model="selectedStatusFilter" class="filter-select">
+              <option value="">Semua Status</option>
+              <option value="active">🟢 Aktif</option>
+              <option value="overdue">🔴 Terlambat</option>
+              <option value="warning">⚠️ Peringatan</option>
+            </select>
           </div>
+          <div class="sort-group">
+            <label>Urutkan:</label>
+            <select v-model="sortBy" class="sort-select">
+              <option value="date_asc">Tanggal (Lama → Baru)</option>
+              <option value="date_desc">Tanggal (Baru → Lama)</option>
+              <option value="due_asc">Jatuuh Tempo (Terdekat)</option>
+              <option value="due_desc">Jatuuh Tempo (Terjauh)</option>
+              <option value="fine_desc">Denda (Terbesar)</option>
+              <option value="equipment">Nama Alat (A-Z)</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Active Borrowings Table -->
+        <div class="table-wrapper">
+          <table class="borrowings-table">
+            <thead>
+              <tr>
+                <th class="col-equipment">Alat</th>
+                <th class="col-borrower">Peminjam</th>
+                <th class="col-borrow-date">Tanggal Pinjam</th>
+                <th class="col-due-date">Jatuuh Tempo</th>
+                <th class="col-status">Status</th>
+                <th class="col-fine">Denda</th>
+                <th class="col-code">Kode Verifikasi</th>
+                <th class="col-actions">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="borrowing in filteredAndSortedBorrowings" :key="borrowing.id_peminjaman" :class="['row', { 'row-overdue': isOverdue(borrowing), 'row-warning': isWarning(borrowing) }]">
+                <td class="col-equipment">
+                  <div class="equipment-cell">
+                    <span class="icon">{{ getEquipmentIcon(borrowing.equipment?.category?.nama_kategori) }}</span>
+                    <span>{{ borrowing.equipment?.nama_alat || borrowing.nama_alat }}</span>
+                  </div>
+                </td>
+                <td class="col-borrower">{{ currentUser?.fullname || currentUser?.username || '-' }}</td>
+                <td class="col-borrow-date">{{ formatDateDisplay(borrowing.tanggal_peminjaman || borrowing.borrow_date) }}</td>
+                <td class="col-due-date">
+                  <div :class="['due-date', { 'due-warning': isWarning(borrowing), 'due-overdue': isOverdue(borrowing) }]">
+                    {{ formatDateDisplay(borrowing.tanggal_rencana_kembali || borrowing.planned_return_date) }}
+                  </div>
+                </td>
+                <td class="col-status">
+                  <span :class="['status-badge', isOverdue(borrowing) ? 'status-overdue' : isWarning(borrowing) ? 'status-warning' : 'status-active']">
+                    {{ isOverdue(borrowing) ? '🔴 OVERDUE' : isWarning(borrowing) ? '⚠️ PERINGATAN' : '🟢 AKTIF' }}
+                  </span>
+                </td>
+                <td class="col-fine">
+                  <span v-if="borrowing.fine_amount > 0" class="fine-badge">Rp {{ formatCurrency(borrowing.fine_amount) }}</span>
+                  <span v-else class="fine-none">-</span>
+                </td>
+                <td class="col-code">
+                  <code v-if="borrowing.kode_verifikasi" class="code-badge">{{ borrowing.kode_verifikasi }}</code>
+                  <span v-else class="code-none">-</span>
+                </td>
+                <td class="col-actions">
+                  <div class="action-buttons">
+                    <button class="btn-action detail" @click="selectBorrowingDetail(borrowing)" title="Lihat Detail">Detail</button>
+                    <button v-if="isOverdue(borrowing)" class="btn-action extend" @click="handleExtendBorrowing(borrowing)" title="Perpanjang">Perpanjang</button>
+                    <button class="btn-action download" @click="downloadProof(borrowing)" title="Download bukti">Bukti</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
 
@@ -151,6 +205,8 @@ const showDetailModal = ref(false)
 const activeBorrowings = ref([])
 const loadingActiveBorrowings = ref(false)
 const availableEquipmentCount = ref(0)
+const sortBy = ref('date_desc')
+const selectedStatusFilter = ref('')
 
 onMounted(() => {
   const userStr = localStorage.getItem('user')
@@ -203,6 +259,44 @@ const availableItemsCount = computed(() => {
   return availableEquipmentCount.value
 })
 
+// Computed property for filtered borrowings by status
+const filteredBorrowings = computed(() => {
+  if (!selectedStatusFilter.value) return activeBorrowings.value
+  
+  return activeBorrowings.value.filter(b => {
+    if (selectedStatusFilter.value === 'overdue') return isOverdue(b)
+    if (selectedStatusFilter.value === 'warning') return isWarning(b) && !isOverdue(b)
+    if (selectedStatusFilter.value === 'active') return !isOverdue(b) && !isWarning(b)
+    return true
+  })
+})
+
+// Computed property for sorted and filtered borrowings
+const filteredAndSortedBorrowings = computed(() => {
+  const items = [...filteredBorrowings.value]
+  
+  items.sort((a, b) => {
+    switch (sortBy.value) {
+      case 'date_asc':
+        return new Date(a.tanggal_peminjaman || a.borrow_date) - new Date(b.tanggal_peminjaman || b.borrow_date)
+      case 'date_desc':
+        return new Date(b.tanggal_peminjaman || b.borrow_date) - new Date(a.tanggal_peminjaman || a.borrow_date)
+      case 'due_asc':
+        return new Date(a.tanggal_rencana_kembali || a.planned_return_date) - new Date(b.tanggal_rencana_kembali || b.planned_return_date)
+      case 'due_desc':
+        return new Date(b.tanggal_rencana_kembali || b.planned_return_date) - new Date(a.tanggal_rencana_kembali || a.planned_return_date)
+      case 'fine_desc':
+        return (b.fine_amount || 0) - (a.fine_amount || 0)
+      case 'equipment':
+        return (a.equipment?.nama_alat || a.nama_alat).localeCompare(b.equipment?.nama_alat || b.nama_alat)
+      default:
+        return 0
+    }
+  })
+  
+  return items
+})
+
 // Load available equipment from API
 const loadAvailableEquipment = async () => {
   try {
@@ -224,6 +318,15 @@ const isOverdue = (borrowing) => {
   const plannedReturnDate = new Date(borrowing.tanggal_rencana_kembali || borrowing.planned_return_date)
   const now = new Date()
   return now > plannedReturnDate
+}
+
+// Check if borrowing is in warning period (due within 3 days)
+const isWarning = (borrowing) => {
+  if (!borrowing) return false
+  const plannedReturnDate = new Date(borrowing.tanggal_rencana_kembali || borrowing.planned_return_date)
+  const now = new Date()
+  const daysUntilDue = (plannedReturnDate - now) / (1000 * 60 * 60 * 24)
+  return daysUntilDue <= 3 && daysUntilDue > 0
 }
 
 // Format date for display
@@ -274,6 +377,12 @@ const selectBorrowingDetail = (borrowing) => {
 // Handle extend borrowing request (future feature)
 const handleExtendBorrowing = (borrowing) => {
   // TODO: Implement borrowing extension API call
+}
+
+// Download proof document (if available)
+const downloadProof = (borrowing) => {
+  // TODO: Implement proof document download
+  alert(`Download bukti peminjaman: ${borrowing.equipment?.nama_alat || borrowing.nama_alat}`)
 }
 
 // Dummy data (kept for reference but not used for available count)
@@ -769,5 +878,373 @@ const handleCloseDetailModal = () => {
 
 .modal-close:hover {
   color: #333;
+}
+
+/* ===== TABLE CONTROLS ===== */
+.table-controls {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-group,
+.sort-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-group label,
+.sort-group label {
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+}
+
+.filter-select,
+.sort-select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  color: #333;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-select:hover,
+.sort-select:hover {
+  border-color: #0B7285;
+  box-shadow: 0 2px 8px rgba(11, 114, 133, 0.1);
+}
+
+.filter-select:focus,
+.sort-select:focus {
+  outline: none;
+  border-color: #0B7285;
+  box-shadow: 0 0 0 3px rgba(11, 114, 133, 0.1);
+}
+
+/* ===== TABLE WRAPPER ===== */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  background: white;
+}
+
+/* ===== BORROWINGS TABLE ===== */
+.borrowings-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.borrowings-table thead {
+  background: linear-gradient(135deg, #0b7285 0%, #0c6b7d 100%);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.borrowings-table th {
+  padding: 14px;
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.borrowings-table th:last-child {
+  border-right: none;
+}
+
+.borrowings-table tbody tr {
+  border-bottom: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.borrowings-table tbody tr:hover {
+  background: #f8fbfc;
+  box-shadow: inset 2px 0 0 #0B7285;
+}
+
+.borrowings-table td {
+  padding: 14px;
+  border-right: 1px solid #f0f0f0;
+  color: #333;
+}
+
+.borrowings-table td:last-child {
+  border-right: none;
+}
+
+/* Row Highlighting */
+.borrowings-table tr.row-overdue {
+  background: #fff5f5;
+}
+
+.borrowings-table tr.row-warning {
+  background: #fffbf0;
+}
+
+/* Column Styling */
+.col-equipment {
+  min-width: 220px;
+  font-weight: 600;
+}
+
+.equipment-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.equipment-cell .icon {
+  font-size: 1.5rem;
+  min-width: 28px;
+}
+
+.col-borrower {
+  min-width: 150px;
+}
+
+.col-borrow-date {
+  min-width: 110px;
+  color: #666;
+}
+
+.col-due-date {
+  min-width: 110px;
+}
+
+.due-date {
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: #e8f5f9;
+  color: #0B7285;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.due-date.due-warning {
+  background: #fff4e6;
+  color: #ff9f1c;
+}
+
+.due-date.due-overdue {
+  background: #ffe8e8;
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.col-status {
+  min-width: 130px;
+  text-align: center;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-badge.status-active {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge.status-warning {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.status-overdue {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.col-fine {
+  min-width: 120px;
+  text-align: right;
+  font-weight: 600;
+}
+
+.fine-badge {
+  padding: 6px 10px;
+  background: #ffe8e8;
+  color: #ef4444;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  display: inline-block;
+}
+
+.fine-none {
+  color: #999;
+  font-weight: 400;
+}
+
+.col-code {
+  min-width: 140px;
+  font-family: 'Courier New', monospace;
+}
+
+.code-badge {
+  padding: 4px 8px;
+  background: #e8f5f9;
+  color: #0B7285;
+  border-radius: 3px;
+  font-size: 0.8rem;
+  display: inline-block;
+  word-break: break-all;
+}
+
+.code-none {
+  color: #bbb;
+}
+
+.col-actions {
+  min-width: 240px;
+  text-align: right;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.btn-action {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  color: #333;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-action.detail {
+  color: #0B7285;
+  border-color: #0B7285;
+  background: rgba(11, 114, 133, 0.05);
+}
+
+.btn-action.detail:hover {
+  background: rgba(11, 114, 133, 0.1);
+}
+
+.btn-action.extend {
+  color: #ff9f1c;
+  border-color: #ff9f1c;
+  background: rgba(255, 159, 28, 0.05);
+}
+
+.btn-action.extend:hover {
+  background: rgba(255, 159, 28, 0.1);
+}
+
+.btn-action.download {
+  color: #666;
+  border-color: #ddd;
+  background: white;
+}
+
+.btn-action.download:hover {
+  background: #f8f9fa;
+}
+
+/* Mobile Responsive */
+@media (max-width: 1024px) {
+  .table-controls {
+    flex-direction: column;
+  }
+
+  .filter-group,
+  .sort-group {
+    width: 100%;
+  }
+
+  .filter-select,
+  .sort-select {
+    flex: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .table-wrapper {
+    border-radius: 0;
+    margin: -15px -15px 0 -15px;
+  }
+
+  .borrowings-table th,
+  .borrowings-table td {
+    padding: 10px 8px;
+    font-size: 0.8rem;
+  }
+
+  .col-equipment {
+    min-width: 150px;
+  }
+
+  .col-borrower {
+    min-width: 120px;
+  }
+
+  .col-borrow-date,
+  .col-due-date {
+    min-width: 90px;
+  }
+
+  .col-code {
+    min-width: 100px;
+  }
+
+  .col-actions {
+    min-width: 180px;
+    padding: 10px 5px;
+  }
+
+  .action-buttons {
+    gap: 4px;
+  }
+
+  .btn-action {
+    padding: 5px 8px;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .status-badge {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+  }
+
+  .btn-action {
+    padding: 4px 6px;
+    font-size: 0.7rem;
+  }
+
+  .code-badge {
+    font-size: 0.7rem;
+  }
 }
 </style>

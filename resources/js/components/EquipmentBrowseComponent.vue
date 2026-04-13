@@ -53,6 +53,11 @@
 
         <div class="card-content">
           <h3>{{ item.nama_alat }}</h3>
+          <p class="card-meta">
+            <span class="card-price">Rp {{ (item.fine_per_day || 50000).toLocaleString('id-ID') }}/hari</span> 
+            • 
+            <span class="card-stock" :class="{ unavailable: item.available_quantity === 0 }">{{ item.available_quantity > 0 ? `Stok: ${item.available_quantity}` : 'Habis' }}</span>
+          </p>
           <p class="category">{{ item.category_name || item.kategori }}</p>
           
           <div class="details">
@@ -465,6 +470,26 @@ watch(sortBy, (newValue) => {
   font-size: 1.1rem;
 }
 
+.card-meta {
+  margin: 0 0 8px 0;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.card-price {
+  font-weight: 600;
+  color: #0b7285;
+}
+
+.card-stock {
+  font-weight: 600;
+  color: #51cf66;
+}
+
+.card-stock.unavailable {
+  color: #ff6b6b;
+}
+
 .category {
   margin: 0 0 12px 0;
   color: #666;
@@ -763,6 +788,153 @@ watch(sortBy, (newValue) => {
 
   .info-row .label {
     margin-bottom: 4px;
+  }
+
+  .card-meta {
+    font-size: 0.8rem;
+  }
+
+  .card-price,
+  .card-stock {
+    font-size: 0.8rem;
+  }
+}
+
+/* Mobile Layout - 3 Columns (≤ 576px) */
+@media (max-width: 576px) {
+  .equipment-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    transition: gap 0.3s ease-in-out;
+  }
+
+  .card-image {
+    height: 100px;
+    transition: height 0.3s ease-in-out;
+  }
+
+  .card-content {
+    padding: 8px;
+    transition: padding 0.3s ease-in-out;
+  }
+
+  .card-content h3 {
+    font-size: 0.8rem;
+    margin: 0 0 3px 0;
+    font-weight: 600;
+    line-height: 1.2;
+    color: #1a1a2e;
+  }
+
+  .card-meta {
+    margin: 0 0 6px 0;
+    font-size: 0.75rem;
+    color: #666;
+  }
+
+  .card-price {
+    font-weight: 600;
+    color: #0b7285;
+    font-size: 0.75rem;
+  }
+
+  .card-stock {
+    font-weight: 600;
+    color: #51cf66;
+    font-size: 0.75rem;
+  }
+
+  .card-stock.unavailable {
+    color: #ff6b6b;
+  }
+
+  .category {
+    display: none;
+  }
+
+  .details {
+    display: none;
+  }
+
+  .card-description {
+    display: none;
+  }
+
+  .browse-header {
+    margin-bottom: 15px;
+  }
+
+  .browse-header h2 {
+    font-size: 1.1rem;
+    margin: 0 0 3px 0;
+  }
+
+  .subtitle {
+    font-size: 0.8rem;
+  }
+
+  .card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 0.75rem;
+    border-radius: 4px;
+  }
+
+  .btn-primary {
+    background-color: #0b7285;
+    color: white;
+    font-weight: 600;
+  }
+
+  .btn-secondary {
+    background-color: #e0e0e0;
+    color: #333;
+    font-weight: 600;
+  }
+
+  .stock-badge {
+    font-size: 0.65rem;
+    padding: 3px 6px;
+    top: 6px;
+    right: 6px;
+    border-radius: 12px;
+  }
+
+  .filters-section {
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .search-input,
+  .select-input {
+    padding: 8px;
+    font-size: 0.85rem;
+  }
+
+  .stats-bar {
+    gap: 12px;
+    padding: 10px;
+    font-size: 0.8rem;
+    margin-bottom: 12px;
+    border-radius: 4px;
+  }
+
+  .equipment-card {
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+  }
+
+  .equipment-card:hover {
+    transform: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 }
 </style>

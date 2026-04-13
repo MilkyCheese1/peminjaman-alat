@@ -12,7 +12,18 @@
         <div class="header-left-controls">
           <!-- Dark Mode Toggle -->
           <button class="theme-toggle" @click="toggleDarkMode" :title="isDarkMode ? 'Light Mode' : 'Dark Mode'">
-            {{ isDarkMode ? '☀️' : '🌙' }}
+            <!-- Light Mode Icon (kiri hitam, kanan putih) -->
+            <svg v-if="!isDarkMode" :key="'light-' + isDarkMode" class="theme-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="11" fill="#000000" />
+              <circle cx="12" cy="12" r="11" fill="#ffffff" clip-path="polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)" />
+              <circle cx="12" cy="12" r="11" fill="none" stroke="#000000" stroke-width="0.5" />
+            </svg>
+            <!-- Dark Mode Icon (kiri putih, kanan hitam) -->
+            <svg v-else :key="'dark-' + isDarkMode" class="theme-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="11" fill="#ffffff" />
+              <circle cx="12" cy="12" r="11" fill="#000000" clip-path="polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)" />
+              <circle cx="12" cy="12" r="11" fill="none" stroke="#ffffff" stroke-width="0.5" />
+            </svg>
           </button>
 
           <!-- Desktop Nav -->
@@ -47,7 +58,18 @@
         <a href="#about" @click.prevent="scrollToSectionAndCloseMobile(2)">Tentang</a>
         <router-link to="/register" class="mobile-link">Mulai</router-link>
         <button class="mobile-theme-toggle" @click="toggleDarkMode">
-          {{ isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode' }}
+          <!-- Light Mode Icon (kiri hitam, kanan putih) -->
+          <svg v-if="!isDarkMode" :key="'mobile-light-' + isDarkMode" class="theme-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="11" fill="#000000" />
+            <circle cx="12" cy="12" r="11" fill="#ffffff" clip-path="polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)" />
+            <circle cx="12" cy="12" r="11" fill="none" stroke="#000000" stroke-width="0.5" />
+          </svg>
+          <!-- Dark Mode Icon (kiri putih, kanan hitam) -->
+          <svg v-else :key="'mobile-dark-' + isDarkMode" class="theme-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="11" fill="#ffffff" />
+            <circle cx="12" cy="12" r="11" fill="#000000" clip-path="polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)" />
+            <circle cx="12" cy="12" r="11" fill="none" stroke="#ffffff" stroke-width="0.5" />
+          </svg>
         </button>
       </nav>
     </header>
