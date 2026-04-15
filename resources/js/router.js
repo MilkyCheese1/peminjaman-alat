@@ -2,8 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LandingPage from './pages/LandingPage.vue'
 import Login from './pages/Login.vue'
 import Register from './pages/Register.vue'
-import Dashboard from './pages/DashboardRoleAware.vue'
+import Dashboard from './pages/Dashboard.vue'
+import Equipment from './pages/Equipment.vue'
+import Reports from './pages/Reports.vue'
+import Settings from './pages/Settings.vue'
 import TermsAndConditions from './pages/TermsAndConditions.vue'
+import MainLayout from './layouts/MainLayout.vue'
 
 const routes = [
   {
@@ -25,7 +29,25 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, layout: 'MainLayout' }
+  },
+  {
+    path: '/equipment',
+    name: 'Equipment',
+    component: Equipment,
+    meta: { requiresAuth: true, layout: 'MainLayout' }
+  },
+  {
+    path: '/reports',
+    name: 'Reports',
+    component: Reports,
+    meta: { requiresAuth: true, layout: 'MainLayout' }
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: Settings,
+    meta: { requiresAuth: true, layout: 'MainLayout' }
   },
   {
     path: '/terms',
@@ -44,7 +66,6 @@ const router = createRouter({
 })
 
 // Navigation guard untuk proteksi halaman yang memerlukan autentikasi
-// Updated: Use Vue Router 4 syntax (return instead of next callback)
 router.beforeEach((to, from) => {
   let isAuthenticated = false
   

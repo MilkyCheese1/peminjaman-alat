@@ -5,15 +5,23 @@
   <!-- Loading Screen -->
   <LoadingScreen :is-loading="isLoading" :message="loadingMessage" />
 
-  <!-- Main App -->
-  <RouterView />
+  <!-- Main App with conditional layout -->
+  <template v-if="showMainLayout">
+    <MainLayout>
+      <RouterView />
+    </MainLayout>
+  </template>
+  <template v-else>
+    <RouterView />
+  </template>
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, computed } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
 import SplashScreen from './components/SplashScreen.vue'
 import LoadingScreen from './components/LoadingScreen.vue'
+import MainLayout from './layouts/MainLayout.vue'
 import { useSessionRestoration } from './composables/useSessionRestoration.js'
 
 // State
@@ -25,6 +33,12 @@ const router = useRouter()
 
 // Session restoration
 const { initializeSession, getLastRoute, restoreScrollPosition } = useSessionRestoration()
+
+// Determine if MainLayout should be shown
+const showMainLayout = computed(() => {
+  const layoutRoutes = ['/dashboard', '/equipment', '/reports', '/settings']
+  return layoutRoutes.includes(router.currentRoute.value.path)
+})
 
 // Initialize session restoration on app mount
 onMounted(() => {
