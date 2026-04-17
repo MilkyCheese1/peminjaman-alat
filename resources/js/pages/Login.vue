@@ -34,7 +34,7 @@
           <label for="password">
             Password 
             <span v-if="form.password" class="password-length-hint">
-              ({{ form.password.length }} chars)
+              ({{ form.password.length }} karakter)
             </span>
           </label>
           <div class="input-wrapper">
@@ -213,12 +213,13 @@ const handleLogin = async () => {
         return
       }
       
-      successMessage.value = `Selamat datang, ${user.fullname || user.email}!`
+      successMessage.value = `Selamat datang, ${user.username || user.email}!`
       
       const userData = {
         id_user: user.id,
         id: user.id,
-        fullname: user.fullname || '',
+        username: user.username || '',
+        nama_lengkap: user.nama_lengkap || '',
         email: user.email || '',
         role: user.role || 'customer',
         phone: user.phone || '',
@@ -232,7 +233,7 @@ const handleLogin = async () => {
       }
       
       localStorage.setItem('user', JSON.stringify(userData))
-      showSuccess(`Selamat datang, ${user.fullname || user.email}!`)
+      showSuccess(`Selamat datang, ${user.username || user.email}!`)
       
       setTimeout(() => {
         router.push('/dashboard')

@@ -16,6 +16,14 @@ class SendBorrowingCreatedNotification
 
     public function handle(BorrowingCreated $event)
     {
-        $this->notificationService->notifyBorrowingCreated($event->borrowing);
+        try {
+            $this->notificationService->notifyBorrowingCreated($event->borrowing);
+        } catch (\Exception $e) {
+            \Log::error('Error sending borrowing created notification: ' . $e->getMessage(), [
+                'borrowing_id' => $event->borrowing->id_borrowing ?? null,
+                'error' => $e
+            ]);
+            // Continue silently - don't crash the event
+        }
     }
 }

@@ -101,7 +101,7 @@
                     <span>{{ borrowing.equipment?.nama_alat || borrowing.nama_alat }}</span>
                   </div>
                 </td>
-                <td class="col-borrower">{{ currentUser?.fullname || currentUser?.username || '-' }}</td>
+                <td class="col-borrower">{{ currentUser?.username || '-' }}</td>
                 <td class="col-borrow-date">{{ formatDateDisplay(borrowing.tanggal_peminjaman || borrowing.borrow_date) }}</td>
                 <td class="col-due-date">
                   <div :class="['due-date', { 'due-warning': isWarning(borrowing), 'due-overdue': isOverdue(borrowing) }]">
@@ -212,7 +212,7 @@ onMounted(() => {
   const userStr = localStorage.getItem('user')
   if (userStr) {
     currentUser.value = JSON.parse(userStr)
-    userName.value = currentUser.value.fullname || currentUser.value.username || 'User'
+    userName.value = currentUser.value.username || 'User'
     loadActiveBorrowings()
     loadAvailableEquipment()
   }

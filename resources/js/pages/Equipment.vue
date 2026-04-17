@@ -1,14 +1,32 @@
 ﻿<script setup lang="ts">
 import { ref, onMounted } from "vue"
 import { Card, CardContent } from "@/components/ui"
-import { Package, X } from "lucide-vue-next"
+import { Package, X, Grid, List } from "lucide-vue-next"
 import axios from "axios"
 
+interface Category {
+  id_kategori: number
+  nama_kategori: string
+}
+
+interface Equipment {
+  id_equipment: number
+  nama_alat: string
+  gambar?: string
+  deskripsi: string
+  category?: Category
+  available_quantity: number
+  total_stok: number
+  kondisi: string
+  fine_per_day: number
+}
+
 const loading = ref(false)
-const equipment = ref([])
+const equipment = ref<Equipment[]>([])
 const error = ref("")
 const showDetailModal = ref(false)
-const selectedEquipment = ref<any>(null)
+const selectedEquipment = ref<Equipment | null>(null)
+const viewMode = ref<'card' | 'table'>('card')
 
 onMounted(async () => {
   await loadEquipment()
@@ -54,12 +72,41 @@ const closeDetail = () => {
       {{ error }}
     </div>
 
+    <!-- View Toggle Buttons -->
+    <div class="flex gap-2 mb-6">
+      <button
+        @click="viewMode = 'card'"
+        :class="[
+          'flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors',
+          viewMode === 'card'
+            ? 'bg-primary text-primary-foreground'
+            : 'bg-secondary text-foreground hover:bg-secondary/80'
+        ]"
+      >
+        <Grid :size="20" />
+        Card
+      </button>
+      <button
+        @click="viewMode = 'table'"
+        :class="[
+          'flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors',
+          viewMode === 'table'
+            ? 'bg-primary text-primary-foreground'
+            : 'bg-secondary text-foreground hover:bg-secondary/80'
+        ]"
+      >
+        <List :size="20" />
+        Tabel
+      </button>
+    </div>
+
     <!-- Equipment List -->
     <div v-if="loading" class="text-center py-12">
       <p class="text-muted-foreground">Memuat data alat...</p>
     </div>
 
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Card View -->
+    <div v-else-if="viewMode === 'card'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <Card
         v-for="item in equipment"
         :key="item.id_equipment"
@@ -111,6 +158,52 @@ const closeDetail = () => {
           </button>
         </div>
       </Card>
+    </div>
+
+    <!-- Table View -->
+    <div v-else-if="viewMode === 'table'" class="overflow-x-auto border rounded-lg">
+      <table class="w-full">
+        <thead class="bg-muted">
+          <tr>
+            <th class="px-6 py-3 text-left text-sm font-semibold">Nama Alat</th>
+            <th class="px-6 py-3 text-left text-sm font-semibold">Kategori</th>
+            <th class="px-6 py-3 text-center text-sm font-semibold">Stok</th>
+            <th class="px-6 py-3 text-center text-sm font-semibold">Tersedia</th>
+            <th class="px-6 py-3 text-left text-sm font-semibold">Kondisi</th>
+            <th class="px-6 py-3 text-center text-sm font-semibold">Aksi</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y">
+          <tr v-for="item in equipment" :key="item.id_equipment" class="hover:bg-muted/50">
+            <td class="px-6 py-4 text-sm">{{ item.nama_alat }}</td>
+            <td class="px-6 py-4 text-sm text-muted-foreground">{{ item.category?.nama_kategori }}</td>
+            <td class="px-6 py-4 text-sm text-center font-medium">{{ item.total_stok }}</td>
+            <td class="px-6 py-4 text-sm text-center">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" :class="item.available_quantity > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                {{ item.available_quantity }}
+              </span>
+            </td>
+            <td class="px-6 py-4 text-sm capitalize">{{ item.kondisi }}</td>
+            <td class="px-6 py-4 text-sm text-center">
+              <div class="flex gap-2 justify-center">
+                <button
+                  class="px-3 py-1 bg-green-600 text-white rounded text-xs hover:bg-green-700 transition-colors"
+                  :disabled="item.available_quantity === 0"
+                  :class="item.available_quantity === 0 ? 'opacity-50 cursor-not-allowed' : ''"
+                >
+                  Pinjam
+                </button>
+                <button
+                  @click="openDetail(item)"
+                  class="px-3 py-1 bg-slate-200 text-foreground rounded text-xs hover:bg-slate-300 transition-colors"
+                >
+                  Detail
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <!-- Empty State -->
@@ -186,7 +279,7 @@ const closeDetail = () => {
             <div>
               <p class="text-xs font-medium text-muted-foreground mb-2">Denda/Hari</p>
               <p class="text-lg font-semibold text-foreground">
-                Rp{{ parseInt(selectedEquipment.fine_per_day).toLocaleString("id-ID") }}
+                Rp{{ selectedEquipment.fine_per_day.toLocaleString("id-ID") }}
               </p>
             </div>
           </div>

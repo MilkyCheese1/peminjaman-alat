@@ -56,23 +56,17 @@ const loadStatistics = async () => {
     loading.value = false
   }
 }
-
-const handleLogout = () => {
-  localStorage.removeItem('user')
-  localStorage.removeItem('token')
-  router.push('/login')
-}
 </script>
 
 <template>
   <div v-if="!userInfo" class="text-center py-8">
-    <p>Loading...</p>
+    <p>Memuat...</p>
   </div>
 
   <template v-else>
     <!-- Header -->
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-foreground">Dashboard</h1>
+      <h1 class="text-3xl font-bold text-foreground">Dasbor Sistem</h1>
       <p class="text-muted-foreground mt-1">
         Selamat datang, <span class="font-semibold">{{ userInfo.name }}</span>
         <span class="ml-2 px-2 py-1 rounded text-sm text-white" :style="{ backgroundColor: roleColor }">
@@ -130,9 +124,9 @@ const handleLogout = () => {
     </div>
 
     <!-- Quick Actions -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 gap-6">
       <!-- Recent Activity / Main Content -->
-      <div class="lg:col-span-2">
+      <div>
         <Card>
           <CardHeader>
             <CardTitle>Aktivitas Terkini</CardTitle>
@@ -147,59 +141,6 @@ const handleLogout = () => {
                   <p>Tidak ada aktivitas terkini</p>
                 </div>
               </template>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <!-- Sidebar -->
-      <div class="space-y-6">
-        <!-- User Info Card -->
-        <Card>
-          <CardHeader>
-            <CardTitle>Informasi Pengguna</CardTitle>
-          </CardHeader>
-          <CardContent class="space-y-3">
-            <div>
-              <p class="text-sm text-muted-foreground">Nama</p>
-              <p class="font-medium">{{ userInfo.name }}</p>
-            </div>
-            <div>
-              <p class="text-sm text-muted-foreground">Email</p>
-              <p class="font-medium text-sm break-all">{{ userInfo.email }}</p>
-            </div>
-            <div>
-              <p class="text-sm text-muted-foreground">Role</p>
-              <p class="font-medium" :style="{ color: roleColor }">{{ roleLabel }}</p>
-            </div>
-            <button
-              @click="handleLogout"
-              class="w-full mt-4 px-4 py-2 bg-destructive text-destructive-foreground rounded-md hover:bg-destructive/90 transition-colors text-sm font-medium"
-            >
-              Logout
-            </button>
-          </CardContent>
-        </Card>
-
-        <!-- Quick Links -->
-        <Card>
-          <CardHeader>
-            <CardTitle>Menu Cepat</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div class="space-y-2">
-              <router-link
-                to="/dashboard"
-                class="block px-3 py-2 rounded-md hover:bg-accent transition-colors text-sm"
-              >
-                📊 Dashboard
-              </router-link>
-              <router-link
-                to="/terms"
-                class="block px-3 py-2 rounded-md hover:bg-accent transition-colors text-sm"
-              >
-                📋 Syarat & Ketentuan
-              </router-link>
             </div>
           </CardContent>
         </Card>

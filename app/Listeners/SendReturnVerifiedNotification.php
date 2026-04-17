@@ -16,6 +16,13 @@ class SendReturnVerifiedNotification
 
     public function handle(ReturnVerified $event)
     {
-        $this->notificationService->notifyReturnVerified($event->borrowing);
+        try {
+            $this->notificationService->notifyReturnVerified($event->borrowing);
+        } catch (\Exception $e) {
+            \Log::error('Error sending return verified notification: ' . $e->getMessage(), [
+                'borrowing_id' => $event->borrowing->id_borrowing ?? null,
+                'error' => $e
+            ]);
+        }
     }
 }

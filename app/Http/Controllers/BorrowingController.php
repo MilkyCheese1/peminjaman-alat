@@ -86,9 +86,9 @@ class BorrowingController extends Controller
                 'catatan' => 'nullable|string|max:500',
             ]);
 
-            // Parse dates
-            $startDate = new DateTime($validated['tanggal_mulai_peminjaman']);
-            $endDate = new DateTime($validated['tanggal_rencana_kembali']);
+            // Parse dates using Carbon for timezone awareness
+            $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $validated['tanggal_mulai_peminjaman'], config('app.timezone'));
+            $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $validated['tanggal_rencana_kembali'], config('app.timezone'));
             
             // Validate no holidays
             $dateErrors = BorrowingHelper::validateDates($startDate, $endDate);
@@ -171,12 +171,12 @@ class BorrowingController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $this->formatBorrowingResponse($borrowing),
-                'message' => 'Borrowing retrieved successfully'
+                'message' => 'Peminjaman berhasil diambil'
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to retrieve borrowing: ' . $e->getMessage()
+                'message' => 'Gagal mengambil peminjaman: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -197,7 +197,7 @@ class BorrowingController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $borrowing->load('user', 'equipment'),
-                'message' => 'Borrowing updated successfully'
+                'message' => 'Peminjaman berhasil diperbarui'
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
@@ -407,15 +407,30 @@ class BorrowingController extends Controller
             if ($borrowing->status !== 'picked_up') {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Only picked up borrowings can be returned'
+                    'message' => 'Hanya peminjaman yang sudah diambil yang dapat dikembalikan'
                 ], 400);
             }
 
-            // Calculate fine if late
-            $returnDate = new \DateTime($validated['return_date']);
-            $plannedDate = new \DateTime($borrowing->planned_return_date);
-            $lateDays = max(0, $returnDate->diff($plannedDate)->days);
-            $fineAmount = $lateDays > 0 ? min($lateDays, 30) * 50000 : 0;
+            // Calculate fine if late - with timezone safety
+            try {
+                $returnDate = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $validated['return_date'], config('app.timezone'));
+                $plannedDate = \Carbon\Carbon::parse($borrowing->planned_return_date, config('app.timezone'));
+                
+                // Calculate late days (only count if return is after planned date)
+                $lateDays = 0;
+                if ($returnDate->isAfter($plannedDate)) {
+                    $lateDays = $returnDate->diffInDays($plannedDate);
+                }
+                
+                // Fine calculation: cap at 30 days max, 50000 per day
+                $fineAmount = $lateDays > 0 ? min($lateDays, 30) * 50000 : 0;
+            } catch (\Exception $dateError) {
+                \Log::error('DateTime calculation error in verifyReturn: ' . $dateError->getMessage());
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid date format or timezone error'
+                ], 400);
+            }
 
             // Create return record
             $borrowing->returnDetails()->create([
@@ -450,6 +465,7 @@ class BorrowingController extends Controller
                 'message' => 'Validation failed'
             ], 422);
         } catch (\Exception $e) {
+            \Log::error('VerifyReturn error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to verify return: ' . $e->getMessage()

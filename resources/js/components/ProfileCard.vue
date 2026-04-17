@@ -5,9 +5,9 @@
         {{ userInitial }}
       </div>
       <div class="profile-info">
-        <h2>{{ userInfo?.nama_lengkap || 'User' }}</h2>
+        <h2>{{ userInfo?.username || 'User' }}</h2>
         <p class="role">{{ roleLabel }}</p>
-        <p class="email">{{ userInfo?.email }}</p>
+        <p class="email">{{ userInfo?.nama_lengkap || '-' }}</p>
       </div>
     </div>
 
@@ -19,8 +19,8 @@
           <span class="value">{{ userInfo?.username }}</span>
         </div>
         <div class="info-row">
-          <span class="label">Nama Lengkap:</span>
-          <span class="value">{{ userInfo?.nama_lengkap }}</span>
+          <span class="label">Nama:</span>
+          <span class="value">{{ userInfo?.nama_lengkap || '-' }}</span>
         </div>
         <div class="info-row">
           <span class="label">Email:</span>
@@ -104,7 +104,8 @@ const avatarColor = computed(() => {
 })
 
 const userInitial = computed(() => {
-  return userInfo.value?.nama_lengkap?.charAt(0).toUpperCase() || 'U'
+  const name = userInfo.value?.nama_lengkap || userInfo.value?.username || 'U'
+  return name?.charAt(0).toUpperCase() || 'U'
 })
 
 const loadUserProfile = async () => {

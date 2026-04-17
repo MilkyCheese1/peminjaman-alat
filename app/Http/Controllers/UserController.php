@@ -387,7 +387,9 @@ class UserController extends Controller
             // Prepare response
             $responseData = [
                 'id' => $user->id_user,
-                'fullname' => $user->nama_lengkap,
+                'id_user' => $user->id_user,
+                'username' => $user->username,
+                'nama_lengkap' => $user->nama_lengkap,
                 'email' => $user->email,
                 'role' => $user->role,
                 'phone' => $user->phone ?? '',

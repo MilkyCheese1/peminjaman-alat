@@ -36,7 +36,7 @@ const { initializeSession, getLastRoute, restoreScrollPosition } = useSessionRes
 
 // Determine if MainLayout should be shown
 const showMainLayout = computed(() => {
-  const layoutRoutes = ['/dashboard', '/equipment', '/reports', '/settings']
+  const layoutRoutes = ['/dashboard', '/equipment', '/reports', '/settings', '/profile', '/chat']
   return layoutRoutes.includes(router.currentRoute.value.path)
 })
 
@@ -70,5 +70,58 @@ router.afterEach((to, from, failure) => {
   }, 300)
 })
 </script>
+
+<style>
+/* Global minimalist scrollbar styling */
+html,
+body,
+::-webkit-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+  transition: background-color 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+</style>
 
 

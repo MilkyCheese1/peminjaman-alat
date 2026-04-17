@@ -91,6 +91,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Relationship: User has notification preferences
+     */
+    public function notificationPreferences()
+    {
+        return $this->hasMany(NotificationPreference::class, 'id_user', 'id_user');
+    }
+
+    /**
      * Check if user has a specific role
      */
     public function hasRole($role)

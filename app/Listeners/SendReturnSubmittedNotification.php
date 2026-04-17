@@ -16,7 +16,14 @@ class SendReturnSubmittedNotification
 
     public function handle(ReturnSubmitted $event)
     {
-        // Broadcast to admins/operators that return was submitted
-        // Not implemented yet
+        try {
+            // Broadcast to admins/operators that return was submitted
+            // TODO: Implement notification logic for return submission
+        } catch (\Exception $e) {
+            \Log::error('Error sending return submitted notification: ' . $e->getMessage(), [
+                'borrowing_id' => $event->borrowing->id_borrowing ?? null,
+                'error' => $e
+            ]);
+        }
     }
 }

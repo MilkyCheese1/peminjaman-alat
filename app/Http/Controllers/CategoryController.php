@@ -18,12 +18,12 @@ class CategoryController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $categories,
-                'message' => 'Categories retrieved successfully'
+                'message' => 'Kategori berhasil diambil'
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to retrieve categories: ' . $e->getMessage()
+                'message' => 'Gagal mengambil kategori: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -52,18 +52,18 @@ class CategoryController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $category,
-                'message' => 'Category created successfully'
+                'message' => 'Kategori berhasil dibuat'
             ], 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'errors' => $e->errors(),
-                'message' => 'Validation failed'
+                'message' => 'Validasi gagal'
             ], 422);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to create category: ' . $e->getMessage()
+                'message' => 'Gagal membuat kategori: ' . $e->getMessage()
             ], 500);
         }
     }

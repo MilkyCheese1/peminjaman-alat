@@ -3,20 +3,59 @@ import { ref, onMounted } from 'vue'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui'
 import { BarChart3, Printer } from 'lucide-vue-next'
 import axios from 'axios'
+import PrintReports from './PrintReports.vue'
 
 const loading = ref(false)
 const statistics = ref<any>(null)
 const error = ref('')
+const currentUser = ref<any>(null)
+const reportNumber = ref('')
 
 onMounted(async () => {
   await loadReports()
+  loadCurrentUser()
+  generateReportNumber()
 })
+
+const loadCurrentUser = () => {
+  try {
+    const userStr = localStorage.getItem('user')
+    if (userStr) {
+      currentUser.value = JSON.parse(userStr)
+    }
+  } catch (err) {
+    console.error('Failed to load user:', err)
+  }
+}
+
+const generateReportNumber = () => {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0')
+  reportNumber.value = `TR-${year}${month}${day}-${random}`
+}
 
 const loadReports = async () => {
   try {
     loading.value = true
     const response = await axios.get('/api/statistics/detailed')
-    statistics.value = response.data.data || {}
+    const data = response.data.data || {}
+    
+    // Flatten and calculate compliance rate
+    statistics.value = {
+      total_borrowings: data.borrowings?.total || 0,
+      overdue_count: data.borrowings?.overdue || 0,
+      compliance_rate: data.borrowings?.total > 0 
+        ? ((data.borrowings.total - data.borrowings.overdue) / data.borrowings.total)
+        : 1,
+      active_borrowings: data.borrowings?.active || 0,
+      completed_borrowings: data.borrowings?.completed || 0,
+      total_equipment: data.equipment?.total || 0,
+      total_active_users: data.users?.active || 0,
+      total_categories: data.equipment?.categories || 0,
+    }
   } catch (err: any) {
     error.value = err.message
     console.error('Failed to load reports:', err)
@@ -28,12 +67,33 @@ const loadReports = async () => {
 const handlePrint = () => {
   window.print()
 }
+
+const formatPrintDate = () => {
+  const now = new Date()
+  return now.toLocaleDateString('id-ID', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
+
+const formatLongDate = () => {
+  const now = new Date()
+  return now.toLocaleDateString('id-ID', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+}
 </script>
 
 <template>
   <div>
-    <!-- Header with Print Button -->
-    <div class="mb-8 flex items-center justify-between">
+    <!-- Header with Print Button (Screen view) -->
+    <div class="mb-8 flex items-center justify-between no-print">
       <div>
         <h1 class="text-3xl font-bold text-foreground flex items-center gap-2">
           <BarChart3 :size="32" />
@@ -46,12 +106,12 @@ const handlePrint = () => {
         class="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors font-medium"
       >
         <Printer :size="20" />
-        Cetak
+        Cetak Laporan
       </button>
     </div>
 
     <!-- Error Message -->
-    <div v-if="error" class="bg-destructive/10 border border-destructive text-destructive px-4 py-3 rounded-lg mb-6">
+    <div v-if="error" class="bg-destructive/10 border border-destructive text-destructive px-4 py-3 rounded-lg mb-6 no-print">
       {{ error }}
     </div>
 
@@ -60,10 +120,10 @@ const handlePrint = () => {
       <p class="text-muted-foreground">Memuat laporan...</p>
     </div>
 
-    <!-- Reports Content -->
-    <template v-else>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <Card v-if="statistics">
+    <!-- Screen View Statistics (Hidden on Print) -->
+    <template v-if="!loading && statistics">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 no-print">
+        <Card>
           <CardHeader class="pb-2">
             <CardTitle class="text-sm font-medium text-muted-foreground">Total Peminjaman</CardTitle>
           </CardHeader>
@@ -73,7 +133,7 @@ const handlePrint = () => {
           </CardContent>
         </Card>
 
-        <Card v-if="statistics">
+        <Card>
           <CardHeader class="pb-2">
             <CardTitle class="text-sm font-medium text-muted-foreground">Terlambat</CardTitle>
           </CardHeader>
@@ -83,7 +143,7 @@ const handlePrint = () => {
           </CardContent>
         </Card>
 
-        <Card v-if="statistics">
+        <Card>
           <CardHeader class="pb-2">
             <CardTitle class="text-sm font-medium text-muted-foreground">Tingkat Kepatuhan</CardTitle>
           </CardHeader>
@@ -96,8 +156,7 @@ const handlePrint = () => {
         </Card>
       </div>
 
-      <!-- Detailed Reports -->
-      <div class="grid grid-cols-1 gap-6">
+      <div class="grid grid-cols-1 gap-6 no-print">
         <Card>
           <CardHeader>
             <CardTitle>Ringkasan Aktivitas</CardTitle>
@@ -127,39 +186,50 @@ const handlePrint = () => {
         </Card>
       </div>
     </template>
+
+    <!-- Empty State -->
+    <div v-if="!loading && statistics && statistics.total_borrowings === 0" class="text-center py-12 no-print">
+      <BarChart3 class="mx-auto mb-4 text-muted-foreground" :size="48" />
+      <p class="text-muted-foreground">Tidak ada data laporan</p>
+    </div>
+
+    <!-- Hidden Print Document (Only rendered when printing) -->
+    <div class="print-document">
+      <PrintReports />
+    </div>
   </div>
 </template>
 
 <style scoped>
-/* Print styles */
+/* Hidden on screen, visible when printing */
+.print-document {
+  display: none;
+}
+
 @media print {
+  /* Hide all screen content during print */
   .no-print {
     display: none !important;
   }
 
-  :deep(*) {
+  /* Show only print document */
+  .print-document {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
     background: white !important;
-    color: black !important;
-    border-color: #ccc !important;
   }
 
-  :deep(button),
-  :deep(input[type="checkbox"]) {
-    display: none !important;
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
   }
 
-  h1, h2, h3 {
-    page-break-after: avoid;
-    color: black !important;
-  }
-
-  :deep(.card) {
-    page-break-inside: avoid;
-    border: 1px solid #ccc !important;
-  }
-
+  /* A4 Print Settings */
   @page {
-    margin: 1cm;
+    size: A4 portrait;
+    margin: 15mm;
   }
 }
 </style>

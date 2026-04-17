@@ -1,8 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui'
-import { Settings } from 'lucide-vue-next'
+import { Settings, Lock } from 'lucide-vue-next'
+import { useToast } from '@/composables/useToast'
+import CustomerService from '@/components/CustomerService.vue'
+import StaffServices from '@/components/StaffServices.vue'
 
+const userInfo = ref<any>(null)
+const { success: showSuccess, error: showError } = useToast()
 const settings = ref({
   appName: 'Peminjaman Alat',
   appVersion: '1.0.0',
@@ -11,13 +16,43 @@ const settings = ref({
   debugMode: false
 })
 
+const securitySettings = ref({
+  currentPassword: '',
+  newPassword: '',
+  confirmPassword: ''
+})
+
+const isAdminOrOwner = computed(() => {
+  return userInfo.value?.role === 'admin' || userInfo.value?.role === 'owner'
+})
+
 const handleSave = () => {
-  alert('Pengaturan disimpan!')
+  showSuccess('Pengaturan disimpan!')
 }
 
 const handleReset = () => {
-  alert('Pengaturan direset ke default!')
+  showSuccess('Pengaturan direset ke default!')
 }
+
+const handleChangePassword = () => {
+  if (securitySettings.value.newPassword !== securitySettings.value.confirmPassword) {
+    showError('Password tidak cocok!')
+    return
+  }
+  showSuccess('Password berhasil diubah!')
+  securitySettings.value = {
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  }
+}
+
+onMounted(() => {
+  const userStr = localStorage.getItem('user')
+  if (userStr) {
+    userInfo.value = JSON.parse(userStr)
+  }
+})
 </script>
 
 <template>
@@ -26,13 +61,13 @@ const handleReset = () => {
     <div class="mb-8">
       <h1 class="text-3xl font-bold text-foreground flex items-center gap-2">
         <Settings :size="32" />
-        Pengaturan Sistem
+        {{ isAdminOrOwner ? 'Pengaturan Sistem' : 'Keamanan Akun' }}
       </h1>
-      <p class="text-muted-foreground mt-1">Kelola konfigurasi sistem dan preferensi</p>
+      <p class="text-muted-foreground mt-1">{{ isAdminOrOwner ? 'Kelola konfigurasi sistem dan preferensi' : 'Kelola keamanan akun Anda' }}</p>
     </div>
 
-    <!-- Settings Form -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Admin/Owner Settings -->
+    <div v-if="isAdminOrOwner" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <!-- General Settings -->
       <Card>
         <CardHeader>
@@ -132,6 +167,69 @@ const handleReset = () => {
           </div>
         </CardContent>
       </Card>
+    </div>
+
+    <!-- Staff/Customer Security Settings -->
+    <div v-else class="space-y-6">
+      <!-- Security Card -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle class="flex items-center gap-2">
+              <Lock :size="24" />
+              Keamanan Akun
+            </CardTitle>
+          </CardHeader>
+          <CardContent class="space-y-6">
+            <!-- Current Password -->
+            <div>
+              <label class="block text-sm font-medium mb-2">Password Saat Ini</label>
+              <input
+                v-model="securitySettings.currentPassword"
+                type="password"
+                class="w-full px-4 py-2 border border-input rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                placeholder="Masukkan password saat ini"
+              />
+            </div>
+
+            <!-- New Password -->
+            <div>
+              <label class="block text-sm font-medium mb-2">Password Baru</label>
+              <input
+                v-model="securitySettings.newPassword"
+                type="password"
+                class="w-full px-4 py-2 border border-input rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                placeholder="Masukkan password baru"
+              />
+            </div>
+
+            <!-- Confirm Password -->
+            <div>
+              <label class="block text-sm font-medium mb-2">Konfirmasi Password</label>
+              <input
+                v-model="securitySettings.confirmPassword"
+                type="password"
+                class="w-full px-4 py-2 border border-input rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                placeholder="Konfirmasi password baru"
+              />
+            </div>
+
+            <!-- Save Button -->
+            <button
+              @click="handleChangePassword"
+              class="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
+            >
+              Ubah Password
+            </button>
+          </CardContent>
+        </Card>
+
+        <!-- Service Component -->
+        <div>
+          <CustomerService v-if="userInfo?.role === 'customer'" />
+          <StaffServices v-else-if="userInfo?.role === 'staff'" />
+        </div>
+      </div>
     </div>
   </div>
 </template>

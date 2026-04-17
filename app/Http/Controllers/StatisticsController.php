@@ -50,13 +50,13 @@ class StatisticsController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $statistics,
-                'message' => 'Statistics retrieved successfully'
+                'message' => 'Statistik berhasil diambil'
             ], 200);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to retrieve statistics: ' . $e->getMessage()
+                'message' => 'Gagal mengambil statistik: ' . $e->getMessage()
             ], 500);
         }
     }

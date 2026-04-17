@@ -16,6 +16,13 @@ class SendBorrowingRejectedNotification
 
     public function handle(BorrowingRejected $event)
     {
-        $this->notificationService->notifyBorrowingRejected($event->borrowing, $event->reason);
+        try {
+            $this->notificationService->notifyBorrowingRejected($event->borrowing);
+        } catch (\Exception $e) {
+            \Log::error('Error sending borrowing rejected notification: ' . $e->getMessage(), [
+                'borrowing_id' => $event->borrowing->id_borrowing ?? null,
+                'error' => $e
+            ]);
+        }
     }
 }

@@ -43,7 +43,7 @@ class EquipmentController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $equipment,
-                'message' => 'Equipment retrieved successfully'
+                'message' => 'Alat berhasil diambil'
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -94,12 +94,21 @@ class EquipmentController extends Controller
                 'fine_per_day' => $validated['fine_per_day'] ?? 50000,
             ];
 
-            // Handle photo upload
+            // Handle photo upload with error handling
             if ($request->hasFile('photo')) {
-                $photoFile = $request->file('photo');
-                // Store in public disk under equipment folder
-                $photoPath = $photoFile->store('equipment', 'public');
-                $data['photo'] = $photoPath;
+                try {
+                    $photoFile = $request->file('photo');
+                    // Store in public disk under equipment folder
+                    $photoPath = $photoFile->store('equipment', 'public');
+                    if (!$photoPath) {
+                        throw new \Exception('Failed to save photo to storage');
+                    }
+                    $data['photo'] = $photoPath;
+                } catch (\Exception $photoError) {
+                    \Log::error('Photo upload error for equipment: ' . $photoError->getMessage());
+                    // Continue without photo if upload fails
+                    // Photo is optional for equipment
+                }
             }
 
             $equipment = Equipment::create($data);
@@ -108,7 +117,7 @@ class EquipmentController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $this->formatEquipmentResponse($equipment),
-                'message' => 'Equipment created successfully'
+                'message' => 'Alat berhasil ditambahkan'
             ], 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
@@ -119,7 +128,7 @@ class EquipmentController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to create equipment: ' . $e->getMessage()
+                'message' => 'Gagal menambahkan alat: ' . $e->getMessage()
             ], 500);
         }
     }

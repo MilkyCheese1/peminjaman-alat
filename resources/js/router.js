@@ -6,6 +6,8 @@ import Dashboard from './pages/Dashboard.vue'
 import Equipment from './pages/Equipment.vue'
 import Reports from './pages/Reports.vue'
 import Settings from './pages/Settings.vue'
+import Profile from './pages/Profile.vue'
+import Chat from './pages/Chat.vue'
 import TermsAndConditions from './pages/TermsAndConditions.vue'
 import MainLayout from './layouts/MainLayout.vue'
 
@@ -48,6 +50,18 @@ const routes = [
     name: 'Settings',
     component: Settings,
     meta: { requiresAuth: true, layout: 'MainLayout' }
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile,
+    meta: { requiresAuth: true, layout: 'MainLayout' }
+  },
+  {
+    path: '/chat',
+    name: 'Chat',
+    component: Chat,
+    meta: { requiresAuth: true, layout: 'MainLayout', roles: ['admin', 'owner'] }
   },
   {
     path: '/terms',

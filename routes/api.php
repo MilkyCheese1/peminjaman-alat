@@ -45,51 +45,25 @@ Route::post('/register', [UserController::class, 'register']);
 // ======================================================================
 
 Route::prefix('notifications')->group(function () {
-    // Development endpoints (accessible with ?user_id=X when app.debug = true)
-    if (config('app.debug')) {
-        // Retrieval Endpoints
-        Route::get('/', [NotificationController::class, 'index']);
-        Route::get('/grouped', [NotificationController::class, 'grouped']);
-        Route::get('/{id}', [NotificationController::class, 'show']);
-        Route::get('/unread/count', [NotificationController::class, 'unreadCount']);
-        
-        // Update/Modify Endpoints
-        Route::post('/{id}/mark-read', [NotificationController::class, 'markAsRead']);
-        Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead']);
-        Route::post('/mark-category-read', [NotificationController::class, 'markCategoryAsRead']);
-        Route::post('/{id}/archive', [NotificationController::class, 'archive']);
-        Route::post('/archive-category', [NotificationController::class, 'archiveCategory']);
-        Route::delete('/{id}', [NotificationController::class, 'destroy']);
-        Route::post('/{id}/restore', [NotificationController::class, 'restore']);
-        Route::delete('/clear-all', [NotificationController::class, 'clearAll']);
-        
-        // Preference Endpoints
-        Route::get('/preferences', [NotificationController::class, 'preferences']);
-        Route::put('/preferences', [NotificationController::class, 'updatePreferences']);
-    }
-
-    // Protected endpoints (for authenticated users)
-    Route::middleware('auth:sanctum')->group(function () {
-        // Retrieval Endpoints
-        Route::get('/', [NotificationController::class, 'index']);
-        Route::get('/grouped', [NotificationController::class, 'grouped']);
-        Route::get('/{id}', [NotificationController::class, 'show']);
-        Route::get('/unread/count', [NotificationController::class, 'unreadCount']);
-        
-        // Update/Modify Endpoints
-        Route::post('/{id}/mark-read', [NotificationController::class, 'markAsRead']);
-        Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead']);
-        Route::post('/mark-category-read', [NotificationController::class, 'markCategoryAsRead']);
-        Route::post('/{id}/archive', [NotificationController::class, 'archive']);
-        Route::post('/archive-category', [NotificationController::class, 'archiveCategory']);
-        Route::delete('/{id}', [NotificationController::class, 'destroy']);
-        Route::post('/{id}/restore', [NotificationController::class, 'restore']);
-        Route::delete('/clear-all', [NotificationController::class, 'clearAll']);
-        
-        // Preference Endpoints
-        Route::get('/preferences', [NotificationController::class, 'preferences']);
-        Route::put('/preferences', [NotificationController::class, 'updatePreferences']);
-    });
+    // Retrieval Endpoints
+    Route::get('/', [NotificationController::class, 'index']);
+    Route::get('/grouped', [NotificationController::class, 'grouped']);
+    Route::get('/{id}', [NotificationController::class, 'show']);
+    Route::get('/unread/count', [NotificationController::class, 'unreadCount']);
+    
+    // Update/Modify Endpoints (Protected)
+    Route::post('/{id}/mark-read', [NotificationController::class, 'markAsRead']);
+    Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead']);
+    Route::post('/mark-category-read', [NotificationController::class, 'markCategoryAsRead']);
+    Route::post('/{id}/archive', [NotificationController::class, 'archive']);
+    Route::post('/archive-category', [NotificationController::class, 'archiveCategory']);
+    Route::delete('/{id}', [NotificationController::class, 'destroy']);
+    Route::post('/{id}/restore', [NotificationController::class, 'restore']);
+    Route::delete('/clear-all', [NotificationController::class, 'clearAll']);
+    
+    // Preference Endpoints (Protected)
+    Route::get('/preferences', [NotificationController::class, 'preferences']);
+    Route::put('/preferences', [NotificationController::class, 'updatePreferences']);
 });
 
 // Category Routes

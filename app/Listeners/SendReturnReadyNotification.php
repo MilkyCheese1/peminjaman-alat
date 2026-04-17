@@ -16,6 +16,13 @@ class SendReturnReadyNotification
 
     public function handle(ReturnReady $event)
     {
-        $this->notificationService->notifyReturnReady($event->borrowing);
+        try {
+            $this->notificationService->notifyReturnReady($event->borrowing);
+        } catch (\Exception $e) {
+            \Log::error('Error sending return ready notification: ' . $e->getMessage(), [
+                'borrowing_id' => $event->borrowing->id_borrowing ?? null,
+                'error' => $e
+            ]);
+        }
     }
 }

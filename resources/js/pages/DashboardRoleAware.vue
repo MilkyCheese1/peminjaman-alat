@@ -191,7 +191,7 @@ onMounted(() => {
   if (userStr) {
     try {
       const user = JSON.parse(userStr)
-      userName.value = user.fullname || user.email.split('@')[0] || 'User'
+      userName.value = user.username || user.email.split('@')[0] || 'User'
       userRole.value = user.role || 'customer'
       userInitial.value = userName.value.charAt(0).toUpperCase()
       

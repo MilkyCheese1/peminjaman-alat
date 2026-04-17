@@ -16,6 +16,13 @@ class SendReturnOverdueNotification
 
     public function handle(ReturnOverdue $event)
     {
-        $this->notificationService->notifyReturnOverdue($event->borrowing);
+        try {
+            $this->notificationService->notifyReturnOverdue($event->borrowing);
+        } catch (\Exception $e) {
+            \Log::error('Error sending return overdue notification: ' . $e->getMessage(), [
+                'borrowing_id' => $event->borrowing->id_borrowing ?? null,
+                'error' => $e
+            ]);
+        }
     }
 }
