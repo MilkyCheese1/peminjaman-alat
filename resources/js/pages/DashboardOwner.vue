@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-slate-950 flex">
+  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 flex">
     <!-- Sidebar -->
     <SidebarOwner />
 
@@ -11,22 +11,22 @@
       <!-- Dashboard Content -->
       <main class="flex-1 p-6">
         <div class="mb-6">
-          <h1 class="text-3xl font-bold text-white">Dashboard Owner</h1>
-          <p class="text-slate-300">Selamat datang di dashboard owner</p>
+          <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Dashboard Owner</h1>
+          <p class="text-slate-700 dark:text-slate-300">Selamat datang di dashboard owner</p>
         </div>
 
         <!-- Statistics -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div class="bg-slate-900/90 p-6 rounded-3xl shadow-2xl shadow-slate-950/40 border-l-4 border-cyan-500">
+          <div class="bg-white dark:bg-slate-900/90 p-6 rounded-3xl shadow-2xl shadow-slate-950/40 border-l-4 border-cyan-500">
             <div class="flex items-center">
               <div class="flex-shrink-0">
-                <svg class="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-8 h-8 text-cyan-600 dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
               </div>
               <div class="ml-4">
-                <p class="text-sm font-medium text-slate-400">Total Peminjaman</p>
-                <p class="text-2xl font-semibold text-white">1,234</p>
+                <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Total Peminjaman</p>
+                <p class="text-2xl font-semibold text-slate-900 dark:text-white">1,234</p>
               </div>
             </div>
           </div>

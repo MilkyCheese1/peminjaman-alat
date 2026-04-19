@@ -12,6 +12,10 @@ import AkunAdmin from '../pages/AkunAdmin.vue';
 import AkunOwner from '../pages/AkunOwner.vue';
 import AkunStaff from '../pages/AkunStaff.vue';
 import AkunPeminjam from '../pages/AkunPeminjam.vue';
+import StatistikAdmin from '../pages/StatistikAdmin.vue';
+import StatistikOwner from '../pages/StatistikOwner.vue';
+import StatistikStaff from '../pages/StatistikStaff.vue';
+import StatistikPeminjam from '../pages/StatistikPeminjam.vue';
 
 const routes = [
   {
@@ -78,6 +82,26 @@ const routes = [
     path: '/akun-peminjam',
     name: 'AkunPeminjam',
     component: AkunPeminjam,
+  },
+  {
+    path: '/statistik-admin',
+    name: 'StatistikAdmin',
+    component: StatistikAdmin,
+  },
+  {
+    path: '/statistik-owner',
+    name: 'StatistikOwner',
+    component: StatistikOwner,
+  },
+  {
+    path: '/statistik-staff',
+    name: 'StatistikStaff',
+    component: StatistikStaff,
+  },
+  {
+    path: '/statistik-peminjam',
+    name: 'StatistikPeminjam',
+    component: StatistikPeminjam,
   },
 ];
 

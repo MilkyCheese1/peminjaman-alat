@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-slate-950 flex">
+  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 flex">
     <!-- Sidebar -->
     <SidebarPeminjam />
 
@@ -11,93 +11,93 @@
       <!-- Dashboard Content -->
       <main class="flex-1 p-6">
         <div class="mb-6">
-          <h1 class="text-3xl font-bold text-white">Dashboard Peminjam</h1>
-          <p class="text-slate-300">Jelajahi dan kelola peminjaman alat Anda</p>
+          <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Dashboard Peminjam</h1>
+          <p class="text-slate-700 dark:text-slate-300">Jelajahi dan kelola peminjaman alat Anda</p>
         </div>
 
         <!-- Quick Actions -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <router-link to="/alat" class="block bg-slate-900 border border-white/10 text-white p-6 rounded-3xl shadow-2xl shadow-slate-950/40 transition hover:bg-slate-800">
+          <router-link to="/alat" class="block bg-white dark:bg-slate-900 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white p-6 rounded-3xl shadow-2xl shadow-slate-950/40 transition hover:bg-slate-200 dark:hover:bg-slate-800">
             <h2 class="text-xl font-bold mb-2">Jelajahi Alat</h2>
-            <p class="mb-4 text-slate-300">Temukan alat yang Anda butuhkan</p>
-            <span class="inline-flex items-center rounded-full bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-950">Buka Daftar Alat</span>
+            <p class="mb-4 text-slate-700 dark:text-slate-300">Temukan alat yang Anda butuhkan</p>
+            <span class="inline-flex items-center rounded-full bg-cyan-500 px-4 py-2 text-sm font-semibold text-white dark:text-slate-950">Buka Daftar Alat</span>
           </router-link>
-          <router-link to="/peminjaman-saya" class="block bg-slate-900 border border-white/10 text-white p-6 rounded-3xl shadow-2xl shadow-slate-950/40 transition hover:bg-slate-800">
+          <router-link to="/peminjaman-saya" class="block bg-white dark:bg-slate-900 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white p-6 rounded-3xl shadow-2xl shadow-slate-950/40 transition hover:bg-slate-200 dark:hover:bg-slate-800">
             <h2 class="text-xl font-bold mb-2">Peminjaman Saya</h2>
-            <p class="mb-4 text-slate-300">Lihat status peminjaman Anda</p>
-            <span class="inline-flex items-center rounded-full bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-950">Lihat Riwayat</span>
+            <p class="mb-4 text-slate-700 dark:text-slate-300">Lihat status peminjaman Anda</p>
+            <span class="inline-flex items-center rounded-full bg-cyan-500 px-4 py-2 text-sm font-semibold text-white dark:text-slate-950">Lihat Riwayat</span>
           </router-link>
         </div>
 
         <!-- Jelajahi Alat -->
         <div class="mb-8">
-          <h2 class="text-2xl font-bold text-white mb-4">Jelajahi Alat Tersedia</h2>
+          <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Jelajahi Alat Tersedia</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="bg-slate-900 border border-white/10 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden hover:shadow-slate-900 transition duration-300">
-              <div class="h-48 bg-slate-800 flex items-center justify-center">
-                <span class="text-slate-400">Gambar Alat</span>
+            <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden hover:shadow-slate-900 transition duration-300">
+              <div class="h-48 bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
+                <span class="text-slate-600 dark:text-slate-400">Gambar Alat</span>
               </div>
               <div class="p-4">
-                <h3 class="font-semibold text-white">Bor Listrik</h3>
-                <p class="text-slate-300 text-sm mb-2">Alat untuk membuat lubang</p>
+                <h3 class="font-semibold text-slate-900 dark:text-white">Bor Listrik</h3>
+                <p class="text-slate-700 dark:text-slate-300 text-sm mb-2">Alat untuk membuat lubang</p>
                 <div class="flex justify-between items-center mb-3">
-                  <span class="text-emerald-300 font-semibold">Tersedia</span>
-                  <span class="text-slate-400 font-semibold">Rp 50,000/hari</span>
+                  <span class="text-emerald-600 dark:text-emerald-300 font-semibold">Tersedia</span>
+                  <span class="text-slate-600 dark:text-slate-400 font-semibold">Rp 50,000/hari</span>
                 </div>
-                <button class="w-full bg-cyan-500 text-slate-950 py-2 px-4 rounded hover:bg-cyan-400 transition duration-300">
+                <button class="w-full bg-cyan-500 text-white dark:text-slate-950 py-2 px-4 rounded hover:bg-cyan-600 dark:hover:bg-cyan-400 transition duration-300">
                   Pinjam Sekarang
                 </button>
               </div>
             </div>
-            <div class="bg-slate-900 border border-white/10 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden hover:shadow-slate-900 transition duration-300">
-              <div class="h-48 bg-slate-800 flex items-center justify-center">
-                <span class="text-slate-400">Gambar Alat</span>
+            <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden hover:shadow-slate-900 transition duration-300">
+              <div class="h-48 bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
+                <span class="text-slate-600 dark:text-slate-400">Gambar Alat</span>
               </div>
               <div class="p-4">
-                <h3 class="font-semibold text-white">Gergaji Mesin</h3>
-                <p class="text-slate-300 text-sm mb-2">Alat untuk memotong kayu</p>
+                <h3 class="font-semibold text-slate-900 dark:text-white">Gergaji Mesin</h3>
+                <p class="text-slate-700 dark:text-slate-300 text-sm mb-2">Alat untuk memotong kayu</p>
                 <div class="flex justify-between items-center mb-3">
-                  <span class="text-emerald-300 font-semibold">Tersedia</span>
-                  <span class="text-slate-400 font-semibold">Rp 75,000/hari</span>
+                  <span class="text-emerald-600 dark:text-emerald-300 font-semibold">Tersedia</span>
+                  <span class="text-slate-600 dark:text-slate-400 font-semibold">Rp 75,000/hari</span>
                 </div>
-                <button class="w-full bg-cyan-500 text-slate-950 py-2 px-4 rounded hover:bg-cyan-400 transition duration-300">
+                <button class="w-full bg-cyan-500 text-white dark:text-slate-950 py-2 px-4 rounded hover:bg-cyan-600 dark:hover:bg-cyan-400 transition duration-300">
                   Pinjam Sekarang
                 </button>
               </div>
             </div>
-            <div class="bg-slate-900 border border-white/10 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden hover:shadow-slate-900 transition duration-300">
-              <div class="h-48 bg-slate-800 flex items-center justify-center">
-                <span class="text-slate-400">Gambar Alat</span>
+            <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden hover:shadow-slate-900 transition duration-300">
+              <div class="h-48 bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
+                <span class="text-slate-600 dark:text-slate-400">Gambar Alat</span>
               </div>
               <div class="p-4">
-                <h3 class="font-semibold text-white">Cat Semprot</h3>
-                <p class="text-slate-300 text-sm mb-2">Alat untuk mengecat</p>
+                <h3 class="font-semibold text-slate-900 dark:text-white">Cat Semprot</h3>
+                <p class="text-slate-700 dark:text-slate-300 text-sm mb-2">Alat untuk mengecat</p>
                 <div class="flex justify-between items-center mb-3">
-                  <span class="text-cyan-300 font-semibold">Dipinjam</span>
-                  <span class="text-slate-400 font-semibold">Rp 40,000/hari</span>
+                  <span class="text-cyan-600 dark:text-cyan-300 font-semibold">Dipinjam</span>
+                  <span class="text-slate-600 dark:text-slate-400 font-semibold">Rp 40,000/hari</span>
                 </div>
-                <button class="w-full bg-slate-700 text-white py-2 px-4 rounded cursor-not-allowed">
+                <button class="w-full bg-slate-300 dark:bg-slate-700 text-slate-900 dark:text-white py-2 px-4 rounded cursor-not-allowed">
                   Tidak Tersedia
                 </button>
               </div>
             </div>
-            <div class="bg-slate-900 border border-white/10 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden hover:shadow-slate-900 transition duration-300">
-              <div class="h-48 bg-slate-800 flex items-center justify-center">
-                <span class="text-slate-400">Gambar Alat</span>
+            <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden hover:shadow-slate-900 transition duration-300">
+              <div class="h-48 bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
+                <span class="text-slate-600 dark:text-slate-400">Gambar Alat</span>
               </div>
               <div class="p-4">
-                <h3 class="font-semibold text-white">Palu</h3>
-                <p class="text-slate-300 text-sm mb-2">Alat untuk memukul</p>
+                <h3 class="font-semibold text-slate-900 dark:text-white">Palu</h3>
+                <p class="text-slate-700 dark:text-slate-300 text-sm mb-2">Alat untuk memukul</p>
                 <div class="flex justify-between items-center mb-3">
-                  <span class="text-emerald-300 font-semibold">Tersedia</span>
-                  <span class="text-slate-400 font-semibold">Rp 25,000/hari</span>
+                  <span class="text-emerald-600 dark:text-emerald-300 font-semibold">Tersedia</span>
+                  <span class="text-slate-600 dark:text-slate-400 font-semibold">Rp 25,000/hari</span>
                 </div>
-                <button class="w-full bg-cyan-500 text-slate-950 py-2 px-4 rounded hover:bg-cyan-400 transition duration-300">
+                <button class="w-full bg-cyan-500 text-white dark:text-slate-950 py-2 px-4 rounded hover:bg-cyan-600 dark:hover:bg-cyan-400 transition duration-300">
                   Pinjam Sekarang
                 </button>
               </div>
             </div>
-            <div class="bg-slate-900 border border-white/10 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden hover:shadow-slate-900 transition duration-300">
+            <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden hover:shadow-slate-900 transition duration-300">
               <div class="h-48 bg-slate-800 flex items-center justify-center">
                 <span class="text-slate-400">Gambar Alat</span>
               </div>
