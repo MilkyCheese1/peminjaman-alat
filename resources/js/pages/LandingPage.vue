@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen bg-slate-950 text-slate-100">
-    <nav class="sticky top-0 z-50 border-b border-white/10 bg-slate-950/90 backdrop-blur-xl shadow-xl">
+  <div class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+    <nav class="sticky top-0 z-50 border-b border-slate-200/70 bg-white/90 dark:bg-slate-900/90 dark:border-slate-700/50 backdrop-blur-xl shadow-xl">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-20">
           <div class="flex items-center gap-3">
@@ -40,48 +40,48 @@
           <div class="grid gap-10 lg:grid-cols-[1.3fr_0.9fr] items-center">
             <div class="space-y-6">
               <p class="inline-flex rounded-full bg-cyan-500/15 px-4 py-1 text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">Sistem Internal • TrustEquip</p>
-              <h1 class="text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">Peminjaman Alat Kantor untuk Karyawan.</h1>
-              <p class="max-w-2xl text-lg text-slate-300 sm:text-xl">Sistem peminjaman alat kantor internal yang efisien untuk meningkatkan produktivitas dan mengelola inventaris organisasi.</p>
+              <h1 class="text-4xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-5xl lg:text-6xl">Peminjaman Alat Kantor untuk Karyawan.</h1>
+              <p class="max-w-2xl text-lg text-slate-600 dark:text-slate-300 sm:text-xl">Sistem peminjaman alat kantor internal yang efisien untuk meningkatkan produktivitas dan mengelola inventaris organisasi.</p>
               <div class="flex flex-wrap gap-4">
                 <router-link to="/login" class="inline-flex items-center justify-center rounded-full bg-cyan-500 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-500/20 transition hover:bg-cyan-400">Masuk Sistem</router-link>
-                <a href="#alat" class="inline-flex items-center justify-center rounded-full border border-slate-600 bg-slate-900/70 px-6 py-3 text-sm font-semibold text-slate-200 transition hover:border-cyan-300 hover:text-cyan-200">Lihat Katalog</a>
+                <a href="#alat" class="inline-flex items-center justify-center rounded-full border border-slate-300 bg-slate-100/90 dark:bg-slate-800/80 px-6 py-3 text-sm font-semibold text-slate-900 dark:text-slate-200 transition hover:border-cyan-300 hover:text-cyan-700 dark:hover:text-cyan-200">Lihat Katalog</a>
               </div>
             </div>
 
             <div class="relative">
-              <div class="rounded-[2rem] border border-white/10 bg-slate-900/80 p-6 shadow-2xl shadow-slate-950/40 ring-1 ring-white/5">
+              <div class="rounded-[2rem] border border-slate-200/70 bg-white/90 dark:bg-slate-900/80 p-6 shadow-2xl shadow-slate-950/40 ring-1 ring-slate-200/70 dark:ring-white/5">
                 <div class="grid gap-4 sm:grid-cols-2">
-                  <div class="rounded-3xl bg-slate-950/90 p-5 shadow-inner shadow-black/20">
-                    <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Ketersediaan</p>
-                    <h2 class="mt-3 text-3xl font-semibold text-white">98% Aktif</h2>
-                    <p class="mt-2 text-sm leading-6 text-slate-400">Alat siap dipinjam kapan saja.</p>
+                  <div class="rounded-3xl bg-slate-100/90 dark:bg-slate-950/90 p-5 shadow-inner shadow-slate-900/10">
+                    <p class="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">Ketersediaan</p>
+                    <h2 class="mt-3 text-3xl font-semibold text-slate-900 dark:text-white">98% Aktif</h2>
+                    <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">Alat siap dipinjam kapan saja.</p>
                   </div>
                   <div class="rounded-3xl bg-cyan-500/10 p-5 ring-1 ring-cyan-300/20">
-                    <p class="text-xs uppercase tracking-[0.3em] text-cyan-200/80">Kepercayaan</p>
-                    <h2 class="mt-3 text-3xl font-semibold text-white">8.5/10</h2>
-                    <p class="mt-2 text-sm leading-6 text-cyan-100/80">Rating pengguna yang puas.</p>
+                    <p class="text-xs uppercase tracking-[0.3em] text-cyan-700 dark:text-cyan-200">Kepercayaan</p>
+                    <h2 class="mt-3 text-3xl font-semibold text-slate-900 dark:text-white">8.5/10</h2>
+                    <p class="mt-2 text-sm leading-6 text-slate-700 dark:text-cyan-100/80">Rating pengguna yang puas.</p>
                   </div>
-                  <div class="sm:col-span-2 rounded-3xl bg-slate-900/90 p-5">
+                  <div class="sm:col-span-2 rounded-3xl bg-white/90 dark:bg-slate-900/90 p-5">
                     <div class="flex items-center justify-between">
                       <div>
-                        <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Peminjaman</p>
-                        <h3 class="mt-2 text-2xl font-semibold text-white">120+</h3>
+                        <p class="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">Peminjaman</p>
+                        <h3 class="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">120+</h3>
                       </div>
-                      <div class="rounded-2xl bg-slate-800/80 px-3 py-2 text-xs uppercase tracking-[0.3em] text-slate-300">Realtime</div>
+                      <div class="rounded-2xl bg-slate-100/80 dark:bg-slate-800/80 px-3 py-2 text-xs uppercase tracking-[0.3em] text-slate-700 dark:text-slate-300">Realtime</div>
                     </div>
-                    <p class="mt-4 text-sm leading-6 text-slate-400">Semua status alat terlihat dalam satu layar.</p>
+                    <p class="mt-4 text-sm leading-6 text-slate-600 dark:text-slate-400">Semua status alat terlihat dalam satu layar.</p>
                   </div>
                 </div>
               </div>
-              <div class="mt-6 rounded-[2rem] bg-slate-900/80 p-6 text-slate-300 ring-1 ring-white/10">
+              <div class="mt-6 rounded-[2rem] bg-slate-100/90 dark:bg-slate-900/80 p-6 text-slate-700 dark:text-slate-300 ring-1 ring-slate-200/70 dark:ring-white/10">
                 <div class="grid grid-cols-2 gap-4">
-                  <div class="rounded-3xl bg-slate-950/90 p-4">
-                    <p class="text-xs uppercase tracking-[0.24em] text-slate-400">Waktu</p>
-                    <p class="mt-3 text-xl font-semibold text-white">2 menit</p>
+                  <div class="rounded-3xl bg-slate-100/90 dark:bg-slate-950/90 p-4">
+                    <p class="text-xs uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Waktu</p>
+                    <p class="mt-3 text-xl font-semibold text-slate-900 dark:text-white">2 menit</p>
                   </div>
-                  <div class="rounded-3xl bg-slate-950/90 p-4">
-                    <p class="text-xs uppercase tracking-[0.24em] text-slate-400">Proses</p>
-                    <p class="mt-3 text-xl font-semibold text-white">Langsung</p>
+                  <div class="rounded-3xl bg-slate-100/90 dark:bg-slate-950/90 p-4">
+                    <p class="text-xs uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Proses</p>
+                    <p class="mt-3 text-xl font-semibold text-slate-900 dark:text-white">Langsung</p>
                   </div>
                 </div>
               </div>
@@ -90,34 +90,34 @@
         </div>
       </section>
 
-      <section id="fitur" class="relative overflow-hidden py-24 bg-slate-950/95">
+      <section id="fitur" class="relative overflow-hidden py-24 bg-slate-50/95 dark:bg-slate-950/95">
         <div class="absolute right-0 top-0 h-48 w-48 rounded-full bg-cyan-500/10 blur-3xl"></div>
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="mb-14 text-center">
-            <p class="text-sm uppercase tracking-[0.3em] text-cyan-300/80">Fitur Sistem Internal</p>
-            <h2 class="mt-3 text-4xl font-semibold tracking-tight text-white">Manajemen Peminjaman Alat Kantor</h2>
-            <p class="mt-4 max-w-2xl mx-auto text-base text-slate-400">Sistem terintegrasi untuk mengelola peminjaman alat kantor dengan efisien dan transparan.</p>
+            <p class="text-sm uppercase tracking-[0.3em] text-cyan-700/80 dark:text-cyan-300/80">Fitur Sistem Internal</p>
+            <h2 class="mt-3 text-4xl font-semibold tracking-tight text-slate-900 dark:text-white">Manajemen Peminjaman Alat Kantor</h2>
+            <p class="mt-4 max-w-2xl mx-auto text-base text-slate-600 dark:text-slate-400">Sistem terintegrasi untuk mengelola peminjaman alat kantor dengan efisien dan transparan.</p>
           </div>
 
           <div class="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
             <div class="grid gap-6 sm:grid-cols-3">
-              <div class="bento-card rounded-[2rem] bg-slate-900/90 border border-white/10 p-6 shadow-2xl shadow-slate-950/20">
-                <h3 class="mt-2 text-xl font-semibold text-white">Ajukan Permintaan</h3>
-                <p class="mt-3 text-slate-400">Pilih alat yang dibutuhkan dan kirim permintaan peminjaman ke administrator.</p>
+              <div class="bento-card rounded-[2rem] bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 p-6 shadow-2xl shadow-slate-950/20">
+                <h3 class="mt-2 text-xl font-semibold text-slate-900 dark:text-white">Ajukan Permintaan</h3>
+                <p class="mt-3 text-slate-600 dark:text-slate-400">Pilih alat yang dibutuhkan dan kirim permintaan peminjaman ke administrator.</p>
               </div>
               <div class="bento-card rounded-[2rem] bg-cyan-500/10 border border-cyan-300/20 p-6 shadow-2xl shadow-cyan-500/10">
-                <h3 class="mt-2 text-xl font-semibold text-white">Proses Persetujuan</h3>
-                <p class="mt-3 text-slate-400">Admin memeriksa ketersediaan dan menyetujui permintaan sebelum alat diambil.</p>
+                <h3 class="mt-2 text-xl font-semibold text-slate-900 dark:text-white">Proses Persetujuan</h3>
+                <p class="mt-3 text-slate-700 dark:text-cyan-100">Admin memeriksa ketersediaan dan menyetujui permintaan sebelum alat diambil.</p>
               </div>
-              <div class="bento-card rounded-[2rem] bg-slate-900/90 border border-white/10 p-6 shadow-2xl shadow-slate-950/20">
-                <h3 class="mt-2 text-xl font-semibold text-white">Ambil Alat</h3>
-                <p class="mt-3 text-slate-400">Setelah disetujui, ambil alat di lokasi yang ditentukan dan mulai gunakan sesuai kebutuhan.</p>
+              <div class="bento-card rounded-[2rem] bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 p-6 shadow-2xl shadow-slate-950/20">
+                <h3 class="mt-2 text-xl font-semibold text-slate-900 dark:text-white">Ambil Alat</h3>
+                <p class="mt-3 text-slate-600 dark:text-slate-400">Setelah disetujui, ambil alat di lokasi yang ditentukan dan mulai gunakan sesuai kebutuhan.</p>
               </div>
             </div>
 
             <div class="grid gap-6">
-              <div class="bento-card rounded-[2rem] bg-slate-900/90 border border-white/10 p-8 shadow-2xl shadow-slate-950/20">
-                <h3 class="text-3xl font-semibold text-white">Alur Peminjaman Sederhana</h3>
+              <div class="bento-card rounded-[2rem] bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 p-8 shadow-2xl shadow-slate-950/20">
+                <h3 class="text-3xl font-semibold text-slate-900 dark:text-white">Alur Peminjaman Sederhana</h3>
                 <p class="mt-4 text-slate-400">Sistem dirancang untuk membuat proses pinjam, setujui, dan ambil menjadi cepat dan transparan bagi staf kantor.</p>
                 <ul class="mt-6 space-y-4 text-slate-300">
                   <li class="flex items-start gap-3"><span class="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-cyan-300"></span>Ajukan alat yang dibutuhkan melalui katalog internal.</li>
@@ -130,12 +130,12 @@
         </div>
       </section>
 
-      <section id="alat" class="py-24 bg-slate-950">
+      <section id="alat" class="py-24 bg-slate-50 dark:bg-slate-950">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="mb-14 text-center">
             <p class="text-sm uppercase tracking-[0.3em] text-cyan-300/80">Sistem Peminjaman Internal</p>
-            <h2 class="mt-3 text-4xl font-semibold tracking-tight text-white">Alat Kantor untuk Karyawan</h2>
-            <p class="mt-4 max-w-2xl mx-auto text-base text-slate-400">Koleksi lengkap peralatan kantor yang tersedia untuk peminjaman internal organisasi.</p>
+            <h2 class="mt-3 text-4xl font-semibold tracking-tight text-slate-900 dark:text-white">Alat Kantor untuk Karyawan</h2>
+            <p class="mt-4 max-w-2xl mx-auto text-base text-slate-600 dark:text-slate-400">Koleksi lengkap peralatan kantor yang tersedia untuk peminjaman internal organisasi.</p>
           </div>
 
           <!-- Carousel Container -->
@@ -143,9 +143,9 @@
             <!-- Carousel Track -->
             <div class="flex transition-transform duration-500 ease-in-out" :style="{ transform: `translateX(-${currentSlide * (100 / visibleSlides)}%)` }">
               <div v-for="(item, index) in [...alat, ...alat, ...alat]" :key="`${item.id}-${index}`" class="flex-shrink-0 w-full md:w-1/2 lg:w-1/3 xl:w-1/4 px-3">
-                <div class="group relative rounded-[2rem] bg-slate-900/90 p-6 ring-1 ring-white/10 shadow-2xl shadow-slate-950/20 overflow-hidden hover:ring-cyan-300/30 transition-all duration-300">
+                <div class="group relative rounded-[2rem] bg-white/90 dark:bg-slate-900/90 p-6 ring-1 ring-slate-200/70 dark:ring-white/10 shadow-2xl shadow-slate-950/20 overflow-hidden hover:ring-cyan-300/30 transition-all duration-300">
                   <!-- Image Container -->
-                  <div class="relative aspect-[4/3] mb-4 rounded-2xl overflow-hidden bg-slate-800">
+                  <div class="relative aspect-[4/3] mb-4 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800">
                     <img :src="item.gambar" :alt="item.nama" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                     <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                     <div class="absolute top-3 left-3">
@@ -157,8 +157,8 @@
 
                   <!-- Content -->
                   <div class="space-y-3">
-                    <h3 class="text-xl font-semibold text-white group-hover:text-cyan-300 transition-colors">{{ item.nama }}</h3>
-                    <p class="text-sm text-slate-400 line-clamp-2">{{ item.deskripsi }}</p>
+                    <h3 class="text-xl font-semibold text-slate-900 dark:text-white group-hover:text-cyan-300 transition-colors">{{ item.nama }}</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 line-clamp-2">{{ item.deskripsi }}</p>
                     <div class="flex justify-center pt-2">
                       <button class="w-full rounded-full bg-cyan-500 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-400 transition-colors">
                         Ajukan Peminjaman
@@ -190,79 +190,79 @@
 </div>
       </section>
 
-      <section id="testimoni" class="py-24 bg-slate-950/95">
+      <section id="testimoni" class="py-24 bg-slate-50/95 dark:bg-slate-950/95">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="mb-14 text-center">
-            <p class="text-sm uppercase tracking-[0.3em] text-cyan-300/80">Ulasan Pengguna</p>
-            <h2 class="mt-3 text-4xl font-semibold tracking-tight text-white">Dipercaya oleh pekerja, pelajar, dan kontraktor</h2>
+            <p class="text-sm uppercase tracking-[0.3em] text-cyan-700/80 dark:text-cyan-300/80">Ulasan Pengguna</p>
+            <h2 class="mt-3 text-4xl font-semibold tracking-tight text-slate-900 dark:text-white">Dipercaya oleh pekerja, pelajar, dan kontraktor</h2>
           </div>
 
           <div class="grid gap-6 md:grid-cols-3">
-            <div class="rounded-[2rem] bg-slate-900/90 p-8 ring-1 ring-white/10 shadow-2xl shadow-slate-950/20">
+            <div class="rounded-[2rem] bg-white/90 dark:bg-slate-900/90 p-8 ring-1 ring-slate-200/70 dark:ring-white/10 shadow-2xl shadow-slate-950/20">
               <div class="mb-5 flex items-center gap-3">
                 <div class="flex h-12 w-12 items-center justify-center rounded-3xl bg-cyan-500/10 text-cyan-200">A</div>
                 <div>
-                  <p class="text-lg font-semibold text-white">Ahmad</p>
-                  <p class="text-sm text-slate-500">Pengguna</p>
+                  <p class="text-lg font-semibold text-slate-900 dark:text-white">Ahmad</p>
+                  <p class="text-sm text-slate-500 dark:text-slate-400">Pengguna</p>
                 </div>
               </div>
               <div class="mb-4 flex gap-1">
                 <span v-for="i in 5" :key="i" class="text-yellow-400">★</span>
               </div>
-              <p class="text-slate-400">"Sangat mudah meminjam alat di sini. Prosesnya cepat dan alatnya berkualitas."</p>
+              <p class="text-slate-600 dark:text-slate-400">"Sangat mudah meminjam alat di sini. Prosesnya cepat dan alatnya berkualitas."</p>
             </div>
-            <div class="rounded-[2rem] bg-slate-900/90 p-8 ring-1 ring-white/10 shadow-2xl shadow-slate-950/20">
+            <div class="rounded-[2rem] bg-white/90 dark:bg-slate-900/90 p-8 ring-1 ring-slate-200/70 dark:ring-white/10 shadow-2xl shadow-slate-950/20">
               <div class="mb-5 flex items-center gap-3">
                 <div class="flex h-12 w-12 items-center justify-center rounded-3xl bg-emerald-500/10 text-emerald-200">B</div>
                 <div>
-                  <p class="text-lg font-semibold text-white">Budi</p>
-                  <p class="text-sm text-slate-500">Kontraktor</p>
+                  <p class="text-lg font-semibold text-slate-900 dark:text-white">Budi</p>
+                  <p class="text-sm text-slate-500 dark:text-slate-400">Kontraktor</p>
                 </div>
               </div>
               <div class="mb-4 flex gap-1">
                 <span v-for="i in 5" :key="i" class="text-yellow-400">★</span>
               </div>
-              <p class="text-slate-400">"Koleksi alat lengkap dan harga terjangkau. Recommended!"</p>
+              <p class="text-slate-600 dark:text-slate-400">"Koleksi alat lengkap dan harga terjangkau. Recommended!"</p>
             </div>
-            <div class="rounded-[2rem] bg-slate-900/90 p-8 ring-1 ring-white/10 shadow-2xl shadow-slate-950/20">
+            <div class="rounded-[2rem] bg-white/90 dark:bg-slate-900/90 p-8 ring-1 ring-slate-200/70 dark:ring-white/10 shadow-2xl shadow-slate-950/20">
               <div class="mb-5 flex items-center gap-3">
                 <div class="flex h-12 w-12 items-center justify-center rounded-3xl bg-sky-500/10 text-sky-200">C</div>
                 <div>
-                  <p class="text-lg font-semibold text-white">Citra</p>
-                  <p class="text-sm text-slate-500">Mahasiswa</p>
+                  <p class="text-lg font-semibold text-slate-900 dark:text-white">Citra</p>
+                  <p class="text-sm text-slate-500 dark:text-slate-400">Mahasiswa</p>
                 </div>
               </div>
               <div class="mb-4 flex gap-1">
                 <span v-for="i in 5" :key="i" class="text-yellow-400">★</span>
               </div>
-              <p class="text-slate-400">"Interface yang user-friendly. Mudah digunakan bahkan untuk pemula."</p>
+              <p class="text-slate-600 dark:text-slate-400">"Interface yang user-friendly. Mudah digunakan bahkan untuk pemula."</p>
             </div>
           </div>
 
-          <div class="mt-16 rounded-[2rem] border border-white/10 bg-slate-900/80 p-10 shadow-2xl shadow-slate-950/10">
-            <h3 class="text-center text-2xl font-semibold text-white">Berikan Penilaian Anda</h3>
-            <p class="mt-2 text-center text-slate-400">Bagikan pengalaman Anda menggunakan Trustequip</p>
+          <div class="mt-16 rounded-[2rem] border border-slate-200/70 bg-slate-100/90 dark:bg-slate-900/80 p-10 shadow-2xl shadow-slate-950/10">
+            <h3 class="text-center text-2xl font-semibold text-slate-900 dark:text-white">Berikan Penilaian Anda</h3>
+            <p class="mt-2 text-center text-slate-600 dark:text-slate-400">Bagikan pengalaman Anda menggunakan Trustequip</p>
 
             <form @submit.prevent="submitRating" class="mt-8 space-y-6 max-w-2xl mx-auto">
               <div class="grid gap-6 md:grid-cols-2">
                 <div>
-                  <label class="block text-sm font-semibold text-slate-200 mb-2">Nama Lengkap</label>
+                  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">Nama Lengkap</label>
                   <input 
                     v-model="rating.name" 
                     type="text" 
                     required 
                     placeholder="Masukkan nama Anda"
-                    class="w-full rounded-2xl border border-white/10 bg-slate-800/50 px-4 py-3 text-slate-100 placeholder-slate-500 transition focus:border-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-500/20"
+                    class="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-white/90 dark:bg-slate-950 px-4 py-3 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 transition focus:border-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-500/20"
                   >
                 </div>
                 <div>
-                  <label class="block text-sm font-semibold text-slate-200 mb-2">Email</label>
+                  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">Email</label>
                   <input 
                     v-model="rating.email" 
                     type="email" 
                     required 
                     placeholder="nama@email.com"
-                    class="w-full rounded-2xl border border-white/10 bg-slate-800/50 px-4 py-3 text-slate-100 placeholder-slate-500 transition focus:border-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-500/20"
+                    class="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-white/90 dark:bg-slate-950 px-4 py-3 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 transition focus:border-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-500/20"
                   >
                 </div>
               </div>
@@ -293,7 +293,7 @@
                   required 
                   rows="5"
                   placeholder="Bagikan pengalaman Anda menggunakan Trustequip..."
-                  class="w-full rounded-2xl border border-white/10 bg-slate-800/50 px-4 py-3 text-slate-100 placeholder-slate-500 transition focus:border-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 resize-none"
+                  class="w-full rounded-2xl border border-slate-300 dark:border-slate-700 bg-white/90 dark:bg-slate-950 px-4 py-3 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 transition focus:border-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 resize-none"
                 ></textarea>
               </div>
 
@@ -306,9 +306,9 @@
             </form>
           </div>
 
-          <div id="hubungi" class="mt-16 rounded-[2rem] border border-white/10 bg-slate-900/80 p-10 text-center shadow-2xl shadow-slate-950/10">
-            <h3 class="text-2xl font-semibold text-white">Siap mencoba Trustequip?</h3>
-            <p class="mt-3 text-slate-400">Akses penuh, login sekarang atau daftar untuk mulai pinjam.</p>
+          <div id="hubungi" class="mt-16 rounded-[2rem] border border-slate-200/70 dark:border-white/10 bg-slate-100/90 dark:bg-slate-900/80 p-10 text-center shadow-2xl shadow-slate-950/10">
+            <h3 class="text-2xl font-semibold text-slate-900 dark:text-white">Siap mencoba Trustequip?</h3>
+            <p class="mt-3 text-slate-600 dark:text-slate-400">Akses penuh, login sekarang atau daftar untuk mulai pinjam.</p>
             <div class="mt-8 flex flex-wrap justify-center gap-4">
               <router-link to="/register" class="rounded-full bg-cyan-500 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400">Daftar</router-link>
               <router-link to="/login" class="rounded-full border border-slate-600 px-6 py-3 text-sm font-semibold text-slate-200 transition hover:border-cyan-300 hover:text-cyan-200">Login</router-link>
@@ -317,7 +317,7 @@
         </div>
       </section>
 
-      <footer class="relative border-t border-white/10 bg-slate-950 pt-16 pb-8">
+      <footer class="relative border-t border-slate-200/70 dark:border-white/10 bg-slate-50 dark:bg-slate-950 pt-16 pb-8">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,_rgba(56,189,248,0.08),_transparent_40%)] pointer-events-none"></div>
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="grid gap-12 md:grid-cols-4 mb-12">
@@ -327,11 +327,11 @@
                   <span class="text-lg font-black">T</span>
                 </div>
                 <div>
-                  <h3 class="text-lg font-semibold tracking-tight text-white">Trustequip</h3>
-                  <p class="text-xs text-slate-400">Sistem Peminjaman Alat</p>
+                  <h3 class="text-lg font-semibold tracking-tight text-slate-900 dark:text-white">Trustequip</h3>
+                  <p class="text-xs text-slate-500 dark:text-slate-400">Sistem Peminjaman Alat</p>
                 </div>
               </div>
-              <p class="text-sm text-slate-400 mb-4">Sistem peminjaman alat kantor internal untuk meningkatkan produktivitas organisasi.</p>
+              <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">Sistem peminjaman alat kantor internal untuk meningkatkan produktivitas organisasi.</p>
               <div class="flex gap-3">
                 <a href="#" class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cyan-500/10 text-cyan-300 ring-1 ring-cyan-300/20 transition hover:bg-cyan-500/20">
                   <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a9 9 0 01-9 9m0 0a9 9 0 01-9-9m9 9v8m0-8h8m-8 0H3m9 0a9 9 0 019 9"/></svg>
@@ -348,49 +348,49 @@
             <div>
               <p class="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300/80">Alat</p>
               <div class="space-y-3">
-                <a href="#fitur" class="block text-sm text-slate-400 transition hover:text-cyan-300">Fitur Lengkap</a>
-                <a href="#alat" class="block text-sm text-slate-400 transition hover:text-cyan-300">Katalog Alat</a>
-                <a href="#" class="block text-sm text-slate-400 transition hover:text-cyan-300">Harga Sewa</a>
-                <a href="#" class="block text-sm text-slate-400 transition hover:text-cyan-300">Promo Terbaru</a>
+                <a href="#fitur" class="block text-sm text-slate-500 dark:text-slate-400 transition hover:text-cyan-300">Fitur Lengkap</a>
+                <a href="#alat" class="block text-sm text-slate-500 dark:text-slate-400 transition hover:text-cyan-300">Katalog Alat</a>
+                <a href="#" class="block text-sm text-slate-500 dark:text-slate-400 transition hover:text-cyan-300">Harga Sewa</a>
+                <a href="#" class="block text-sm text-slate-500 dark:text-slate-400 transition hover:text-cyan-300">Promo Terbaru</a>
               </div>
             </div>
 
             <div>
               <p class="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300/80">Perusahaan</p>
               <div class="space-y-3">
-                <a href="#" class="block text-sm text-slate-400 transition hover:text-cyan-300">Tentang Kami</a>
-                <a href="#" class="block text-sm text-slate-400 transition hover:text-cyan-300">Blog</a>
-                <a href="#" class="block text-sm text-slate-400 transition hover:text-cyan-300">Kebijakan Privasi</a>
-                <a href="#" class="block text-sm text-slate-400 transition hover:text-cyan-300">Syarat & Ketentuan</a>
+                <a href="#" class="block text-sm text-slate-500 dark:text-slate-400 transition hover:text-cyan-300">Tentang Kami</a>
+                <a href="#" class="block text-sm text-slate-500 dark:text-slate-400 transition hover:text-cyan-300">Blog</a>
+                <a href="#" class="block text-sm text-slate-500 dark:text-slate-400 transition hover:text-cyan-300">Kebijakan Privasi</a>
+                <a href="#" class="block text-sm text-slate-500 dark:text-slate-400 transition hover:text-cyan-300">Syarat & Ketentuan</a>
               </div>
             </div>
 
             <div>
               <p class="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300/80">Kontak</p>
               <div class="space-y-3">
-                <div class="text-sm text-slate-400">
-                  <p class="text-slate-300 font-medium mb-1">Email</p>
+                <div class="text-sm text-slate-500 dark:text-slate-400">
+                  <p class="text-slate-700 dark:text-slate-300 font-medium mb-1">Email</p>
                   <a href="mailto:support@trustequip.id" class="transition hover:text-cyan-300">support@trustequip.id</a>
                 </div>
-                <div class="text-sm text-slate-400">
-                  <p class="text-slate-300 font-medium mb-1">Telepon</p>
+                <div class="text-sm text-slate-500 dark:text-slate-400">
+                  <p class="text-slate-700 dark:text-slate-300 font-medium mb-1">Telepon</p>
                   <a href="tel:+62812345678" class="transition hover:text-cyan-300">+62 812-345-678</a>
                 </div>
-                <div class="text-sm text-slate-400">
-                  <p class="text-slate-300 font-medium mb-1">Alamat</p>
+                <div class="text-sm text-slate-500 dark:text-slate-400">
+                  <p class="text-slate-700 dark:text-slate-300 font-medium mb-1">Alamat</p>
                   <p>Jakarta, Indonesia</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="border-t border-white/10 pt-8">
+          <div class="border-t border-slate-200/70 dark:border-white/10 pt-8">
             <div class="grid gap-6 sm:grid-cols-2 items-center">
-              <p class="text-sm text-slate-500">&copy; 2026 Trustequip. Semua hak dilindungi.</p>
+              <p class="text-sm text-slate-500 dark:text-slate-400">&copy; 2026 Trustequip. Semua hak dilindungi.</p>
               <div class="flex justify-start sm:justify-end gap-6">
-                <a href="#" class="text-sm text-slate-500 transition hover:text-cyan-300">Privasi</a>
-                <a href="#" class="text-sm text-slate-500 transition hover:text-cyan-300">Syarat</a>
-                <a href="#" class="text-sm text-slate-500 transition hover:text-cyan-300">Cookies</a>
+                <a href="#" class="text-sm text-slate-500 dark:text-slate-400 transition hover:text-cyan-300">Privasi</a>
+                <a href="#" class="text-sm text-slate-500 dark:text-slate-400 transition hover:text-cyan-300">Syarat</a>
+                <a href="#" class="text-sm text-slate-500 dark:text-slate-400 transition hover:text-cyan-300">Cookies</a>
               </div>
             </div>
           </div>

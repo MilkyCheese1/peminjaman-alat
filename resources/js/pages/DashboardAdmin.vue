@@ -29,14 +29,14 @@
             </svg>
             Kelola Kategori
           </button>
-          <button class="bg-slate-900/90 text-white p-4 rounded-3xl shadow-2xl shadow-slate-950/40 border border-white/10 hover:bg-slate-800 transition duration-300">
-            <svg class="w-8 h-8 mb-2 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button class="bg-white dark:bg-slate-900/90 text-slate-900 dark:text-white p-4 rounded-3xl shadow-2xl shadow-slate-950/40 border border-slate-300 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-slate-800 transition duration-300">
+            <svg class="w-8 h-8 mb-2 text-cyan-600 dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
             </svg>
             Kelola Pengguna
           </button>
-          <button class="bg-slate-900/90 text-white p-4 rounded-3xl shadow-2xl shadow-slate-950/40 border border-white/10 hover:bg-slate-800 transition duration-300">
-            <svg class="w-8 h-8 mb-2 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button class="bg-white dark:bg-slate-900/90 text-slate-900 dark:text-white p-4 rounded-3xl shadow-2xl shadow-slate-950/40 border border-slate-300 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-slate-800 transition duration-300">
+            <svg class="w-8 h-8 mb-2 text-cyan-600 dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
             Laporan
@@ -46,9 +46,9 @@
         <!-- Management Tables -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <!-- Alat Management -->
-          <div class="bg-slate-900/90 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden border border-white/10">
-            <div class="p-6 border-b border-slate-800">
-              <h2 class="text-xl font-semibold text-white">Manajemen Alat</h2>
+          <div class="bg-white dark:bg-slate-900/90 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden border border-slate-300 dark:border-white/10">
+            <div class="p-6 border-b border-slate-200 dark:border-slate-800">
+              <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Manajemen Alat</h2>
             </div>
             <div class="p-6">
               <div class="overflow-x-auto">
@@ -87,9 +87,9 @@
           </div>
 
           <!-- User Management -->
-          <div class="bg-slate-900/90 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden border border-white/10">
-            <div class="p-6 border-b border-slate-800">
-              <h2 class="text-xl font-semibold text-white">Manajemen Pengguna</h2>
+          <div class="bg-white dark:bg-slate-900/90 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden border border-slate-300 dark:border-white/10">
+            <div class="p-6 border-b border-slate-200 dark:border-slate-800">
+              <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Manajemen Pengguna</h2>
             </div>
             <div class="p-6">
               <div class="overflow-x-auto">
@@ -130,18 +130,18 @@
 
         <!-- Reports Section -->
         <div class="mt-8">
-          <h2 class="text-2xl font-bold text-white mb-4">Laporan Sistem</h2>
+          <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Laporan Sistem</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-slate-900/90 rounded-3xl shadow-2xl shadow-slate-950/40 p-6 border border-white/10">
-              <h3 class="text-lg font-semibold text-white mb-4">Peminjaman Bulanan</h3>
-              <div class="h-48 bg-slate-800 rounded flex items-center justify-center">
-                <span class="text-slate-400">Chart Peminjaman - Placeholder</span>
+            <div class="bg-white dark:bg-slate-900/90 rounded-3xl shadow-2xl shadow-slate-950/40 p-6 border border-slate-300 dark:border-white/10">
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Peminjaman Bulanan</h3>
+              <div class="h-48 bg-slate-100 dark:bg-slate-800 rounded flex items-center justify-center">
+                <span class="text-slate-500 dark:text-slate-400">Chart Peminjaman - Placeholder</span>
               </div>
             </div>
-            <div class="bg-slate-900/90 rounded-3xl shadow-2xl shadow-slate-950/40 p-6 border border-white/10">
-              <h3 class="text-lg font-semibold text-white mb-4">Pendapatan Bulanan</h3>
-              <div class="h-48 bg-slate-800 rounded flex items-center justify-center">
-                <span class="text-slate-400">Chart Pendapatan - Placeholder</span>
+            <div class="bg-white dark:bg-slate-900/90 rounded-3xl shadow-2xl shadow-slate-950/40 p-6 border border-slate-300 dark:border-white/10">
+              <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Pendapatan Bulanan</h3>
+              <div class="h-48 bg-slate-100 dark:bg-slate-800 rounded flex items-center justify-center">
+                <span class="text-slate-500 dark:text-slate-400">Chart Pendapatan - Placeholder</span>
               </div>
             </div>
           </div>

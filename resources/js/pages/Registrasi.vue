@@ -1,14 +1,14 @@
 <template>
-  <div class="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center px-4 py-8">
+  <div class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex items-center justify-center px-4 py-8">
     <div class="w-full max-w-md">
       <!-- Logo/Title -->
       <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-white mb-2">Peminjaman Alat</h1>
-        <p class="text-slate-400">Buat akun baru</p>
+        <h1 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Peminjaman Alat</h1>
+        <p class="text-slate-600 dark:text-slate-400">Buat akun baru</p>
       </div>
 
       <!-- Registration Form -->
-      <div class="bg-slate-900/90 p-8 rounded-[2rem] shadow-2xl border border-white/10">
+      <div class="bg-white dark:bg-slate-900/90 p-8 rounded-[2rem] shadow-2xl border border-slate-200 dark:border-slate-800">
         <form @submit.prevent="handleRegister" class="space-y-6">
           <!-- Name Field -->
           <div>
@@ -20,7 +20,7 @@
               v-model="form.name"
               type="text"
               required
-              class="w-full px-3 py-2 border border-white/10 bg-slate-950 text-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent placeholder-slate-500 dark:placeholder-slate-400"
               placeholder="Masukkan nama lengkap"
             >
           </div>
@@ -35,7 +35,7 @@
               v-model="form.email"
               type="email"
               required
-              class="w-full px-3 py-2 border border-white/10 bg-slate-950 text-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent placeholder-slate-500 dark:placeholder-slate-400"
               placeholder="Masukkan email"
             >
           </div>
@@ -50,7 +50,7 @@
               v-model="form.phone"
               type="tel"
               required
-              class="w-full px-3 py-2 border border-white/10 bg-slate-950 text-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent placeholder-slate-500 dark:placeholder-slate-400"
               placeholder="Masukkan nomor telepon"
             >
           </div>
@@ -65,7 +65,7 @@
               v-model="form.password"
               type="password"
               required
-              class="w-full px-3 py-2 border border-white/10 bg-slate-950 text-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent placeholder-slate-500 dark:placeholder-slate-400"
               placeholder="Masukkan password"
             >
           </div>
@@ -80,7 +80,7 @@
               v-model="form.password_confirmation"
               type="password"
               required
-              class="w-full px-3 py-2 border border-white/10 bg-slate-950 text-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent placeholder-slate-500 dark:placeholder-slate-400"
               placeholder="Konfirmasi password"
             >
           </div>

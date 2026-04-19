@@ -98,33 +98,33 @@
               </div>
             </div>
             <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden hover:shadow-slate-900 transition duration-300">
-              <div class="h-48 bg-slate-800 flex items-center justify-center">
-                <span class="text-slate-400">Gambar Alat</span>
+              <div class="h-48 bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
+                <span class="text-slate-600 dark:text-slate-400">Gambar Alat</span>
               </div>
               <div class="p-4">
-                <h3 class="font-semibold text-white">Obeng Set</h3>
-                <p class="text-slate-300 text-sm mb-2">Set obeng berbagai ukuran</p>
+                <h3 class="font-semibold text-slate-900 dark:text-white">Obeng Set</h3>
+                <p class="text-slate-700 dark:text-slate-300 text-sm mb-2">Set obeng berbagai ukuran</p>
                 <div class="flex justify-between items-center mb-3">
-                  <span class="text-emerald-300 font-semibold">Tersedia</span>
-                  <span class="text-slate-400 font-semibold">Rp 30,000/hari</span>
+                  <span class="text-emerald-600 dark:text-emerald-300 font-semibold">Tersedia</span>
+                  <span class="text-slate-600 dark:text-slate-400 font-semibold">Rp 30,000/hari</span>
                 </div>
-                <button class="w-full bg-cyan-500 text-slate-950 py-2 px-4 rounded hover:bg-cyan-400 transition duration-300">
+                <button class="w-full bg-cyan-500 text-white dark:text-slate-950 py-2 px-4 rounded hover:bg-cyan-600 dark:hover:bg-cyan-400 transition duration-300">
                   Pinjam Sekarang
                 </button>
               </div>
             </div>
-            <div class="bg-slate-900 border border-white/10 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden hover:shadow-slate-900 transition duration-300">
-              <div class="h-48 bg-slate-800 flex items-center justify-center">
-                <span class="text-slate-400">Gambar Alat</span>
+            <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden hover:shadow-slate-900 transition duration-300">
+              <div class="h-48 bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
+                <span class="text-slate-600 dark:text-slate-400">Gambar Alat</span>
               </div>
               <div class="p-4">
-                <h3 class="font-semibold text-white">Tangga Lipat</h3>
-                <p class="text-slate-300 text-sm mb-2">Tangga untuk pekerjaan tinggi</p>
+                <h3 class="font-semibold text-slate-900 dark:text-white">Tangga Lipat</h3>
+                <p class="text-slate-700 dark:text-slate-300 text-sm mb-2">Tangga untuk pekerjaan tinggi</p>
                 <div class="flex justify-between items-center mb-3">
-                  <span class="text-amber-300 font-semibold">Maintenance</span>
-                  <span class="text-slate-400 font-semibold">Rp 35,000/hari</span>
+                  <span class="text-amber-600 dark:text-amber-300 font-semibold">Maintenance</span>
+                  <span class="text-slate-600 dark:text-slate-400 font-semibold">Rp 35,000/hari</span>
                 </div>
-                <button class="w-full bg-slate-700 text-white py-2 px-4 rounded cursor-not-allowed">
+                <button class="w-full bg-slate-300 dark:bg-slate-700 text-slate-900 dark:text-white py-2 px-4 rounded cursor-not-allowed">
                   Dalam Perbaikan
                 </button>
               </div>
@@ -134,46 +134,46 @@
 
         <!-- Peminjaman Saya -->
         <div>
-          <h2 class="text-2xl font-bold text-white mb-4">Peminjaman Saya</h2>
-          <div class="bg-slate-900 border border-white/10 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden">
+          <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Peminjaman Saya</h2>
+          <div class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-white/10 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden">
             <div class="overflow-x-auto">
               <table class="w-full">
-                <thead class="bg-slate-800">
+                <thead class="bg-slate-100 dark:bg-slate-800">
                   <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Alat</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Tanggal Pinjam</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Tanggal Kembali</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Status</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Total Biaya</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 dark:text-slate-400 uppercase tracking-wider">Alat</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 dark:text-slate-400 uppercase tracking-wider">Tanggal Pinjam</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 dark:text-slate-400 uppercase tracking-wider">Tanggal Kembali</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 dark:text-slate-400 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-700 dark:text-slate-400 uppercase tracking-wider">Total Biaya</th>
                   </tr>
                 </thead>
-                <tbody class="bg-slate-950 divide-y divide-slate-800">
+                <tbody class="bg-white dark:bg-slate-950 divide-y divide-slate-200 dark:divide-slate-800">
                   <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-200">Bor Listrik</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-200">2026-04-15</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-200">2026-04-18</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">Bor Listrik</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">2026-04-15</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">2026-04-18</td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-emerald-100 text-emerald-800">
                         Dikembalikan
                       </span>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-200">Rp 150,000</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">Rp 150,000</td>
                   </tr>
                   <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-200">Gergaji Mesin</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-200">2026-04-10</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-200">2026-04-12</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">Gergaji Mesin</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">2026-04-10</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">2026-04-12</td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-cyan-100 text-cyan-800">
                         Dipinjam
                       </span>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-200">Rp 150,000</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">Rp 150,000</td>
                   </tr>
                   <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-200">Cat Semprot</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-200">2026-04-08</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-200">2026-04-10</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">Cat Semprot</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">2026-04-08</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">2026-04-10</td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-amber-100 text-amber-800">
                         Pending Return
