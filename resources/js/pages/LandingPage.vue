@@ -1,542 +1,564 @@
 <template>
-  <div id="landing" class="landing-page">
-    <!-- HEADER -->
-    <header class="header" :class="{ 'header-scroll': isScrolled, 'dark': isDarkMode }">
-      <div class="header-container">
-        <!-- Logo -->
-        <div class="logo">
-          🎓 TrustEquip
+  <div class="min-h-screen bg-slate-950 text-slate-100">
+    <nav class="sticky top-0 z-50 border-b border-white/10 bg-slate-950/90 backdrop-blur-xl shadow-xl">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+          <div class="flex items-center gap-3">
+            <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-400/15 border border-cyan-300/25 text-cyan-300 shadow-lg shadow-cyan-500/10">
+              <span class="text-xl font-black">T</span>
+            </div>
+            <div>
+              <h1 class="text-xl font-semibold tracking-tight">Trustequip</h1>
+              <p class="text-xs uppercase tracking-[0.28em] text-slate-400">Sistem Peminjaman Alat</p>
+            </div>
+          </div>
+
+          <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-200">
+            <a href="#home" class="transition hover:text-cyan-300">Home</a>
+            <a href="#fitur" class="transition hover:text-cyan-300">Fitur</a>
+            <a href="#alat" class="transition hover:text-cyan-300">Alat</a>
+            <a href="#testimoni" class="transition hover:text-cyan-300">Testimoni</a>
+            <a href="#hubungi" class="transition hover:text-cyan-300">Kontak</a>
+          </div>
+
+          <div>
+            <router-link to="/login" class="inline-flex items-center justify-center rounded-full bg-cyan-500 px-5 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400">Login</router-link>
+          </div>
         </div>
-
-        <!-- Dark Mode Toggle & Desktop Nav (Left controls) -->
-        <div class="header-left-controls">
-          <!-- Dark Mode Toggle -->
-          <button class="theme-toggle" @click="toggleDarkMode" :title="isDarkMode ? 'Light Mode' : 'Dark Mode'">
-            <!-- Light Mode Icon (kiri hitam, kanan putih) -->
-            <svg v-if="!isDarkMode" :key="'light-' + isDarkMode" class="theme-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="11" fill="#000000" />
-              <circle cx="12" cy="12" r="11" fill="#ffffff" clip-path="polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)" />
-              <circle cx="12" cy="12" r="11" fill="none" stroke="#000000" stroke-width="0.5" />
-            </svg>
-            <!-- Dark Mode Icon (kiri putih, kanan hitam) -->
-            <svg v-else :key="'dark-' + isDarkMode" class="theme-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="11" fill="#ffffff" />
-              <circle cx="12" cy="12" r="11" fill="#000000" clip-path="polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)" />
-              <circle cx="12" cy="12" r="11" fill="none" stroke="#ffffff" stroke-width="0.5" />
-            </svg>
-          </button>
-
-          <!-- Desktop Nav -->
-          <nav class="nav-desktop">
-            <a href="#hero" @click.prevent="scrollToSection(0)" :class="{ 'active': currentSection === 0 }">
-              Home
-            </a>
-            <a href="#products" @click.prevent="scrollToSection(1)" :class="{ 'active': currentSection === 1 }">
-              Produk
-            </a>
-            <a href="#about" @click.prevent="scrollToSection(2)" :class="{ 'active': currentSection === 2 }">
-              Tentang
-            </a>
-            <router-link to="/register" class="nav-link nav-link-primary">
-              Mulai
-            </router-link>
-          </nav>
-        </div>
-
-        <!-- Mobile Menu Toggle -->
-        <button class="mobile-menu-toggle" @click="isMobileMenuOpen = !isMobileMenuOpen" :class="{ 'active': isMobileMenuOpen }">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
       </div>
+    </nav>
 
-      <!-- Mobile Menu -->
-      <nav class="nav-mobile" v-show="isMobileMenuOpen">
-        <a href="#hero" @click.prevent="scrollToSectionAndCloseMobile(0)">Home</a>
-        <a href="#products" @click.prevent="scrollToSectionAndCloseMobile(1)">Produk</a>
-        <a href="#about" @click.prevent="scrollToSectionAndCloseMobile(2)">Tentang</a>
-        <router-link to="/register" class="mobile-link">Mulai</router-link>
-        <button class="mobile-theme-toggle" @click="toggleDarkMode">
-          <!-- Light Mode Icon (kiri hitam, kanan putih) -->
-          <svg v-if="!isDarkMode" :key="'mobile-light-' + isDarkMode" class="theme-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="11" fill="#000000" />
-            <circle cx="12" cy="12" r="11" fill="#ffffff" clip-path="polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)" />
-            <circle cx="12" cy="12" r="11" fill="none" stroke="#000000" stroke-width="0.5" />
-          </svg>
-          <!-- Dark Mode Icon (kiri putih, kanan hitam) -->
-          <svg v-else :key="'mobile-dark-' + isDarkMode" class="theme-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="11" fill="#ffffff" />
-            <circle cx="12" cy="12" r="11" fill="#000000" clip-path="polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)" />
-            <circle cx="12" cy="12" r="11" fill="none" stroke="#ffffff" stroke-width="0.5" />
-          </svg>
-        </button>
-      </nav>
-    </header>
+    <main>
+      <section id="home" class="relative overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.16),_transparent_24%)] pointer-events-none"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,_rgba(16,185,129,0.12),_transparent_28%)] pointer-events-none"></div>
+        <div class="absolute -left-12 top-24 h-44 w-44 rounded-full bg-cyan-400/15 blur-3xl" :style="shape1Style"></div>
+        <div class="absolute right-0 top-1/3 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl" :style="shape2Style"></div>
+        <div class="absolute left-1/4 bottom-0 h-32 w-32 rounded-full bg-sky-500/10 blur-3xl" :style="shape3Style"></div>
 
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-      <!-- SECTION 1: HERO -->
-      <section class="section hero-section" :class="{ 'active': currentSection === 0 }">
-        <div class="hero-background" :style="{ transform: `translateY(${parallaxOffset * 0.5}px)` }"></div>
-        
-        <div class="hero-content">
-          <div class="hero-text" :style="{ opacity: heroOpacity, transform: `translateY(${(1 - heroOpacity) * 20}px)` }">
-            <h1 class="hero-title">Pinjam Alat dengan Mudah</h1>
-            <p class="hero-subtitle">Platform penyewaan alat terpercaya untuk komunitas sekolah Anda</p>
-            
-            <div class="hero-stats">
-              <div class="stat">
-                <div class="stat-number">{{ statistics.total_equipment }}+</div>
-                <div class="stat-label">Alat Tersedia</div>
-              </div>
-              <div class="stat">
-                <div class="stat-number">{{ statistics.total_active_users }}+</div>
-                <div class="stat-label">Pengguna Aktif</div>
-              </div>
-              <div class="stat">
-                <div class="stat-number">{{ statistics.satisfaction_rate }}%</div>
-                <div class="stat-label">Kepuasan</div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+          <div class="grid gap-10 lg:grid-cols-[1.3fr_0.9fr] items-center">
+            <div class="space-y-6">
+              <p class="inline-flex rounded-full bg-cyan-500/15 px-4 py-1 text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">Sistem Internal • TrustEquip</p>
+              <h1 class="text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">Peminjaman Alat Kantor untuk Karyawan.</h1>
+              <p class="max-w-2xl text-lg text-slate-300 sm:text-xl">Sistem peminjaman alat kantor internal yang efisien untuk meningkatkan produktivitas dan mengelola inventaris organisasi.</p>
+              <div class="flex flex-wrap gap-4">
+                <router-link to="/login" class="inline-flex items-center justify-center rounded-full bg-cyan-500 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-500/20 transition hover:bg-cyan-400">Masuk Sistem</router-link>
+                <a href="#alat" class="inline-flex items-center justify-center rounded-full border border-slate-600 bg-slate-900/70 px-6 py-3 text-sm font-semibold text-slate-200 transition hover:border-cyan-300 hover:text-cyan-200">Lihat Katalog</a>
               </div>
             </div>
 
-            <div class="hero-buttons">
-              <button class="cta-button primary" @click="scrollToSection(3)">
-                Daftar
+            <div class="relative">
+              <div class="rounded-[2rem] border border-white/10 bg-slate-900/80 p-6 shadow-2xl shadow-slate-950/40 ring-1 ring-white/5">
+                <div class="grid gap-4 sm:grid-cols-2">
+                  <div class="rounded-3xl bg-slate-950/90 p-5 shadow-inner shadow-black/20">
+                    <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Ketersediaan</p>
+                    <h2 class="mt-3 text-3xl font-semibold text-white">98% Aktif</h2>
+                    <p class="mt-2 text-sm leading-6 text-slate-400">Alat siap dipinjam kapan saja.</p>
+                  </div>
+                  <div class="rounded-3xl bg-cyan-500/10 p-5 ring-1 ring-cyan-300/20">
+                    <p class="text-xs uppercase tracking-[0.3em] text-cyan-200/80">Kepercayaan</p>
+                    <h2 class="mt-3 text-3xl font-semibold text-white">8.5/10</h2>
+                    <p class="mt-2 text-sm leading-6 text-cyan-100/80">Rating pengguna yang puas.</p>
+                  </div>
+                  <div class="sm:col-span-2 rounded-3xl bg-slate-900/90 p-5">
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Peminjaman</p>
+                        <h3 class="mt-2 text-2xl font-semibold text-white">120+</h3>
+                      </div>
+                      <div class="rounded-2xl bg-slate-800/80 px-3 py-2 text-xs uppercase tracking-[0.3em] text-slate-300">Realtime</div>
+                    </div>
+                    <p class="mt-4 text-sm leading-6 text-slate-400">Semua status alat terlihat dalam satu layar.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-6 rounded-[2rem] bg-slate-900/80 p-6 text-slate-300 ring-1 ring-white/10">
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="rounded-3xl bg-slate-950/90 p-4">
+                    <p class="text-xs uppercase tracking-[0.24em] text-slate-400">Waktu</p>
+                    <p class="mt-3 text-xl font-semibold text-white">2 menit</p>
+                  </div>
+                  <div class="rounded-3xl bg-slate-950/90 p-4">
+                    <p class="text-xs uppercase tracking-[0.24em] text-slate-400">Proses</p>
+                    <p class="mt-3 text-xl font-semibold text-white">Langsung</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="fitur" class="relative overflow-hidden py-24 bg-slate-950/95">
+        <div class="absolute right-0 top-0 h-48 w-48 rounded-full bg-cyan-500/10 blur-3xl"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="mb-14 text-center">
+            <p class="text-sm uppercase tracking-[0.3em] text-cyan-300/80">Fitur Sistem Internal</p>
+            <h2 class="mt-3 text-4xl font-semibold tracking-tight text-white">Manajemen Peminjaman Alat Kantor</h2>
+            <p class="mt-4 max-w-2xl mx-auto text-base text-slate-400">Sistem terintegrasi untuk mengelola peminjaman alat kantor dengan efisien dan transparan.</p>
+          </div>
+
+          <div class="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+            <div class="grid gap-6 sm:grid-cols-3">
+              <div class="bento-card rounded-[2rem] bg-slate-900/90 border border-white/10 p-6 shadow-2xl shadow-slate-950/20">
+                <h3 class="mt-2 text-xl font-semibold text-white">Ajukan Permintaan</h3>
+                <p class="mt-3 text-slate-400">Pilih alat yang dibutuhkan dan kirim permintaan peminjaman ke administrator.</p>
+              </div>
+              <div class="bento-card rounded-[2rem] bg-cyan-500/10 border border-cyan-300/20 p-6 shadow-2xl shadow-cyan-500/10">
+                <h3 class="mt-2 text-xl font-semibold text-white">Proses Persetujuan</h3>
+                <p class="mt-3 text-slate-400">Admin memeriksa ketersediaan dan menyetujui permintaan sebelum alat diambil.</p>
+              </div>
+              <div class="bento-card rounded-[2rem] bg-slate-900/90 border border-white/10 p-6 shadow-2xl shadow-slate-950/20">
+                <h3 class="mt-2 text-xl font-semibold text-white">Ambil Alat</h3>
+                <p class="mt-3 text-slate-400">Setelah disetujui, ambil alat di lokasi yang ditentukan dan mulai gunakan sesuai kebutuhan.</p>
+              </div>
+            </div>
+
+            <div class="grid gap-6">
+              <div class="bento-card rounded-[2rem] bg-slate-900/90 border border-white/10 p-8 shadow-2xl shadow-slate-950/20">
+                <h3 class="text-3xl font-semibold text-white">Alur Peminjaman Sederhana</h3>
+                <p class="mt-4 text-slate-400">Sistem dirancang untuk membuat proses pinjam, setujui, dan ambil menjadi cepat dan transparan bagi staf kantor.</p>
+                <ul class="mt-6 space-y-4 text-slate-300">
+                  <li class="flex items-start gap-3"><span class="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-cyan-300"></span>Ajukan alat yang dibutuhkan melalui katalog internal.</li>
+                  <li class="flex items-start gap-3"><span class="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-cyan-300"></span>Administrator memproses dan menyetujui permintaan secara cepat.</li>
+                  <li class="flex items-start gap-3"><span class="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-cyan-300"></span>Ambil alat di gudang kantor saat disetujui, lalu kembali setelah selesai.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="alat" class="py-24 bg-slate-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="mb-14 text-center">
+            <p class="text-sm uppercase tracking-[0.3em] text-cyan-300/80">Sistem Peminjaman Internal</p>
+            <h2 class="mt-3 text-4xl font-semibold tracking-tight text-white">Alat Kantor untuk Karyawan</h2>
+            <p class="mt-4 max-w-2xl mx-auto text-base text-slate-400">Koleksi lengkap peralatan kantor yang tersedia untuk peminjaman internal organisasi.</p>
+          </div>
+
+          <!-- Carousel Container -->
+          <div class="relative overflow-hidden">
+            <!-- Carousel Track -->
+            <div class="flex transition-transform duration-500 ease-in-out" :style="{ transform: `translateX(-${currentSlide * (100 / visibleSlides)}%)` }">
+              <div v-for="(item, index) in [...alat, ...alat, ...alat]" :key="`${item.id}-${index}`" class="flex-shrink-0 w-full md:w-1/2 lg:w-1/3 xl:w-1/4 px-3">
+                <div class="group relative rounded-[2rem] bg-slate-900/90 p-6 ring-1 ring-white/10 shadow-2xl shadow-slate-950/20 overflow-hidden hover:ring-cyan-300/30 transition-all duration-300">
+                  <!-- Image Container -->
+                  <div class="relative aspect-[4/3] mb-4 rounded-2xl overflow-hidden bg-slate-800">
+                    <img :src="item.gambar" :alt="item.nama" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                    <div class="absolute top-3 left-3">
+                      <span class="inline-flex items-center gap-1 rounded-full bg-cyan-500/90 px-3 py-1 text-xs font-medium text-white">
+                        {{ item.kategori }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Content -->
+                  <div class="space-y-3">
+                    <h3 class="text-xl font-semibold text-white group-hover:text-cyan-300 transition-colors">{{ item.nama }}</h3>
+                    <p class="text-sm text-slate-400 line-clamp-2">{{ item.deskripsi }}</p>
+                    <div class="flex justify-center pt-2">
+                      <button class="w-full rounded-full bg-cyan-500 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-400 transition-colors">
+                        Ajukan Peminjaman
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <button @click="prevSlide" class="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-slate-800/80 p-3 text-white hover:bg-slate-700 transition-colors backdrop-blur-sm">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+              </svg>
+            </button>
+            <button @click="nextSlide" class="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-slate-800/80 p-3 text-white hover:bg-slate-700 transition-colors backdrop-blur-sm">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+
+            <!-- Dots Indicator -->
+            <div class="flex justify-center mt-8 space-x-2">
+              <button v-for="(item, index) in alat" :key="index" @click="goToSlide(index)" class="w-3 h-3 rounded-full transition-colors" :class="currentSlide % alat.length === index ? 'bg-cyan-500' : 'bg-slate-600 hover:bg-slate-500'"></button>
+            </div>
+          </div>
+
+</div>
+      </section>
+
+      <section id="testimoni" class="py-24 bg-slate-950/95">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="mb-14 text-center">
+            <p class="text-sm uppercase tracking-[0.3em] text-cyan-300/80">Ulasan Pengguna</p>
+            <h2 class="mt-3 text-4xl font-semibold tracking-tight text-white">Dipercaya oleh pekerja, pelajar, dan kontraktor</h2>
+          </div>
+
+          <div class="grid gap-6 md:grid-cols-3">
+            <div class="rounded-[2rem] bg-slate-900/90 p-8 ring-1 ring-white/10 shadow-2xl shadow-slate-950/20">
+              <div class="mb-5 flex items-center gap-3">
+                <div class="flex h-12 w-12 items-center justify-center rounded-3xl bg-cyan-500/10 text-cyan-200">A</div>
+                <div>
+                  <p class="text-lg font-semibold text-white">Ahmad</p>
+                  <p class="text-sm text-slate-500">Pengguna</p>
+                </div>
+              </div>
+              <div class="mb-4 flex gap-1">
+                <span v-for="i in 5" :key="i" class="text-yellow-400">★</span>
+              </div>
+              <p class="text-slate-400">"Sangat mudah meminjam alat di sini. Prosesnya cepat dan alatnya berkualitas."</p>
+            </div>
+            <div class="rounded-[2rem] bg-slate-900/90 p-8 ring-1 ring-white/10 shadow-2xl shadow-slate-950/20">
+              <div class="mb-5 flex items-center gap-3">
+                <div class="flex h-12 w-12 items-center justify-center rounded-3xl bg-emerald-500/10 text-emerald-200">B</div>
+                <div>
+                  <p class="text-lg font-semibold text-white">Budi</p>
+                  <p class="text-sm text-slate-500">Kontraktor</p>
+                </div>
+              </div>
+              <div class="mb-4 flex gap-1">
+                <span v-for="i in 5" :key="i" class="text-yellow-400">★</span>
+              </div>
+              <p class="text-slate-400">"Koleksi alat lengkap dan harga terjangkau. Recommended!"</p>
+            </div>
+            <div class="rounded-[2rem] bg-slate-900/90 p-8 ring-1 ring-white/10 shadow-2xl shadow-slate-950/20">
+              <div class="mb-5 flex items-center gap-3">
+                <div class="flex h-12 w-12 items-center justify-center rounded-3xl bg-sky-500/10 text-sky-200">C</div>
+                <div>
+                  <p class="text-lg font-semibold text-white">Citra</p>
+                  <p class="text-sm text-slate-500">Mahasiswa</p>
+                </div>
+              </div>
+              <div class="mb-4 flex gap-1">
+                <span v-for="i in 5" :key="i" class="text-yellow-400">★</span>
+              </div>
+              <p class="text-slate-400">"Interface yang user-friendly. Mudah digunakan bahkan untuk pemula."</p>
+            </div>
+          </div>
+
+          <div class="mt-16 rounded-[2rem] border border-white/10 bg-slate-900/80 p-10 shadow-2xl shadow-slate-950/10">
+            <h3 class="text-center text-2xl font-semibold text-white">Berikan Penilaian Anda</h3>
+            <p class="mt-2 text-center text-slate-400">Bagikan pengalaman Anda menggunakan Trustequip</p>
+
+            <form @submit.prevent="submitRating" class="mt-8 space-y-6 max-w-2xl mx-auto">
+              <div class="grid gap-6 md:grid-cols-2">
+                <div>
+                  <label class="block text-sm font-semibold text-slate-200 mb-2">Nama Lengkap</label>
+                  <input 
+                    v-model="rating.name" 
+                    type="text" 
+                    required 
+                    placeholder="Masukkan nama Anda"
+                    class="w-full rounded-2xl border border-white/10 bg-slate-800/50 px-4 py-3 text-slate-100 placeholder-slate-500 transition focus:border-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-500/20"
+                  >
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold text-slate-200 mb-2">Email</label>
+                  <input 
+                    v-model="rating.email" 
+                    type="email" 
+                    required 
+                    placeholder="nama@email.com"
+                    class="w-full rounded-2xl border border-white/10 bg-slate-800/50 px-4 py-3 text-slate-100 placeholder-slate-500 transition focus:border-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-500/20"
+                  >
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-slate-200 mb-3">Penilaian Bintang</label>
+                <div class="flex gap-3">
+                  <button 
+                    v-for="star in 5" 
+                    :key="star" 
+                    @click.prevent="rating.stars = star"
+                    type="button"
+                    class="text-4xl transition hover:scale-110"
+                    :class="star <= rating.stars ? 'text-yellow-400' : 'text-slate-600'"
+                  >
+                    ★
+                  </button>
+                </div>
+                <p class="mt-2 text-sm text-slate-400">
+                  <span class="font-semibold text-slate-300">{{ rating.stars }}</span> dari 5 bintang
+                </p>
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-slate-200 mb-2">Testimoni / Review</label>
+                <textarea 
+                  v-model="rating.message" 
+                  required 
+                  rows="5"
+                  placeholder="Bagikan pengalaman Anda menggunakan Trustequip..."
+                  class="w-full rounded-2xl border border-white/10 bg-slate-800/50 px-4 py-3 text-slate-100 placeholder-slate-500 transition focus:border-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 resize-none"
+                ></textarea>
+              </div>
+
+              <button 
+                type="submit"
+                class="w-full rounded-2xl bg-cyan-500 px-6 py-3 font-semibold text-slate-950 shadow-lg shadow-cyan-500/20 transition hover:bg-cyan-400"
+              >
+                Kirim Penilaian
               </button>
-              <router-link to="/login" class="cta-button secondary">Masuk</router-link>
-            </div>
+            </form>
           </div>
 
-          <div class="hero-cards" :style="{ transform: `translateY(${parallaxOffset * 0.3}px)` }">
-            <div class="card" v-for="(card, idx) in heroCards" :key="idx" :style="{ animation: `float 3s ease-in-out ${idx * 0.2}s infinite` }">
-              <div class="card-icon">{{ card.icon }}</div>
-              <div class="card-title">{{ card.title }}</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Scroll Indicator -->
-        <div class="scroll-indicator" :style="{ animation: `bounce 2s infinite` }">
-          <div class="mouse">
-            <div class="wheel"></div>
-          </div>
-          <div class="arrow">↓</div>
-        </div>
-      </section>
-
-      <!-- SECTION 2: PRODUCTS -->
-      <section class="section products-section" :class="{ 'active': currentSection === 1 }">
-        <div class="section-header">
-          <h2>Koleksi Alat Kami</h2>
-          <p>Berbagai alat berkualitas tinggi siap untuk memenuhi kebutuhan Anda</p>
-        </div>
-
-        <div class="carousel-container" ref="carouselContainer" @wheel="handleCarouselWheel">
-          <div class="products-carousel">
-            <div class="product-card" v-for="(product, idx) in products" :key="idx" :style="{ 'animation-delay': `${idx * 0.1}s` }">
-              <div class="product-image">
-                <img 
-                  v-if="product.gambar" 
-                  :src="product.gambar" 
-                  :alt="product.nama_alat"
-                  onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23ddd%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23999%22 font-family=%22Arial%22 font-size=%2216%22%3ENo Image%3C/text%3E%3C/svg%3E'"
-                />
-                <div v-else class="placeholder-image">📦</div>
-              </div>
-              <h3>{{ product.nama_alat }}</h3>
-              <div class="product-info">
-                <span class="stock">Stok: {{ product.total_stok }}</span>
-              </div>
-              <button class="product-button">Lihat Detail</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="carousel-nav">
-          <div class="carousel-dots">
-            <span 
-              v-for="dotIdx in totalDots" 
-              :key="dotIdx - 1" 
-              class="dot"
-              :class="{ 'active': Math.floor(carouselPosition / cardsPerDot) === dotIdx - 1 }"
-              @click="scrollCarouselToIndex(dotIdx - 1)"
-            ></span>
-          </div>
-        </div>
-      </section>
-
-      <!-- SECTION 3: CTA -->
-      <section class="section cta-section" :class="{ 'active': currentSection === 2 }">
-        <div class="cta-wrapper">
-          <div class="cta-content">
-            <h2>Siap Memulai?</h2>
-            <p>Bergabunglah dengan ribuan pengguna yang telah merasakan kemudahan berbagi alat</p>
-            
-            <div class="cta-features">
-              <div class="feature" v-for="feature in ctaFeatures" :key="feature">
-                <span class="check">✓</span>
-                <span>{{ feature }}</span>
-              </div>
-            </div>
-
-            <div class="cta-buttons">
-              <router-link to="/register" class="cta-button primary large">Mulai</router-link>
-            </div>
-          </div>
-
-          <div class="cta-image">
-            <div class="cta-illustration">
-              📦
+          <div id="hubungi" class="mt-16 rounded-[2rem] border border-white/10 bg-slate-900/80 p-10 text-center shadow-2xl shadow-slate-950/10">
+            <h3 class="text-2xl font-semibold text-white">Siap mencoba Trustequip?</h3>
+            <p class="mt-3 text-slate-400">Akses penuh, login sekarang atau daftar untuk mulai pinjam.</p>
+            <div class="mt-8 flex flex-wrap justify-center gap-4">
+              <router-link to="/register" class="rounded-full bg-cyan-500 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400">Daftar</router-link>
+              <router-link to="/login" class="rounded-full border border-slate-600 px-6 py-3 text-sm font-semibold text-slate-200 transition hover:border-cyan-300 hover:text-cyan-200">Login</router-link>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- SECTION 4: FOOTER -->
-      <footer class="section footer" :class="{ 'active': currentSection === 3 }">
-        <div class="footer-content">
-          <div class="footer-section">
-            <h3>TrustEquip</h3>
-            <p>Platform terpercaya untuk penyewaan alat di komunitas sekolah</p>
-            <div class="social-links">
-              <a href="#" title="Facebook">f</a>
-              <a href="#" title="Instagram">ig</a>
-              <a href="#" title="Twitter">𝕏</a>
+      <footer class="relative border-t border-white/10 bg-slate-950 pt-16 pb-8">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,_rgba(56,189,248,0.08),_transparent_40%)] pointer-events-none"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="grid gap-12 md:grid-cols-4 mb-12">
+            <div class="md:col-span-1">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-400/15 border border-cyan-300/25 text-cyan-300 shadow-lg shadow-cyan-500/10">
+                  <span class="text-lg font-black">T</span>
+                </div>
+                <div>
+                  <h3 class="text-lg font-semibold tracking-tight text-white">Trustequip</h3>
+                  <p class="text-xs text-slate-400">Sistem Peminjaman Alat</p>
+                </div>
+              </div>
+              <p class="text-sm text-slate-400 mb-4">Sistem peminjaman alat kantor internal untuk meningkatkan produktivitas organisasi.</p>
+              <div class="flex gap-3">
+                <a href="#" class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cyan-500/10 text-cyan-300 ring-1 ring-cyan-300/20 transition hover:bg-cyan-500/20">
+                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a9 9 0 01-9 9m0 0a9 9 0 01-9-9m9 9v8m0-8h8m-8 0H3m9 0a9 9 0 019 9"/></svg>
+                </a>
+                <a href="#" class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cyan-500/10 text-cyan-300 ring-1 ring-cyan-300/20 transition hover:bg-cyan-500/20">
+                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8.29 20v-7.21H5.5V9.25h2.79V7.61c0-2.74 1.67-4.24 4.12-4.24 1.17 0 2.18.09 2.47.13v2.86h-1.7c-1.33 0-1.59.63-1.59 1.56V9.25h3.19l-4.16 6.19h-3.19V20z"/></svg>
+                </a>
+                <a href="#" class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cyan-500/10 text-cyan-300 ring-1 ring-cyan-300/20 transition hover:bg-cyan-500/20">
+                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2s9 5 20 5a9.5 9.5 0 00-9-5.5c4.75 2.25 7-7 7-7"/></svg>
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <p class="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300/80">Alat</p>
+              <div class="space-y-3">
+                <a href="#fitur" class="block text-sm text-slate-400 transition hover:text-cyan-300">Fitur Lengkap</a>
+                <a href="#alat" class="block text-sm text-slate-400 transition hover:text-cyan-300">Katalog Alat</a>
+                <a href="#" class="block text-sm text-slate-400 transition hover:text-cyan-300">Harga Sewa</a>
+                <a href="#" class="block text-sm text-slate-400 transition hover:text-cyan-300">Promo Terbaru</a>
+              </div>
+            </div>
+
+            <div>
+              <p class="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300/80">Perusahaan</p>
+              <div class="space-y-3">
+                <a href="#" class="block text-sm text-slate-400 transition hover:text-cyan-300">Tentang Kami</a>
+                <a href="#" class="block text-sm text-slate-400 transition hover:text-cyan-300">Blog</a>
+                <a href="#" class="block text-sm text-slate-400 transition hover:text-cyan-300">Kebijakan Privasi</a>
+                <a href="#" class="block text-sm text-slate-400 transition hover:text-cyan-300">Syarat & Ketentuan</a>
+              </div>
+            </div>
+
+            <div>
+              <p class="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300/80">Kontak</p>
+              <div class="space-y-3">
+                <div class="text-sm text-slate-400">
+                  <p class="text-slate-300 font-medium mb-1">Email</p>
+                  <a href="mailto:support@trustequip.id" class="transition hover:text-cyan-300">support@trustequip.id</a>
+                </div>
+                <div class="text-sm text-slate-400">
+                  <p class="text-slate-300 font-medium mb-1">Telepon</p>
+                  <a href="tel:+62812345678" class="transition hover:text-cyan-300">+62 812-345-678</a>
+                </div>
+                <div class="text-sm text-slate-400">
+                  <p class="text-slate-300 font-medium mb-1">Alamat</p>
+                  <p>Jakarta, Indonesia</p>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="footer-section">
-            <h4>Navigasi</h4>
-            <ul>
-              <li><a href="#" @click.prevent="scrollToSection(0)">Home</a></li>
-              <li><a href="#" @click.prevent="scrollToSection(1)">Produk</a></li>
-              <li><a href="#" @click.prevent="scrollToSection(2)">Tentang</a></li>
-              <li><a href="#" @click.prevent="scrollToSection(3)">Kontak</a></li>
-            </ul>
+          <div class="border-t border-white/10 pt-8">
+            <div class="grid gap-6 sm:grid-cols-2 items-center">
+              <p class="text-sm text-slate-500">&copy; 2026 Trustequip. Semua hak dilindungi.</p>
+              <div class="flex justify-start sm:justify-end gap-6">
+                <a href="#" class="text-sm text-slate-500 transition hover:text-cyan-300">Privasi</a>
+                <a href="#" class="text-sm text-slate-500 transition hover:text-cyan-300">Syarat</a>
+                <a href="#" class="text-sm text-slate-500 transition hover:text-cyan-300">Cookies</a>
+              </div>
+            </div>
           </div>
-
-          <div class="footer-section">
-            <h4>Bantuan</h4>
-            <ul>
-              <li><a href="#">FAQ</a></li>
-              <li><a href="#">Syarat & Ketentuan</a></li>
-              <li><a href="#">Kebijakan Privasi</a></li>
-              <li><a href="#">Hubungi Kami</a></li>
-            </ul>
-          </div>
-
-          <div class="footer-section">
-            <h4>Kontak</h4>
-            <p>📧 info@trustequip.id</p>
-            <p>📱 +62 812-3456-7890</p>
-            <p>📍 Sekolah Teknologi Digital</p>
-          </div>
-        </div>
-
-        <div class="footer-bottom">
-          <p>&copy; 2026 TrustEquip. All rights reserved.</p>
         </div>
       </footer>
-      <!-- Floating Back to Top Button -->
-      <button
-        class="floating-back-to-top"
-        @click="scrollToSection(0)"
-        v-show="currentSection > 0"
-        aria-label="Kembali ke atas"
-      >
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="14" cy="14" r="14" fill="#0B7285"/>
-          <path d="M14 20V8M14 8L8 14M14 8L20 14" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
     </main>
-
-    <!-- KEYBOARD NAVIGATION HINT -->
-    <div class="nav-hint" v-if="showNavHint">
-      <span>⌨️ Gunakan arrow keys untuk navigasi</span>
-    </div>
   </div>
 </template>
 
-<script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import apiClient from '../config/api.js'
-
-// State
-const isDarkMode = ref(false)
-const isMobileMenuOpen = ref(false)
-const currentSection = ref(0)
-const scrollProgress = ref(0)
-const parallaxOffset = ref(0)
-const isScrolled = ref(false)
-const showNavHint = ref(true)
-const carouselContainer = ref(null)
-const carouselPosition = ref(0)
-const cardsPerDot = 2 // 1 dot represents 2 cards
-let carouselWheelTimeout = null
-let autoScrollInterval = null
-
-// Computed
-const heroOpacity = computed(() => {
-  return Math.max(0, 1 - (parallaxOffset.value / 300))
-})
-
-const totalDots = computed(() => {
-  return Math.ceil(products.value.length / cardsPerDot)
-})
-
-// Data
-const heroCards = ref([
-  { icon: '⚡', title: 'Cepat & Mudah' },
-  { icon: '🔒', title: 'Aman Terpercaya' },
-  { icon: '✅', title: 'Efisien & Terpercaya' }
-])
-
-// Statistics state
-const statistics = ref({
-  total_equipment: 500,
-  total_active_users: 2000,
-  satisfaction_rate: 98
-})
-const isLoadingStats = ref(false)
-
-const products = ref([])
-const isLoadingProducts = ref(false)
-
-// Fetch statistics from API
-const fetchStatistics = async () => {
-  isLoadingStats.value = true
-  try {
-    const response = await apiClient.get('/statistics/dashboard')
-    if (response.data && response.data.data) {
-      statistics.value = response.data.data
+<script>
+export default {
+  name: 'LandingPage',
+  data() {
+    return {
+      scrollY: 0,
+      currentSlide: 0,
+      testimoni: {
+        email: '',
+        message: ''
+      },
+      rating: {
+        name: '',
+        email: '',
+        stars: 0,
+        message: ''
+      },
+      alat: [
+        {
+          id: 1,
+          nama: 'Proyektor HD',
+          deskripsi: 'Proyektor high definition untuk presentasi dan meeting kantor',
+          gambar: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop',
+          kategori: 'Multimedia'
+        },
+        {
+          id: 2,
+          nama: 'Laptop Kantor',
+          deskripsi: 'Laptop untuk pekerjaan administrasi dan presentasi profesional',
+          gambar: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=300&fit=crop',
+          kategori: 'Komputer'
+        },
+        {
+          id: 3,
+          nama: 'Printer Laser',
+          deskripsi: 'Printer laser multifungsi untuk mencetak dokumen dan laporan kantor',
+          gambar: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=400&h=300&fit=crop',
+          kategori: 'Printer'
+        },
+        {
+          id: 4,
+          nama: 'Mesin Fotocopy',
+          deskripsi: 'Mesin fotocopy digital untuk menggandakan dokumen dengan cepat',
+          gambar: 'https://images.unsplash.com/photo-1580910051078-da8bffc4f1f0?w=400&h=300&fit=crop',
+          kategori: 'Printer'
+        },
+        {
+          id: 5,
+          nama: 'Webcam HD',
+          deskripsi: 'Webcam high definition untuk video conference dan meeting jarak jauh',
+          gambar: 'https://images.unsplash.com/photo-1516455207990-7a41ce80f7ee?w=400&h=300&fit=crop',
+          kategori: 'Multimedia'
+        },
+        {
+          id: 6,
+          nama: 'Microphone Wireless',
+          deskripsi: 'Microphone nirkabel untuk meeting dan presentasi internal',
+          gambar: 'https://images.unsplash.com/photo-1515207727343-0c6f08f26a0f?w=400&h=300&fit=crop',
+          kategori: 'Audio'
+        },
+        {
+          id: 7,
+          nama: 'Speaker Bluetooth',
+          deskripsi: 'Speaker portable untuk presentasi dan audio meeting kantor',
+          gambar: 'https://images.unsplash.com/photo-1506516864270-6f9ee22c6f01?w=400&h=300&fit=crop',
+          kategori: 'Audio'
+        },
+        {
+          id: 8,
+          nama: 'Whiteboard Digital',
+          deskripsi: 'Whiteboard interaktif digital untuk presentasi dan kolaborasi tim',
+          gambar: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=400&h=300&fit=crop',
+          kategori: 'Multimedia'
+        }
+      ]
     }
-  } catch (error) {
-    // Gunakan default values jika API error
-    statistics.value = {
-      total_equipment: 0,
-      total_active_users: 0,
-      satisfaction_rate: 0
+  },
+  computed: {
+    shape1Style() {
+      return {
+        transform: `translateY(${this.scrollY * 0.08}px)`,
+      }
+    },
+    shape2Style() {
+      return {
+        transform: `translateY(${this.scrollY * 0.05}px)`,
+      }
+    },
+    shape3Style() {
+      return {
+        transform: `translateY(${this.scrollY * 0.12}px)`,
+      }
+    },
+    visibleSlides() {
+      if (typeof window !== 'undefined') {
+        if (window.innerWidth >= 1280) return 4 // xl
+        if (window.innerWidth >= 1024) return 3 // lg
+        if (window.innerWidth >= 768) return 2 // md
+        return 1 // mobile
+      }
+      return 1
     }
-  } finally {
-    isLoadingStats.value = false
-  }
-}
-
-// Fetch equipment from API
-const fetchEquipment = async () => {
-  isLoadingProducts.value = true
-  try {
-    const response = await apiClient.get('/equipment')
-    if (response.data && response.data.data) {
-      products.value = response.data.data
+  },
+  methods: {
+    submitTestimoni() {
+      console.log('Testimoni submitted:', this.testimoni)
+      this.testimoni = { email: '', message: '' }
+      alert('Terima kasih atas testimoni Anda!')
+    },
+    submitRating() {
+      if (this.rating.stars === 0) {
+        alert('Silakan berikan rating bintang terlebih dahulu')
+        return
+      }
+      console.log('Rating submitted:', this.rating)
+      alert('Terima kasih atas penilaian Anda! Rating akan kami tinjau.')
+      this.rating = {
+        name: '',
+        email: '',
+        stars: 0,
+        message: ''
+      }
+    },
+    nextSlide() {
+      this.currentSlide = (this.currentSlide + 1) % this.alat.length
+    },
+    prevSlide() {
+      this.currentSlide = this.currentSlide === 0 ? this.alat.length - 1 : this.currentSlide - 1
+    },
+    goToSlide(index) {
+      this.currentSlide = index
+    },
+    handleScroll() {
+      this.scrollY = window.scrollY
     }
-  } catch (error) {
-    // Fallback jika API error
-    products.value = []
-  } finally {
-    isLoadingProducts.value = false
+  },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll, { passive: true })
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll)
   }
 }
-
-const ctaFeatures = ref([
-  'Proses registrasi hanya 2 menit',
-  'Akses 500+ alat premium',
-  'Jaminan uang kembali 100%',
-  'Support 24/7 terhadap masalah'
-])
-
-// Methods
-const toggleDarkMode = () => {
-  isDarkMode.value = !isDarkMode.value
-  localStorage.setItem('trustequip_darkmode', isDarkMode.value)
-  document.documentElement.setAttribute('data-theme', isDarkMode.value ? 'dark' : 'light')
-}
-
-const scrollToSection = (index) => {
-  currentSection.value = index
-  isMobileMenuOpen.value = false
-  const section = document.querySelectorAll('.section')[index]
-  if (section) {
-    section.scrollIntoView({ behavior: 'smooth' })
-  }
-}
-
-const scrollToSectionAndCloseMobile = (index) => {
-  scrollToSection(index)
-  isMobileMenuOpen.value = false
-}
-
-const handleScroll = () => {
-  const scrolled = window.scrollY
-  parallaxOffset.value = scrolled
-  scrollProgress.value = (scrolled / (document.documentElement.scrollHeight - window.innerHeight)) * 100
-  isScrolled.value = scrolled > 50
-
-  // Detect current section
-  const sections = document.querySelectorAll('.section')
-  sections.forEach((section, index) => {
-    const rect = section.getBoundingClientRect()
-    if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
-      currentSection.value = index
-    }
-  })
-}
-
-const scrollCarousel = (direction) => {
-  // Pause auto-scroll when user interacts
-  if (autoScrollInterval) {
-    clearInterval(autoScrollInterval)
-    startAutoScroll()
-  }
-  
-  const step = direction > 0 ? cardsPerDot : -cardsPerDot
-  let newPosition = carouselPosition.value + step
-  
-  // Loop: jika sudah di ujung, kembali ke awal dengan smooth scroll
-  if (newPosition >= products.value.length) {
-    newPosition = 0
-  } else if (newPosition < 0) {
-    newPosition = products.value.length - cardsPerDot
-  }
-  
-  scrollToPosition(newPosition)
-}
-
-const scrollToPosition = (position) => {
-  carouselPosition.value = position
-  if (carouselContainer.value) {
-    const cardElement = carouselContainer.value.querySelector('.product-card')
-    if (cardElement) {
-      const cardWidth = cardElement.offsetWidth
-      const gap = 30
-      carouselContainer.value.scrollLeft = position * (cardWidth + gap)
-    }
-  }
-}
-
-const scrollCarouselToIndex = (dotIndex) => {
-  if (autoScrollInterval) {
-    clearInterval(autoScrollInterval)
-    startAutoScroll()
-  }
-  
-  const position = dotIndex * cardsPerDot
-  scrollToPosition(position)
-}
-
-const handleCarouselWheel = (e) => {
-  if (!carouselContainer.value) return
-  
-  // Pause auto-scroll when user interacts
-  if (autoScrollInterval) {
-    clearInterval(autoScrollInterval)
-    startAutoScroll()
-  }
-  
-  // Debounce wheel events to prevent rapid multiple scrolls
-  if (carouselWheelTimeout !== null) return
-  
-  e.preventDefault()
-  
-  // Check if user is scrolling vertically significantly more than horizontally
-  if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-    // Only prevent default if deltaY is significant
-    if (Math.abs(e.deltaY) > 10) {
-      const direction = e.deltaY > 0 ? 1 : -1
-      scrollCarousel(direction)
-      
-      // Set debounce timeout (300ms prevents rapid scrolls)
-      carouselWheelTimeout = setTimeout(() => {
-        carouselWheelTimeout = null
-      }, 300)
-    }
-  } else {
-    // Horizontal scroll
-    const direction = e.deltaX > 0 ? 1 : -1
-    scrollCarousel(direction)
-    
-    // Set debounce timeout
-    carouselWheelTimeout = setTimeout(() => {
-      carouselWheelTimeout = null
-    }, 300)
-  }
-}
-
-const startAutoScroll = () => {
-  autoScrollInterval = setInterval(() => {
-    scrollCarousel(1)
-  }, 2000)
-}
-
-const handleKeydown = (e) => {
-  const maxSection = 3 // Footer is the last section (index 3)
-  
-  // Handle carousel navigation when in products section
-  if (currentSection.value === 1) {
-    if (e.key === 'ArrowRight') {
-      e.preventDefault()
-      scrollCarousel(1)
-      return
-    } else if (e.key === 'ArrowLeft') {
-      e.preventDefault()
-      scrollCarousel(-1)
-      return
-    }
-  }
-  
-  // Handle section navigation - Up/Down for sections, not left/right
-  if (e.key === 'ArrowDown') {
-    e.preventDefault()
-    if (currentSection.value < maxSection) {
-      scrollToSection(currentSection.value + 1)
-    }
-  } else if (e.key === 'ArrowUp') {
-    e.preventDefault()
-    if (currentSection.value > 0) {
-      scrollToSection(currentSection.value - 1)
-    }
-  }
-}
-
-// Lifecycle
-onMounted(() => {
-  // Fetch statistics and equipment data from API
-  fetchStatistics()
-  fetchEquipment()
-  
-  window.addEventListener('scroll', handleScroll)
-  window.addEventListener('keydown', handleKeydown)
-
-  // Load dark mode preference
-  const savedDarkMode = localStorage.getItem('trustequip_darkmode')
-  if (savedDarkMode === 'true') {
-    isDarkMode.value = true
-    document.documentElement.setAttribute('data-theme', 'dark')
-  }
-
-  // Hide hint after 5 seconds
-  setTimeout(() => {
-    showNavHint.value = false
-  }, 5000)
-
-  // Start auto-scroll carousel after products load
-  setTimeout(() => {
-    startAutoScroll()
-  }, 500)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll)
-  window.removeEventListener('keydown', handleKeydown)
-  
-  // Cleanup timers
-  if (carouselWheelTimeout !== null) {
-    clearTimeout(carouselWheelTimeout)
-  }
-  if (autoScrollInterval) {
-    clearInterval(autoScrollInterval)
-  }
-})
 </script>
+
+<style scoped>
+.bento-card {
+  transition: transform 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+}
+.bento-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(56, 189, 248, 0.35);
+  background-color: rgba(15, 23, 42, 0.98);
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+</style>

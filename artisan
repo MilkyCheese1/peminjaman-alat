@@ -1,24 +1,18 @@
 #!/usr/bin/env php
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Artisan Console Application
-|--------------------------------------------------------------------------
-|
-| This file is the entry point for making various commands that you can call
-| from your terminal, including the tinker command.
-|
-*/
+use Illuminate\Foundation\Application;
+use Symfony\Component\Console\Input\ArgvInput;
 
-if (file_exists(__DIR__.'/vendor/autoload.php')) {
-    require __DIR__.'/vendor/autoload.php';
-} else {
-    require __DIR__.'/../../vendor/autoload.php';
-}
+define('LARAVEL_START', microtime(true));
 
+// Register the Composer autoloader...
+require __DIR__.'/vendor/autoload.php';
+
+// Bootstrap Laravel and handle the command...
+/** @var Application $app */
 $app = require_once __DIR__.'/bootstrap/app.php';
 
-$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+$status = $app->handleCommand(new ArgvInput);
 
-exit($kernel->handle(new Symfony\Component\Console\Input\ArgvInput, new Symfony\Component\Console\Output\ConsoleOutput));
+exit($status);

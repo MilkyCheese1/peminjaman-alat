@@ -1,37 +1,21 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import path from 'path'
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import vue from '@vitejs/plugin-vue';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  plugins: [vue()],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './resources/js'),
-    }
-  },
-  server: {
-    port: 5173,
-    strictPort: true,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8000',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '/api')
-      }
+    plugins: [
+        laravel({
+            input: ['resources/css/app.css', 'resources/js/app.js'],
+            refresh: true,
+        }),
+        vue(),
+        tailwindcss(),
+    ],
+    server: {
+        port: 1573,
+        watch: {
+            ignored: ['**/storage/framework/views/**'],
+        },
     },
-    middlewareMode: false
-  },
-  build: {
-    outDir: 'public/build',
-    assetsDir: 'assets',
-    manifest: true,
-    rollupOptions: {
-      input: 'resources/js/main.js',
-      output: {
-        entryFileNames: 'js/[name]-[hash].js',
-        chunkFileNames: 'js/[name]-[hash].js',
-        assetFileNames: 'css/[name]-[hash].[ext]'
-      }
-    }
-  }
-})
+});
