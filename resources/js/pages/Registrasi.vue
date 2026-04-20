@@ -8,7 +8,7 @@
       </div>
 
       <!-- Registration Form -->
-      <div class="bg-white dark:bg-slate-900/90 p-8 rounded-[2rem] shadow-2xl border border-slate-200 dark:border-slate-800">
+      <div class="bg-cyan-50 dark:bg-cyan-500/10 p-8 rounded-[2rem] shadow-2xl border border-cyan-200 dark:border-cyan-500/20">
         <form @submit.prevent="handleRegister" class="space-y-6">
           <!-- Name Field -->
           <div>

@@ -15,7 +15,7 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-slate-600 dark:text-slate-400 text-sm">Pending Request</p>
-                <p class="text-3xl font-bold text-cyan-600 dark:text-cyan-400 mt-2">8</p>
+                <p class="text-3xl font-bold text-cyan-600 dark:text-cyan-400 mt-2">0</p>
               </div>
               <svg class="w-12 h-12 text-cyan-500/30 dark:text-cyan-500/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -27,7 +27,7 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-slate-600 dark:text-slate-400 text-sm">Disetujui Hari Ini</p>
-                <p class="text-3xl font-bold text-green-600 dark:text-green-400 mt-2">5</p>
+                <p class="text-3xl font-bold text-green-600 dark:text-green-400 mt-2">0</p>
               </div>
               <svg class="w-12 h-12 text-green-500/30 dark:text-green-500/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -39,7 +39,7 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-slate-600 dark:text-slate-400 text-sm">Return Pending</p>
-                <p class="text-3xl font-bold text-purple-600 dark:text-purple-400 mt-2">12</p>
+                <p class="text-3xl font-bold text-purple-600 dark:text-purple-400 mt-2">0</p>
               </div>
               <svg class="w-12 h-12 text-purple-500/30 dark:text-purple-500/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -51,7 +51,7 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-slate-400 text-sm">Ditolak</p>
-                <p class="text-3xl font-bold text-red-400 mt-2">3</p>
+                <p class="text-3xl font-bold text-red-400 mt-2">0</p>
               </div>
               <svg class="w-12 h-12 text-red-500/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -69,19 +69,19 @@
               <div>
                 <div class="flex justify-between mb-2">
                   <span class="text-slate-300">Pending</span>
-                  <span class="text-cyan-400 font-semibold">8</span>
+                  <span class="text-cyan-400 font-semibold">0</span>
                 </div>
                 <div class="w-full bg-slate-800 rounded-full h-2">
-                  <div class="bg-cyan-500 h-2 rounded-full" style="width: 40%"></div>
+                  <div class="bg-cyan-500 h-2 rounded-full" style="width: 0%"></div>
                 </div>
               </div>
               <div>
                 <div class="flex justify-between mb-2">
                   <span class="text-slate-300">Disetujui</span>
-                  <span class="text-green-400 font-semibold">12</span>
+                  <span class="text-green-400 font-semibold">0</span>
                 </div>
                 <div class="w-full bg-slate-800 rounded-full h-2">
-                  <div class="bg-green-500 h-2 rounded-full" style="width: 60%"></div>
+                  <div class="bg-green-500 h-2 rounded-full" style="width: 0%"></div>
                 </div>
               </div>
             </div>
@@ -94,19 +94,19 @@
               <div>
                 <div class="flex justify-between mb-2">
                   <span class="text-slate-300">Pending</span>
-                  <span class="text-cyan-400 font-semibold">12</span>
+                  <span class="text-cyan-400 font-semibold">0</span>
                 </div>
                 <div class="w-full bg-slate-800 rounded-full h-2">
-                  <div class="bg-cyan-500 h-2 rounded-full" style="width: 44%"></div>
+                  <div class="bg-cyan-500 h-2 rounded-full" style="width: 0%"></div>
                 </div>
               </div>
               <div>
                 <div class="flex justify-between mb-2">
                   <span class="text-slate-300">Terverifikasi</span>
-                  <span class="text-green-400 font-semibold">15</span>
+                  <span class="text-green-400 font-semibold">0</span>
                 </div>
                 <div class="w-full bg-slate-800 rounded-full h-2">
-                  <div class="bg-green-500 h-2 rounded-full" style="width: 56%"></div>
+                  <div class="bg-green-500 h-2 rounded-full" style="width: 0%"></div>
                 </div>
               </div>
             </div>
@@ -128,34 +128,9 @@
                 </tr>
               </thead>
               <tbody>
-                <tr class="border-b border-slate-800/50 hover:bg-slate-800/20 transition">
-                  <td class="py-3 text-white">Budi Santoso</td>
-                  <td class="py-3 text-slate-300">Alat Bor</td>
-                  <td class="py-3 text-slate-300">19 Apr 2026</td>
-                  <td class="py-3 text-slate-300">3 hari</td>
-                  <td class="py-3 flex gap-2">
-                    <button class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm hover:bg-green-500/30 transition">Terima</button>
-                    <button class="px-3 py-1 bg-red-500/20 text-red-300 rounded-full text-sm hover:bg-red-500/30 transition">Tolak</button>
-                  </td>
-                </tr>
-                <tr class="border-b border-slate-800/50 hover:bg-slate-800/20 transition">
-                  <td class="py-3 text-white">Rina Wijaya</td>
-                  <td class="py-3 text-slate-300">Alat Gergaji</td>
-                  <td class="py-3 text-slate-300">18 Apr 2026</td>
-                  <td class="py-3 text-slate-300">2 hari</td>
-                  <td class="py-3 flex gap-2">
-                    <button class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm hover:bg-green-500/30 transition">Terima</button>
-                    <button class="px-3 py-1 bg-red-500/20 text-red-300 rounded-full text-sm hover:bg-red-500/30 transition">Tolak</button>
-                  </td>
-                </tr>
-                <tr class="border-b border-slate-800/50 hover:bg-slate-800/20 transition">
-                  <td class="py-3 text-white">Ahmad Hidayat</td>
-                  <td class="py-3 text-slate-300">Obeng Set</td>
-                  <td class="py-3 text-slate-300">17 Apr 2026</td>
-                  <td class="py-3 text-slate-300">5 hari</td>
-                  <td class="py-3 flex gap-2">
-                    <button class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm hover:bg-green-500/30 transition">Terima</button>
-                    <button class="px-3 py-1 bg-red-500/20 text-red-300 rounded-full text-sm hover:bg-red-500/30 transition">Tolak</button>
+                <tr>
+                  <td colspan="5" class="py-10 text-center text-sm text-slate-400">
+                    Belum ada data permintaan.
                   </td>
                 </tr>
               </tbody>

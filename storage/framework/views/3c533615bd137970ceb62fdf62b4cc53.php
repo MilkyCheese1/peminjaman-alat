@@ -8,14 +8,24 @@
         <script>
             // Initialize dark mode from localStorage
             const darkMode = localStorage.getItem('darkMode');
+            const applyTheme = (isDark) => {
+                document.documentElement.classList.toggle('dark', isDark)
+
+                if (isDark) {
+                    document.documentElement.setAttribute('data-theme', 'dark')
+                } else {
+                    document.documentElement.removeAttribute('data-theme')
+                }
+            }
+
             if (darkMode === 'true') {
-                document.documentElement.classList.add('dark')
+                applyTheme(true)
             } else if (darkMode === 'false') {
-                document.documentElement.classList.remove('dark')
+                applyTheme(false)
             } else {
                 // Default: light mode if not set
                 localStorage.setItem('darkMode', 'false')
-                document.documentElement.classList.remove('dark')
+                applyTheme(false)
             }
         </script>
     </head>

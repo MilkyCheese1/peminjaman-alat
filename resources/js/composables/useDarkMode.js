@@ -12,10 +12,12 @@ const initDarkMode = () => {
 
 // Apply dark mode by updating DOM
 const applyDarkMode = (isDark) => {
+  document.documentElement.classList.toggle('dark', isDark)
+
   if (isDark) {
-    document.documentElement.classList.add('dark')
+    document.documentElement.setAttribute('data-theme', 'dark')
   } else {
-    document.documentElement.classList.remove('dark')
+    document.documentElement.removeAttribute('data-theme')
   }
   localStorage.setItem('darkMode', isDark ? 'true' : 'false')
 }

@@ -17,7 +17,7 @@
 
         <!-- Quick Stats -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div class="bg-white dark:bg-slate-900/90 p-6 rounded-3xl shadow-2xl shadow-slate-950/40 border border-slate-300 dark:border-white/10">
+          <div class="app-card app-card--cyan p-6">
             <div class="flex items-center">
               <div class="flex-shrink-0">
                 <svg class="w-8 h-8 text-cyan-600 dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -26,11 +26,11 @@
               </div>
               <div class="ml-4">
                 <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Peminjaman Hari Ini</p>
-                <p class="text-2xl font-semibold text-slate-900 dark:text-white">12</p>
+                <p class="text-2xl font-semibold text-slate-900 dark:text-white">0</p>
               </div>
             </div>
           </div>
-          <div class="bg-white dark:bg-slate-900/90 p-6 rounded-3xl shadow-2xl shadow-slate-950/40 border border-slate-300 dark:border-white/10">
+          <div class="app-card app-card--cyan p-6">
             <div class="flex items-center">
               <div class="flex-shrink-0">
                 <svg class="w-8 h-8 text-cyan-600 dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -39,11 +39,11 @@
               </div>
               <div class="ml-4">
                 <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Pengembalian Hari Ini</p>
-                <p class="text-2xl font-semibold text-slate-900 dark:text-white">8</p>
+                <p class="text-2xl font-semibold text-slate-900 dark:text-white">0</p>
               </div>
             </div>
           </div>
-          <div class="bg-white dark:bg-slate-900/90 p-6 rounded-3xl shadow-2xl shadow-slate-950/40 border border-slate-300 dark:border-white/10">
+          <div class="app-card app-card--cyan p-6">
             <div class="flex items-center">
               <div class="flex-shrink-0">
                 <svg class="w-8 h-8 text-cyan-600 dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -52,7 +52,7 @@
               </div>
               <div class="ml-4">
                 <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Pending Approval</p>
-                <p class="text-2xl font-semibold text-slate-900 dark:text-white">5</p>
+                <p class="text-2xl font-semibold text-slate-900 dark:text-white">0</p>
               </div>
             </div>
           </div>
@@ -61,62 +61,15 @@
         <!-- Daftar Alat -->
         <div class="mb-8">
           <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Daftar Alat</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-white/10 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden">
-              <div class="h-48 bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                <span class="text-slate-500 dark:text-slate-400">Gambar Alat</span>
-              </div>
-              <div class="p-4">
-                <h3 class="font-semibold text-slate-900 dark:text-white">Bor Listrik</h3>
-                <p class="text-slate-600 dark:text-slate-300 text-sm mb-2">Alat untuk membuat lubang</p>
-                <div class="flex justify-between items-center mb-2">
-                  <span class="text-emerald-600 dark:text-emerald-300 font-semibold">Tersedia</span>
-                  <span class="text-slate-600 dark:text-slate-400">Rp 50,000/hari</span>
-                </div>
-                <button class="w-full bg-cyan-500 text-white dark:text-slate-950 py-2 px-4 rounded hover:bg-cyan-600 dark:hover:bg-cyan-400 transition duration-300">
-                  Proses Peminjaman
-                </button>
-              </div>
-            </div>
-            <div class="bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-white/10 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden">
-              <div class="h-48 bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                <span class="text-slate-500 dark:text-slate-400">Gambar Alat</span>
-              </div>
-              <div class="p-4">
-                <h3 class="font-semibold text-slate-900 dark:text-white">Gergaji Mesin</h3>
-                <p class="text-slate-600 dark:text-slate-300 text-sm mb-2">Alat untuk memotong kayu</p>
-                <div class="flex justify-between items-center mb-2">
-                  <span class="text-cyan-600 dark:text-cyan-300 font-semibold">Dipinjam</span>
-                  <span class="text-slate-600 dark:text-slate-400">Rp 75,000/hari</span>
-                </div>
-                <button class="w-full bg-cyan-500 text-white dark:text-slate-950 py-2 px-4 rounded hover:bg-cyan-600 dark:hover:bg-cyan-400 transition duration-300">
-                  Proses Pengembalian
-                </button>
-              </div>
-            </div>
-            <div class="bg-white dark:bg-slate-900/90 border border-slate-300 dark:border-white/10 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden">
-              <div class="h-48 bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                <span class="text-slate-500 dark:text-slate-400">Gambar Alat</span>
-              </div>
-              <div class="p-4">
-                <h3 class="font-semibold text-slate-900 dark:text-white">Cat Semprot</h3>
-                <p class="text-slate-600 dark:text-slate-300 text-sm mb-2">Alat untuk mengecat</p>
-                <div class="flex justify-between items-center mb-2">
-                  <span class="text-amber-600 dark:text-amber-300 font-semibold">Pending</span>
-                  <span class="text-slate-600 dark:text-slate-400">Rp 40,000/hari</span>
-                </div>
-                <button class="w-full bg-amber-500 text-white dark:text-slate-950 py-2 px-4 rounded hover:bg-amber-600 dark:hover:bg-amber-400 transition duration-300">
-                  Approve Peminjaman
-                </button>
-              </div>
-            </div>
+          <div class="app-card app-card--cyan p-6 text-slate-700 dark:text-slate-300">
+            Belum ada data alat untuk ditampilkan.
           </div>
         </div>
 
         <!-- Proses Peminjaman -->
         <div class="mb-8">
           <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Proses Peminjaman Pending</h2>
-          <div class="bg-white dark:bg-slate-900/90 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden border border-slate-300 dark:border-white/10">
+          <div class="app-card app-card--cyan overflow-hidden">
             <div class="overflow-x-auto">
               <table class="w-full">
                 <thead class="bg-slate-100 dark:bg-slate-800">
@@ -130,31 +83,8 @@
                 </thead>
                 <tbody class="bg-white dark:bg-slate-950 divide-y divide-slate-200 dark:divide-slate-800">
                   <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">Ahmad</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">Bor Listrik</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">2026-04-18</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-amber-100 text-amber-800">
-                        Pending
-                      </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button class="text-cyan-300 hover:text-cyan-100 mr-3">Approve</button>
-                      <button class="text-rose-300 hover:text-rose-100">Reject</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">Budi</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">Gergaji Mesin</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">2026-04-19</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-amber-100 text-amber-800">
-                        Pending
-                      </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button class="text-cyan-300 hover:text-cyan-100 mr-3">Approve</button>
-                      <button class="text-rose-300 hover:text-rose-100">Reject</button>
+                    <td colspan="5" class="px-6 py-10 text-center text-sm text-slate-600 dark:text-slate-400">
+                      Belum ada data peminjaman.
                     </td>
                   </tr>
                 </tbody>
@@ -166,7 +96,7 @@
         <!-- Proses Pengembalian -->
         <div>
           <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Proses Pengembalian Hari Ini</h2>
-          <div class="bg-white dark:bg-slate-900/90 rounded-3xl shadow-2xl shadow-slate-950/40 overflow-hidden border border-slate-300 dark:border-white/10">
+          <div class="app-card app-card--cyan overflow-hidden">
             <div class="overflow-x-auto">
               <table class="w-full">
                 <thead class="bg-slate-100 dark:bg-slate-800">
@@ -180,12 +110,8 @@
                 </thead>
                 <tbody class="bg-white dark:bg-slate-950 divide-y divide-slate-200 dark:divide-slate-800">
                   <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">Citra</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">Cat Semprot</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">2026-04-15</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 dark:text-slate-200">2026-04-18</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button class="text-cyan-300 hover:text-cyan-100">Konfirmasi Pengembalian</button>
+                    <td colspan="5" class="px-6 py-10 text-center text-sm text-slate-600 dark:text-slate-400">
+                      Belum ada data pengembalian.
                     </td>
                   </tr>
                 </tbody>

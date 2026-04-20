@@ -2,10 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 import LandingPage from '../pages/LandingPage.vue';
 import Login from '../pages/Login.vue';
 import Registrasi from '../pages/Registrasi.vue';
-import DashboardAdmin from '../pages/DashboardAdmin.vue';
-import DashboardOwner from '../pages/DashboardOwner.vue';
-import DashboardPeminjam from '../pages/DashboardPeminjam.vue';
-import DashboardStaff from '../pages/DashboardStaff.vue';
 import Alat from '../pages/Alat.vue';
 import PeminjamanSaya from '../pages/PeminjamanSaya.vue';
 import AkunAdmin from '../pages/AkunAdmin.vue';
@@ -16,6 +12,11 @@ import StatistikAdmin from '../pages/StatistikAdmin.vue';
 import StatistikOwner from '../pages/StatistikOwner.vue';
 import StatistikStaff from '../pages/StatistikStaff.vue';
 import StatistikPeminjam from '../pages/StatistikPeminjam.vue';
+import ManagementUser from '../pages/ManagementUser.vue';
+import ManagementAlat from '../pages/ManagementAlat.vue';
+import ManagementKategori from '../pages/ManagementKategori.vue';
+import ManagementPeminjaman from '../pages/ManagementPeminjaman.vue';
+import LaporanStaff from '../pages/Laporan.vue';
 
 const routes = [
   {
@@ -36,17 +37,20 @@ const routes = [
   {
     path: '/dashboard/admin',
     name: 'DashboardAdmin',
-    component: DashboardAdmin,
+    redirect: '/statistik-admin',
+    alias: '/dashboard/admin/',
   },
   {
     path: '/dashboard/owner',
     name: 'DashboardOwner',
-    component: DashboardOwner,
+    redirect: '/statistik-owner',
+    alias: '/dashboard/owner/',
   },
   {
     path: '/dashboard/peminjam',
     name: 'DashboardPeminjam',
-    component: DashboardPeminjam,
+    redirect: '/statistik-peminjam',
+    alias: '/dashboard/peminjam/',
   },
   {
     path: '/alat',
@@ -61,7 +65,8 @@ const routes = [
   {
     path: '/dashboard/staff',
     name: 'DashboardStaff',
-    component: DashboardStaff,
+    redirect: '/statistik-staff',
+    alias: '/dashboard/staff/',
   },
   {
     path: '/akun-admin',
@@ -102,6 +107,31 @@ const routes = [
     path: '/statistik-peminjam',
     name: 'StatistikPeminjam',
     component: StatistikPeminjam,
+  },
+  {
+    path: '/management-user',
+    name: 'ManagementUser',
+    component: ManagementUser,
+  },
+  {
+    path: '/management-alat',
+    name: 'ManagementAlat',
+    component: ManagementAlat,
+  },
+  {
+    path: '/management-kategori',
+    name: 'ManagementKategori',
+    component: ManagementKategori,
+  },
+  {
+    path: '/management-peminjaman',
+    name: 'ManagementPeminjaman',
+    component: ManagementPeminjaman,
+  },
+  {
+    path: '/laporan-staff',
+    name: 'LaporanStaff',
+    component: LaporanStaff,
   },
 ];
 
