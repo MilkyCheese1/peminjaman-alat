@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 flex">
+  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col lg:flex-row">
     <!-- Sidebar -->
     <SidebarPeminjam />
 
@@ -9,7 +9,7 @@
       <Navbar />
 
       <!-- Dashboard Content -->
-      <main class="flex-1 p-6">
+      <main class="flex-1 p-4 sm:p-6">
         <div class="mb-6">
           <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Dashboard Peminjam</h1>
           <p class="text-slate-700 dark:text-slate-300">Jelajahi dan kelola peminjaman alat Anda</p>

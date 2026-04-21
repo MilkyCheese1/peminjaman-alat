@@ -1,5 +1,5 @@
 <template>
-  <div class="sticky top-0 h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 w-64 p-4 border-r border-slate-300 dark:border-white/10 flex flex-col overflow-y-auto">
+  <aside class="hidden lg:flex sticky top-0 h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 w-64 p-4 border-r border-slate-300 dark:border-white/10 flex-col overflow-y-auto">
     <div class="mb-8">
       <h2 class="text-xl font-bold text-slate-900 dark:text-white">Staff Panel</h2>
     </div>
@@ -27,14 +27,62 @@
       </svg>
       Logout
     </a>
+  </aside>
+
+  <div v-if="isSidebarOpen" class="lg:hidden fixed inset-0 z-50">
+    <button type="button" class="absolute inset-0 bg-slate-950/70" aria-label="Tutup menu" @click="closeSidebar" />
+    <div class="relative h-full w-80 max-w-[85vw] bg-slate-50 dark:bg-slate-950 border-r border-slate-300 dark:border-white/10 p-4 overflow-y-auto">
+      <div class="mb-6 flex items-center justify-between gap-3">
+        <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">Menu</h2>
+        <button
+          type="button"
+          class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+          aria-label="Tutup menu"
+          @click="closeSidebar"
+        >
+          ✕
+        </button>
+      </div>
+
+      <nav class="space-y-2">
+        <router-link
+          v-for="item in menuItems"
+          :key="item.to"
+          :to="item.to"
+          class="block rounded-2xl px-4 py-3 whitespace-nowrap transition duration-300"
+          :class="isActive(item.to)
+            ? 'bg-cyan-100 text-cyan-700 dark:bg-cyan-500/15 dark:text-cyan-200'
+            : 'hover:bg-slate-200 hover:text-cyan-600 dark:hover:bg-slate-800/50 dark:hover:text-cyan-300'"
+          @click="closeSidebar"
+        >
+          <svg class="mr-2 inline h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="item.icon"></path>
+          </svg>
+          {{ item.label }}
+        </router-link>
+      </nav>
+
+      <a href="#" class="mt-6 block whitespace-nowrap py-3 px-4 rounded-2xl bg-red-100 dark:bg-red-600/10 hover:bg-red-200 dark:hover:bg-red-600/20 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition duration-300 border border-red-300 dark:border-red-600/30">
+        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+        </svg>
+        Logout
+      </a>
+    </div>
   </div>
 </template>
 
 <script>
+import { useSidebarDrawer } from '../../composables/useSidebarDrawer'
+
 export default {
   name: 'SidebarStaff',
   data() {
+    const { isSidebarOpen, closeSidebar } = useSidebarDrawer()
+
     return {
+      isSidebarOpen,
+      closeSidebar,
       menuItems: [
         {
           label: 'Statistik',

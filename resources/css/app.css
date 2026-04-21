@@ -94,6 +94,18 @@ textarea {
   font: inherit;
 }
 
+/* Hide number input spinners (Chrome/Safari/Edge + Firefox) */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 .bento-card {
   transition: transform 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
 }

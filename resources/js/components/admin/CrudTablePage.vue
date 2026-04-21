@@ -195,7 +195,9 @@
                   v-if="form[field.key]"
                   class="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-950"
                 >
-                  <img :src="form[field.key]" alt="Preview gambar" class="h-40 w-full rounded-xl object-cover" />
+                  <div class="flex justify-center">
+                    <img :src="form[field.key]" alt="Preview gambar" class="h-40 w-40 rounded-xl object-cover" />
+                  </div>
                 </div>
               </div>
 
@@ -485,7 +487,50 @@ function clearImageField(field) {
   form[field.key] = ''
 }
 
-function handleImageChange(field, event) {
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+
+    reader.onload = () => resolve(String(reader.result || ''))
+    reader.onerror = () => reject(reader.error)
+
+    reader.readAsDataURL(file)
+  })
+}
+
+async function normalizeImageToSquareDataUrl(file, { size = 512, quality = 0.86 } = {}) {
+  if (typeof window === 'undefined') {
+    return ''
+  }
+
+  try {
+    const bitmap = await createImageBitmap(file)
+    const side = Math.min(bitmap.width, bitmap.height)
+    const sourceX = Math.floor((bitmap.width - side) / 2)
+    const sourceY = Math.floor((bitmap.height - side) / 2)
+
+    const canvas = document.createElement('canvas')
+    canvas.width = size
+    canvas.height = size
+
+    const context = canvas.getContext('2d')
+    if (!context) {
+      throw new Error('Canvas context unavailable')
+    }
+    context.drawImage(bitmap, sourceX, sourceY, side, side, 0, 0, size, size)
+
+    if (typeof bitmap.close === 'function') {
+      bitmap.close()
+    }
+
+    return canvas.toDataURL('image/jpeg', quality)
+  } catch (error) {
+    // Fallback to raw data URL if bitmap/canvas fails.
+    return await readFileAsDataUrl(file)
+  }
+}
+
+async function handleImageChange(field, event) {
   const file = event?.target?.files?.[0]
 
   if (!file) {
@@ -496,13 +541,11 @@ function handleImageChange(field, event) {
     return
   }
 
-  const reader = new FileReader()
+  form[field.key] = await normalizeImageToSquareDataUrl(file)
 
-  reader.onload = () => {
-    form[field.key] = String(reader.result || '')
+  if (event?.target) {
+    event.target.value = ''
   }
-
-  reader.readAsDataURL(file)
 }
 
 function buildPayload() {

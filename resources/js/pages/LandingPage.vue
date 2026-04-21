@@ -13,7 +13,7 @@
             </div>
           </div>
 
-          <div class="ml-auto flex flex-1 items-center justify-end gap-4 sm:gap-6">
+          <div class="ml-auto flex flex-1 items-center justify-end gap-3 sm:gap-6">
             <button
               type="button"
               :aria-label="isDarkMode ? 'Aktifkan mode terang' : 'Aktifkan mode gelap'"
@@ -29,6 +29,20 @@
               </svg>
             </button>
 
+            <button
+              type="button"
+              class="md:hidden inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-white/70 text-slate-700 transition hover:bg-white dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-200 dark:hover:bg-slate-900"
+              :aria-label="mobileMenuOpen ? 'Tutup menu' : 'Buka menu'"
+              @click="mobileMenuOpen = !mobileMenuOpen"
+            >
+              <svg v-if="!mobileMenuOpen" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              <svg v-else class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
             <div class="hidden md:flex items-center justify-end gap-8 text-sm font-medium text-slate-600 dark:text-slate-300">
               <a href="#home" class="transition hover:text-cyan-600 dark:hover:text-cyan-300">Home</a>
               <a href="#fitur" class="transition hover:text-cyan-600 dark:hover:text-cyan-300">Fitur</a>
@@ -38,6 +52,18 @@
             </div>
 
             <router-link to="/login" class="inline-flex items-center justify-center rounded-full bg-cyan-500 px-5 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400">Login</router-link>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="mobileMenuOpen" class="md:hidden border-t border-slate-200/70 dark:border-slate-700/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div class="grid gap-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
+            <a href="#home" class="rounded-2xl px-4 py-3 transition hover:bg-slate-100 dark:hover:bg-slate-800/60" @click="mobileMenuOpen = false">Home</a>
+            <a href="#fitur" class="rounded-2xl px-4 py-3 transition hover:bg-slate-100 dark:hover:bg-slate-800/60" @click="mobileMenuOpen = false">Fitur</a>
+            <a href="#alat" class="rounded-2xl px-4 py-3 transition hover:bg-slate-100 dark:hover:bg-slate-800/60" @click="mobileMenuOpen = false">Alat</a>
+            <a href="#testimoni" class="rounded-2xl px-4 py-3 transition hover:bg-slate-100 dark:hover:bg-slate-800/60" @click="mobileMenuOpen = false">Testimoni</a>
+            <a href="#hubungi" class="rounded-2xl px-4 py-3 transition hover:bg-slate-100 dark:hover:bg-slate-800/60" @click="mobileMenuOpen = false">Kontak</a>
           </div>
         </div>
       </div>
@@ -422,6 +448,7 @@ import { useDarkMode } from '../composables/useDarkMode'
 const { isDarkMode, toggleDarkMode, initDarkMode } = useDarkMode()
 
 const scrollY = ref(0)
+const mobileMenuOpen = ref(false)
 const currentSlide = ref(0)
 const testimoni = ref({
   email: '',

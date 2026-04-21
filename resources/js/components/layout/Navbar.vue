@@ -1,7 +1,18 @@
 <template>
   <nav class="sticky top-0 z-10 bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-700 px-6 py-4">
     <div class="flex justify-between items-center">
-      <div class="flex items-center space-x-4">
+      <div class="flex items-center gap-3">
+        <button
+          type="button"
+          class="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-700 transition hover:bg-slate-100 dark:border-white/10 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
+          aria-label="Buka menu"
+          @click="toggleSidebar"
+        >
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
         <!-- Search bar or other navbar content can be added here -->
       </div>
       <div class="flex items-center space-x-4">
@@ -34,8 +45,10 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useDarkMode } from '../../composables/useDarkMode'
+import { useSidebarDrawer } from '../../composables/useSidebarDrawer'
 
 const { isDarkMode, toggleDarkMode, initDarkMode } = useDarkMode()
+const { toggleSidebar } = useSidebarDrawer()
 
 onMounted(() => {
   initDarkMode()

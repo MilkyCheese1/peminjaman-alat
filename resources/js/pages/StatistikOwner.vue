@@ -1,16 +1,16 @@
 <template>
-  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 flex">
+  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col lg:flex-row">
     <SidebarOwner />
     <div class="flex-1 flex flex-col">
       <Navbar />
-      <main class="flex-1 p-6">
+      <main class="flex-1 p-4 sm:p-6">
         <div class="mb-8">
           <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Statistik Owner</h1>
           <p class="text-slate-700 dark:text-slate-300">Ringkasan data alat dan peminjaman Anda</p>
         </div>
 
         <!-- Key Stats -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
           <div class="bg-blue-100 dark:bg-blue-900/40 border border-blue-300 dark:border-blue-700/50 rounded-3xl p-6 shadow-2xl shadow-slate-950/40">
             <div class="flex items-center justify-between">
               <div>

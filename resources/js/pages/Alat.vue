@@ -1,9 +1,9 @@
 <template>
-  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 flex">
+  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col lg:flex-row">
     <SidebarPeminjam />
     <div class="flex-1 flex flex-col">
       <Navbar />
-      <main class="flex-1 p-6">
+      <main class="flex-1 p-4 sm:p-6">
         <div class="mb-8">
           <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Jelajahi Alat</h1>
           <p class="text-slate-700 dark:text-slate-300">Temukan alat yang tersedia untuk peminjaman.</p>
@@ -48,11 +48,22 @@
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="app-card app-card--cyan p-6 text-slate-700 dark:text-slate-300">
-              Belum ada data alat untuk ditampilkan.
-            </div>
+            <ToolCard
+              v-for="tool in displayedTools"
+              :key="tool.id"
+              :tool="tool"
+              @borrow="handleBorrow"
+              @detail="handleDetail"
+            />
           </div>
         </section>
+
+        <BorrowToolModal
+          :open="isBorrowModalOpen"
+          :tool="selectedTool"
+          @close="closeBorrowModal"
+          @submit="submitBorrowRequest"
+        />
       </main>
     </div>
   </div>
@@ -61,12 +72,93 @@
 <script>
 import SidebarPeminjam from '../components/layout/SidebarPeminjam.vue';
 import Navbar from '../components/layout/Navbar.vue';
+import ToolCard from '../components/tools/ToolCard.vue'
+import BorrowToolModal from '../components/tools/BorrowToolModal.vue'
 
 export default {
   name: 'Alat',
   components: {
     SidebarPeminjam,
     Navbar,
+    ToolCard,
+    BorrowToolModal,
+  },
+  data() {
+    return {
+      tools: [],
+      isBorrowModalOpen: false,
+      selectedTool: null,
+    }
+  },
+  computed: {
+    displayedTools() {
+      if (Array.isArray(this.tools) && this.tools.length) {
+        return this.tools
+      }
+
+      return [
+        {
+          id: 'dummy-alat-card',
+          namaAlat: 'Multimeter Digital',
+          deskripsi: 'Multimeter untuk mengukur tegangan, arus, dan resistansi. Cocok untuk kebutuhan praktikum dan troubleshooting elektronik.',
+          kategori: 'Umum',
+          status: 'Tersedia',
+          kondisi: 'Baik',
+          stok: 3,
+          lokasi: 'Gudang A',
+          dendaHarian: 5000,
+          gambar: null,
+          __isDummy: true,
+        },
+      ]
+    },
+  },
+  created() {
+    this.tools = this.getToolsFromStorage()
+  },
+  methods: {
+    getToolsFromStorage() {
+      if (typeof window === 'undefined') {
+        return []
+      }
+
+      const raw = window.localStorage.getItem('admin-management-tools')
+
+      if (!raw) {
+        return []
+      }
+
+      try {
+        const parsed = JSON.parse(raw)
+        return Array.isArray(parsed) ? parsed : []
+      } catch (error) {
+        return []
+      }
+    },
+    handleBorrow(tool) {
+      this.selectedTool = tool ?? null
+      this.isBorrowModalOpen = true
+    },
+    handleDetail(tool) {
+      if (typeof window === 'undefined') {
+        return
+      }
+
+      window.alert(`Dummy detail untuk: ${tool?.namaAlat ?? 'alat'}`)
+    },
+    closeBorrowModal() {
+      this.isBorrowModalOpen = false
+      this.selectedTool = null
+    },
+    submitBorrowRequest(payload) {
+      if (typeof window === 'undefined') {
+        this.closeBorrowModal()
+        return
+      }
+
+      window.alert(`Pengajuan terkirim untuk: ${this.selectedTool?.namaAlat ?? 'alat'} (${payload?.hari ?? 0} hari)`)
+      this.closeBorrowModal()
+    },
   },
 };
 </script>

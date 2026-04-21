@@ -1,9 +1,9 @@
 <template>
-  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 flex">
+  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col lg:flex-row">
     <SidebarPeminjam />
     <div class="flex-1 flex flex-col">
       <Navbar />
-      <main class="flex-1 p-6">
+      <main class="flex-1 p-4 sm:p-6">
         <div class="mb-8">
           <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Peminjaman Saya</h1>
           <p class="text-slate-700 dark:text-slate-300">Lihat riwayat dan status peminjaman alat Anda.</p>
