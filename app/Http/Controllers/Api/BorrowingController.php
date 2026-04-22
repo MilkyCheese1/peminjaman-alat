@@ -251,6 +251,7 @@ class BorrowingController extends Controller
             'laporanPeminjam' => ['nullable', 'string', 'max:1000'],
             'laporanStaff' => ['nullable', 'string', 'max:1000'],
             'catatan' => ['nullable', 'string', 'max:255'],
+            'hapusBuktiPengembalian' => ['nullable', 'boolean'],
             'buktiPengembalian' => ['nullable'],
         ]);
 
@@ -268,7 +269,8 @@ class BorrowingController extends Controller
         );
 
         $buktiPengembalian = null;
-        if ($request->hasFile('buktiPengembalian') || $request->has('buktiPengembalian')) {
+        $hapusBuktiPengembalian = !empty($data['hapusBuktiPengembalian']);
+        if (!$hapusBuktiPengembalian && ($request->hasFile('buktiPengembalian') || $request->has('buktiPengembalian'))) {
             $buktiPengembalian = $this->resolveEvidencePath($request, folder: 'borrowings', inputNames: ['buktiPengembalian']);
         }
 
@@ -291,7 +293,9 @@ class BorrowingController extends Controller
             'catatan' => $data['catatan'] ?? $borrowing->catatan,
         ];
 
-        if ($buktiPengembalian !== null) {
+        if ($hapusBuktiPengembalian) {
+            $updatePayload['bukti_pengembalian'] = null;
+        } elseif ($buktiPengembalian !== null) {
             $updatePayload['bukti_pengembalian'] = $buktiPengembalian;
         }
 

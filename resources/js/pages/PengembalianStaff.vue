@@ -555,6 +555,8 @@ function toFormData(payload, file) {
     formData.append('buktiPengembalian', file)
   }
 
+  formData.append('_method', 'PUT')
+
   return formData
 }
 
@@ -578,16 +580,13 @@ async function submitReview() {
       laporanPeminjam: form.laporanPeminjam,
       laporanStaff: form.laporanStaff,
       catatan: form.catatan,
+      hapusBuktiPengembalian: buktiPengembalianRemoved.value ? 1 : 0,
     }
 
-    if (buktiPengembalianRemoved.value) {
-      payload.buktiPengembalian = null
-    }
-
-    const body = buktiPengembalianFile.value ? toFormData(payload, buktiPengembalianFile.value) : payload
+    const body = toFormData(payload, buktiPengembalianFile.value)
 
     const updated = await apiRequest(`/api/borrowings/${selectedBorrowing.value.id}/return`, {
-      method: 'PUT',
+      method: 'POST',
       body,
     })
 

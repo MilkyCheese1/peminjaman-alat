@@ -1,6 +1,7 @@
 export async function apiRequest(path, { method = 'GET', body, headers } = {}) {
+  const normalizedMethod = String(method || 'GET').toUpperCase()
   const init = {
-    method,
+    method: normalizedMethod,
     headers: {
       Accept: 'application/json',
       ...(headers || {}),
@@ -9,6 +10,14 @@ export async function apiRequest(path, { method = 'GET', body, headers } = {}) {
 
   if (body !== undefined) {
     if (body instanceof FormData) {
+      if (['PUT', 'PATCH'].includes(normalizedMethod)) {
+        init.method = 'POST'
+
+        if (!body.has('_method')) {
+          body.append('_method', normalizedMethod)
+        }
+      }
+
       init.body = body
     } else {
       init.headers['Content-Type'] = 'application/json'

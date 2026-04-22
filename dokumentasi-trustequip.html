@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dokumentasi TrustEquip.id</title>
+  <meta name="description" content="Dokumentasi lengkap TrustEquip.id: penjelasan aplikasi, tabel database, relasi, tipe data, lokasi file fitur, fitur utama, dan hak akses role.">
+  <style>
+    :root {
+      --bg: #07111f;
+      --bg-soft: #0b1728;
+      --panel: rgba(10, 20, 36, 0.78);
+      --panel-strong: #0e1d33;
+      --line: rgba(148, 163, 184, 0.18);
+      --text: #e5eefb;
+      --muted: #9fb0c7;
+      --accent: #22d3ee;
+      --accent-2: #60a5fa;
+      --accent-3: #34d399;
+      --warn: #fbbf24;
+      --danger: #f87171;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 16px;
+      --max-width: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(96, 165, 250, 0.18), transparent 24%),
+        linear-gradient(180deg, #07111f 0%, #091626 42%, #050b14 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .page {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page::before,
+    .page::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      width: 380px;
+      height: 380px;
+      border-radius: 999px;
+      filter: blur(70px);
+      opacity: 0.22;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page::before {
+      top: -80px;
+      right: -120px;
+      background: rgba(34, 211, 238, 0.8);
+    }
+
+    .page::after {
+      left: -120px;
+      bottom: 120px;
+      background: rgba(96, 165, 250, 0.7);
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: min(100% - 32px, var(--max-width));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(18px);
+      background: rgba(6, 12, 22, 0.72);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+    }
+
+    .topbar-inner {
+      width: min(100% - 32px, var(--max-width));
+      margin: 0 auto;
+      padding: 16px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #04101d;
+      font-weight: 900;
+      box-shadow: 0 10px 30px rgba(34, 211, 238, 0.25);
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .nav a {
+      padding: 10px 14px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      transition: 0.2s ease;
+    }
+
+    .nav a:hover {
+      color: var(--text);
+      background: rgba(148, 163, 184, 0.08);
+      border-color: rgba(148, 163, 184, 0.15);
+    }
+
+    .hero {
+      padding: 34px 0 24px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .hero-card,
+    .info-card,
+    .content-card,
+    .table-card,
+    .feature-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, rgba(13, 24, 43, 0.92), rgba(10, 18, 32, 0.92));
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: 32px;
+      min-height: 100%;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(34, 211, 238, 0.12);
+      color: #8be9f3;
+      border: 1px solid rgba(34, 211, 238, 0.22);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      margin-top: 18px;
+      font-size: clamp(2.4rem, 4vw, 4.4rem);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
+    }
+
+    .hero-copy {
+      margin-top: 18px;
+      font-size: 1.02rem;
+      line-height: 1.8;
+      color: var(--muted);
+      max-width: 64ch;
+    }
+
+    .hero-points {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .chip {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(148, 163, 184, 0.07);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      color: #d9e6f8;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #03111b;
+      box-shadow: 0 12px 30px rgba(34, 211, 238, 0.18);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(148, 163, 184, 0.08);
+      border-color: rgba(148, 163, 184, 0.16);
+      color: var(--text);
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 16px;
+    }
+
+    .info-card {
+      padding: 22px;
+    }
+
+    .info-label {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #8bb8f6;
+    }
+
+    .info-value {
+      margin-top: 10px;
+      font-size: 1.18rem;
+      font-weight: 800;
+      line-height: 1.4;
+    }
+
+    .info-desc {
+      margin-top: 10px;
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .section {
+      padding: 18px 0 0;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: end;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .section-kicker {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #87d8e6;
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: clamp(1.6rem, 2.6vw, 2.35rem);
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+    }
+
+    .section-text {
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 70ch;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .content-card {
+      padding: 20px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      background: rgba(34, 211, 238, 0.11);
+      color: #a0f4ff;
+      border: 1px solid rgba(34, 211, 238, 0.2);
+    }
+
+    .card-title {
+      margin-top: 14px;
+      font-size: 1.06rem;
+      font-weight: 800;
+    }
+
+    .card-text {
+      margin-top: 10px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    .table-card {
+      overflow: hidden;
+    }
+
+    .table-head {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .table-head h3 {
+      font-size: 1.12rem;
+      font-weight: 800;
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+
+    th,
+    td {
+      padding: 14px 18px;
+      vertical-align: top;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+      text-align: left;
+      line-height: 1.65;
+    }
+
+    th {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #9ccdf6;
+      background: rgba(15, 23, 42, 0.6);
+    }
+
+    td {
+      color: #dbe8f8;
+      font-size: 0.94rem;
+    }
+
+    tbody tr:hover td {
+      background: rgba(148, 163, 184, 0.04);
+    }
+
+    code,
+    .code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 0.92em;
+      color: #b7f0ff;
+      background: rgba(34, 211, 238, 0.08);
+      border: 1px solid rgba(34, 211, 238, 0.15);
+      border-radius: 10px;
+      padding: 3px 8px;
+      word-break: break-word;
+    }
+
+    .stack-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .stack-item {
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(148, 163, 184, 0.07);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .stack-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      margin-top: 6px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      flex: 0 0 auto;
+    }
+
+    .stack-item strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+    }
+
+    .timeline-item {
+      padding: 18px;
+      border-radius: 20px;
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      background: rgba(148, 163, 184, 0.07);
+    }
+
+    .timeline-item h4 {
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .timeline-item p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    .access-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .role-card {
+      padding: 20px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(13, 24, 43, 0.95), rgba(10, 18, 32, 0.95));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .role-name {
+      font-size: 1.08rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .role-card ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .note {
+      margin-top: 14px;
+      padding: 16px 18px;
+      border-left: 4px solid var(--warn);
+      border-radius: 16px;
+      background: rgba(251, 191, 36, 0.08);
+      color: #f6df9d;
+      line-height: 1.7;
+    }
+
+    .footer {
+      padding: 36px 0 60px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.75;
+    }
+
+    .subtle {
+      color: var(--muted);
+    }
+
+    @media (max-width: 1040px) {
+      .hero-grid,
+      .grid-3,
+      .access-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar-inner,
+      .section-head {
+        align-items: flex-start;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .hero {
+        padding-top: 24px;
+      }
+
+      .hero-card,
+      .info-card,
+      .content-card,
+      .role-card {
+        border-radius: 22px;
+      }
+
+      .hero-grid,
+      .grid-3,
+      .grid-2,
+      .access-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-points {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card {
+        padding: 24px;
+      }
+
+      .table-head,
+      .topbar-inner {
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      table {
+        min-width: 900px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <div class="brand-mark">T</div>
+          <div>
+            <div style="font-size: 1rem;">TrustEquip.id</div>
+            <div class="subtle" style="font-size: 0.82rem;">Dokumentasi aplikasi peminjaman alat</div>
+          </div>
+        </div>
+
+        <nav class="nav" aria-label="Navigasi halaman">
+          <a href="#tentang">Tentang</a>
+          <a href="#tabel">Tabel</a>
+          <a href="#relasi">Relasi</a>
+          <a href="#tipe-data">Tipe Data</a>
+          <a href="#fitur">Fitur</a>
+          <a href="#hak-akses">Hak Akses</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="hero" id="tentang">
+        <div class="hero-grid">
+          <article class="hero-card">
+            <div class="eyebrow">Single Page App Documentation</div>
+            <h1>TrustEquip.id</h1>
+            <p class="hero-copy">
+              TrustEquip.id adalah aplikasi web untuk mengelola peminjaman alat, kategori alat, data pengguna, pengembalian, notifikasi, laporan, dan log aktivitas dalam satu sistem yang terpusat.
+              Aplikasi ini berbasis SPA, jadi tampilan halaman dibuat dari <span class="code">resources/js</span> dan data diambil melalui API Laravel.
+            </p>
+
+            <div class="hero-points">
+              <div class="chip">Manajemen inventaris alat dan kategori</div>
+              <div class="chip">Peminjaman, persetujuan, dan pengembalian</div>
+              <div class="chip">Dashboard per role</div>
+              <div class="chip">Notifikasi, feedback, dan log aktivitas</div>
+            </div>
+
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#tabel">Lihat tabel database</a>
+              <a class="btn btn-secondary" href="#fitur">Lihat fitur aplikasi</a>
+            </div>
+          </article>
+
+          <aside class="hero-side">
+            <div class="info-card">
+              <div class="info-label">Arsitektur</div>
+              <div class="info-value">Laravel API + Vue SPA + MySQL</div>
+              <div class="info-desc">
+                API ada di <span class="code">routes/api.php</span>, halaman utama di <span class="code">resources/js/pages</span>, dan database aktif memakai MySQL.
+              </div>
+            </div>
+            <div class="info-card">
+              <div class="info-label">Role utama</div>
+              <div class="info-value">Admin, Owner, Staff, Peminjam</div>
+              <div class="info-desc">
+                Setiap role punya menu, dashboard, dan batas akses yang berbeda sesuai kebutuhan operasional.
+              </div>
+            </div>
+            <div class="info-card">
+              <div class="info-label">Catatan database</div>
+              <div class="info-value">Tabel infrastruktur sudah dibersihkan</div>
+              <div class="info-desc">
+                Tabel seperti <span class="code">cache</span>, <span class="code">jobs</span>, <span class="code">sessions</span>, dan <span class="code">password_reset_tokens</span> sudah dihapus dari database aktif.
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" id="ringkasan">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Ringkasan Sistem</div>
+            <h2 class="section-title">Apa yang dilakukan aplikasi ini</h2>
+          </div>
+          <p class="section-text">
+            Sistem ini fokus pada alur peminjaman alat dari sisi admin, owner, staff, dan peminjam. Aplikasi menyimpan data utama di database, lalu menampilkan dan mengelola semuanya melalui antarmuka Vue yang responsif.
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <article class="content-card">
+            <span class="badge">Inventaris</span>
+            <h3 class="card-title">Mengelola alat dan kategori</h3>
+            <p class="card-text">
+              Admin dapat menambah, mengubah, dan menghapus data alat serta kategori. Owner biasanya memakai data ini untuk memantau aset, sedangkan peminjam hanya melihat daftar alat yang tersedia.
+            </p>
+          </article>
+          <article class="content-card">
+            <span class="badge">Transaksi</span>
+            <h3 class="card-title">Mengatur peminjaman dan pengembalian</h3>
+            <p class="card-text">
+              Staff menangani transaksi peminjaman, persetujuan, dan konfirmasi pengembalian. Sistem juga menghitung denda berdasarkan tanggal dan kondisi barang.
+            </p>
+          </article>
+          <article class="content-card">
+            <span class="badge">Kontrol</span>
+            <h3 class="card-title">Memantau aktivitas dan notifikasi</h3>
+            <p class="card-text">
+              Admin dan owner dapat melihat notifikasi, log aktivitas, dan statistik agar keputusan operasional lebih mudah dipantau.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="tabel">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Struktur Database</div>
+            <h2 class="section-title">Tabel yang dipakai di web ini</h2>
+          </div>
+          <p class="section-text">
+            Berikut tabel aktif yang masih dipakai aplikasi. Tabel infrastruktur seperti cache, jobs, sessions, dan token reset password sudah tidak dipakai setelah database dibersihkan.
+          </p>
+        </div>
+
+        <div class="stack-list">
+          <article class="table-card">
+            <div class="table-head">
+              <h3>1. <span class="code">users</span></h3>
+              <span class="subtle">Data akun dan profil pengguna</span>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Kolom</th>
+                    <th>Tipe</th>
+                    <th>Fungsi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>id</td><td>int unsigned</td><td>Primary key, angka positif untuk identitas unik pengguna.</td></tr>
+                  <tr><td>nama</td><td>varchar(100)</td><td>Nama lengkap, cukup pendek tetapi tetap fleksibel.</td></tr>
+                  <tr><td>nik</td><td>varchar(50)</td><td>Nomor identitas opsional, disimpan sebagai teks agar nol di depan tidak hilang.</td></tr>
+                  <tr><td>email</td><td>varchar(120)</td><td>Email login dan kontak; panjang ini cukup aman untuk alamat email normal.</td></tr>
+                  <tr><td>password_hash</td><td>varchar(255)</td><td>Menyimpan hash password, bukan password asli. Panjang fleksibel agar algoritma hash aman.</td></tr>
+                  <tr><td>role</td><td>tinyint unsigned</td><td>Penanda role numerik: Admin, Owner, Staff, atau Peminjam.</td></tr>
+                  <tr><td>status</td><td>tinyint unsigned</td><td>Status akun: Aktif, Nonaktif, atau Ditangguhkan.</td></tr>
+                  <tr><td>telepon</td><td>varchar(20)</td><td>Nomor telepon disimpan sebagai teks karena bisa memakai awalan nol atau +62.</td></tr>
+                  <tr><td>jenis_kelamin</td><td>varchar(20)</td><td>Nilai pilihan tetap, tetap disimpan sebagai string agar mudah dibaca di UI.</td></tr>
+                  <tr><td>tempat_lahir</td><td>varchar(100)</td><td>Kota/tempat lahir, pendek dan cukup jelas.</td></tr>
+                  <tr><td>tanggal_lahir</td><td>date</td><td>Tanggal tanpa jam karena yang dibutuhkan hanya hari lahir.</td></tr>
+                  <tr><td>alamat</td><td>text</td><td>Alamat bisa panjang, jadi dipakai text agar tidak cepat mentok.</td></tr>
+                  <tr><td>gambar</td><td>varchar(255)</td><td>Path file gambar avatar/profil.</td></tr>
+                  <tr><td>created_at</td><td>timestamp</td><td>Waktu data dibuat.</td></tr>
+                  <tr><td>updated_at</td><td>timestamp</td><td>Waktu data terakhir diperbarui.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="table-card">
+            <div class="table-head">
+              <h3>2. <span class="code">categories</span></h3>
+              <span class="subtle">Master kategori alat</span>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Kolom</th>
+                    <th>Tipe</th>
+                    <th>Fungsi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>id</td><td>int unsigned</td><td>Identitas unik kategori.</td></tr>
+                  <tr><td>nama_kategori</td><td>varchar(60)</td><td>Nama kategori, cukup untuk label seperti Elektronik atau Mekanik.</td></tr>
+                  <tr><td>kode_kategori</td><td>varchar(10)</td><td>Kode pendek dan unik agar mudah difilter atau dibaca di tabel.</td></tr>
+                  <tr><td>status</td><td>tinyint unsigned</td><td>Status aktif atau nonaktif.</td></tr>
+                  <tr><td>deskripsi</td><td>varchar(255)</td><td>Ringkasan kategori, tidak terlalu panjang.</td></tr>
+                  <tr><td>gambar</td><td>varchar(255)</td><td>Path gambar kategori.</td></tr>
+                  <tr><td>created_at</td><td>timestamp</td><td>Waktu dibuat.</td></tr>
+                  <tr><td>updated_at</td><td>timestamp</td><td>Waktu diubah.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="table-card">
+            <div class="table-head">
+              <h3>3. <span class="code">tools</span></h3>
+              <span class="subtle">Data alat/inventaris</span>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Kolom</th>
+                    <th>Tipe</th>
+                    <th>Fungsi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>id</td><td>int unsigned</td><td>Primary key alat.</td></tr>
+                  <tr><td>category_id</td><td>int unsigned</td><td>Foreign key ke categories.</td></tr>
+                  <tr><td>nama_alat</td><td>varchar(100)</td><td>Nama alat yang ditampilkan ke user.</td></tr>
+                  <tr><td>harga_asli</td><td>int unsigned</td><td>Harga asli untuk dasar perhitungan denda.</td></tr>
+                  <tr><td>deskripsi</td><td>text</td><td>Penjelasan detail alat, jadi dipakai text agar fleksibel.</td></tr>
+                  <tr><td>stok</td><td>smallint unsigned</td><td>Jumlah stok, cukup untuk angka kecil-menengah.</td></tr>
+                  <tr><td>kondisi</td><td>tinyint unsigned</td><td>Status kondisi alat berbasis kode angka.</td></tr>
+                  <tr><td>status</td><td>tinyint unsigned</td><td>Status ketersediaan alat.</td></tr>
+                  <tr><td>lokasi</td><td>varchar(80)</td><td>Lokasi penyimpanan alat.</td></tr>
+                  <tr><td>gambar</td><td>varchar(255)</td><td>Path gambar alat.</td></tr>
+                  <tr><td>created_at</td><td>timestamp</td><td>Waktu dibuat.</td></tr>
+                  <tr><td>updated_at</td><td>timestamp</td><td>Waktu diubah.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="table-card">
+            <div class="table-head">
+              <h3>4. <span class="code">borrowings</span></h3>
+              <span class="subtle">Transaksi peminjaman</span>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Kolom</th>
+                    <th>Tipe</th>
+                    <th>Fungsi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>id</td><td>int unsigned</td><td>Primary key transaksi.</td></tr>
+                  <tr><td>kode</td><td>varchar(20)</td><td>Kode transaksi unik yang dibuat otomatis.</td></tr>
+                  <tr><td>peminjam_id</td><td>int unsigned</td><td>Foreign key ke users untuk peminjam.</td></tr>
+                  <tr><td>nama_peminjam</td><td>varchar(100)</td><td>Snapshot nama peminjam saat transaksi dibuat.</td></tr>
+                  <tr><td>divisi</td><td>varchar(60)</td><td>Snapshot divisi peminjam.</td></tr>
+                  <tr><td>alat_id</td><td>int unsigned</td><td>Foreign key ke alat yang dipinjam.</td></tr>
+                  <tr><td>alat_harga_asli</td><td>int unsigned</td><td>Harga asli alat saat transaksi untuk dasar denda.</td></tr>
+                  <tr><td>nama_alat</td><td>varchar(100)</td><td>Snapshot nama alat saat transaksi.</td></tr>
+                  <tr><td>kategori</td><td>varchar(60)</td><td>Snapshot kategori alat saat transaksi.</td></tr>
+                  <tr><td>petugas_id</td><td>int unsigned</td><td>Foreign key ke user staff/petugas.</td></tr>
+                  <tr><td>petugas_nama</td><td>varchar(100)</td><td>Snapshot nama petugas yang menangani transaksi.</td></tr>
+                  <tr><td>keperluan</td><td>varchar(255)</td><td>Alasan peminjaman yang singkat namun informatif.</td></tr>
+                  <tr><td>tgl_pinjam</td><td>date</td><td>Tanggal pinjam tanpa jam.</td></tr>
+                  <tr><td>tgl_kembali_rencana</td><td>date</td><td>Tanggal target kembali tanpa jam.</td></tr>
+                  <tr><td>tgl_kembali_aktual</td><td>date</td><td>Tanggal pengembalian aktual tanpa jam.</td></tr>
+                  <tr><td>status</td><td>tinyint unsigned</td><td>Status transaksi numerik: Pending sampai Selesai.</td></tr>
+                  <tr><td>status_pengembalian</td><td>varchar(40)</td><td>Label status pengembalian yang mudah dibaca UI.</td></tr>
+                  <tr><td>kondisi_pengembalian</td><td>varchar(30)</td><td>Label kondisi saat barang kembali.</td></tr>
+                  <tr><td>laporan_peminjam</td><td>text</td><td>Laporan yang bisa cukup panjang.</td></tr>
+                  <tr><td>laporan_staff</td><td>text</td><td>Catatan pemeriksaan dari staff, juga bisa panjang.</td></tr>
+                  <tr><td>biaya</td><td>int unsigned</td><td>Total denda atau biaya transaksi.</td></tr>
+                  <tr><td>denda_kerusakan</td><td>int unsigned</td><td>Denda kerusakan.</td></tr>
+                  <tr><td>denda_kehilangan</td><td>int unsigned</td><td>Denda kehilangan.</td></tr>
+                  <tr><td>denda_keterlambatan</td><td>int unsigned</td><td>Denda terlambat.</td></tr>
+                  <tr><td>catatan</td><td>varchar(255)</td><td>Catatan pendek dari staff.</td></tr>
+                  <tr><td>gambar</td><td>varchar(255)</td><td>Path bukti pengambilan.</td></tr>
+                  <tr><td>bukti_pengambilan</td><td>varchar(255)</td><td>Path bukti serah terima saat awal pinjam.</td></tr>
+                  <tr><td>bukti_pengembalian</td><td>varchar(255)</td><td>Path bukti saat barang dikembalikan.</td></tr>
+                  <tr><td>created_at</td><td>timestamp</td><td>Waktu transaksi dibuat.</td></tr>
+                  <tr><td>updated_at</td><td>timestamp</td><td>Waktu transaksi terakhir berubah.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="table-card">
+            <div class="table-head">
+              <h3>5. <span class="code">feedback_entries</span></h3>
+              <span class="subtle">Ulasan dari landing page</span>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Kolom</th>
+                    <th>Tipe</th>
+                    <th>Fungsi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>id</td><td>int unsigned</td><td>Identitas ulasan.</td></tr>
+                  <tr><td>nama</td><td>varchar(100)</td><td>Nama pengirim feedback.</td></tr>
+                  <tr><td>email</td><td>varchar(120)</td><td>Email pengirim feedback.</td></tr>
+                  <tr><td>stars</td><td>tinyint unsigned</td><td>Rating bintang 1 sampai 5.</td></tr>
+                  <tr><td>pesan</td><td>varchar(255)</td><td>Isi review singkat.</td></tr>
+                  <tr><td>status</td><td>tinyint unsigned</td><td>Status moderasi ulasan.</td></tr>
+                  <tr><td>created_at</td><td>timestamp</td><td>Waktu feedback masuk.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="table-card">
+            <div class="table-head">
+              <h3>6. <span class="code">activity_logs</span></h3>
+              <span class="subtle">Jejak aktivitas sistem</span>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Kolom</th>
+                    <th>Tipe</th>
+                    <th>Fungsi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>id</td><td>int unsigned</td><td>Identitas log.</td></tr>
+                  <tr><td>user_id</td><td>int unsigned</td><td>Pengguna yang melakukan aksi, opsional.</td></tr>
+                  <tr><td>aksi</td><td>varchar(60)</td><td>Nama aksi seperti CREATE atau UPDATE.</td></tr>
+                  <tr><td>entitas</td><td>varchar(30)</td><td>Nama entitas yang dipengaruhi, misalnya users atau borrowings.</td></tr>
+                  <tr><td>entitas_id</td><td>int unsigned</td><td>ID data yang terdampak, opsional.</td></tr>
+                  <tr><td>deskripsi</td><td>varchar(255)</td><td>Penjelasan singkat log aktivitas.</td></tr>
+                  <tr><td>ip_address</td><td>varbinary(16)</td><td>IP disimpan biner agar efisien untuk IPv4 dan IPv6.</td></tr>
+                  <tr><td>created_at</td><td>timestamp</td><td>Waktu log dicatat.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="table-card">
+            <div class="table-head">
+              <h3>7. <span class="code">notifications</span></h3>
+              <span class="subtle">Notifikasi pengguna</span>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Kolom</th>
+                    <th>Tipe</th>
+                    <th>Fungsi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>id</td><td>int unsigned</td><td>Identitas notifikasi.</td></tr>
+                  <tr><td>user_id</td><td>int unsigned</td><td>Pengguna penerima notifikasi.</td></tr>
+                  <tr><td>judul</td><td>varchar(120)</td><td>Judul notifikasi.</td></tr>
+                  <tr><td>pesan</td><td>varchar(255)</td><td>Isi notifikasi singkat.</td></tr>
+                  <tr><td>tipe</td><td>tinyint unsigned</td><td>Jenis notifikasi: Info, Success, Warning, Error.</td></tr>
+                  <tr><td>is_read</td><td>boolean</td><td>Penanda sudah dibaca atau belum.</td></tr>
+                  <tr><td>created_at</td><td>timestamp</td><td>Waktu notifikasi dibuat.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="relasi">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Relasi Antar Tabel</div>
+            <h2 class="section-title">Bagaimana tabel saling terhubung</h2>
+          </div>
+          <p class="section-text">
+            Relasi utama dibuat agar data tidak dobel dan proses peminjaman tetap konsisten. Beberapa tabel juga menyimpan snapshot teks supaya riwayat lama tidak berubah ketika data master diubah.
+          </p>
+        </div>
+
+        <div class="grid-2">
+          <article class="content-card">
+            <h3 class="card-title">Relasi inti</h3>
+            <div class="timeline" style="margin-top: 14px;">
+              <div class="timeline-item">
+                <h4><span class="code">categories.id</span> → <span class="code">tools.category_id</span></h4>
+                <p>Kategori menjadi induk alat. Satu kategori bisa punya banyak alat.</p>
+              </div>
+              <div class="timeline-item">
+                <h4><span class="code">users.id</span> → <span class="code">borrowings.peminjam_id</span></h4>
+                <p>Data peminjam terhubung ke transaksi peminjaman.</p>
+              </div>
+              <div class="timeline-item">
+                <h4><span class="code">users.id</span> → <span class="code">borrowings.petugas_id</span></h4>
+                <p>Staff atau petugas yang memproses transaksi tercatat sebagai relasi ke user.</p>
+              </div>
+              <div class="timeline-item">
+                <h4><span class="code">tools.id</span> → <span class="code">borrowings.alat_id</span></h4>
+                <p>Transaksi menunjuk ke alat yang dipinjam.</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="content-card">
+            <h3 class="card-title">Relasi pendukung</h3>
+            <div class="timeline" style="margin-top: 14px;">
+              <div class="timeline-item">
+                <h4><span class="code">users.id</span> → <span class="code">activity_logs.user_id</span></h4>
+                <p>Log aktivitas menyimpan siapa yang melakukan aksi.</p>
+              </div>
+              <div class="timeline-item">
+                <h4><span class="code">users.id</span> → <span class="code">notifications.user_id</span></h4>
+                <p>Notifikasi dikirim ke user tertentu.</p>
+              </div>
+              <div class="timeline-item">
+                <h4><span class="code">borrowings</span> menyimpan snapshot</h4>
+                <p>Kolom seperti nama peminjam, nama alat, kategori, dan petugas_nama disimpan ulang supaya riwayat transaksi tetap sama walau data master berubah nanti.</p>
+              </div>
+              <div class="timeline-item">
+                <h4><span class="code">feedback_entries</span> berdiri sendiri</h4>
+                <p>Feedback dari landing page tidak punya foreign key karena hanya menyimpan ulasan publik.</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="tipe-data">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Alasan Tipe Data</div>
+            <h2 class="section-title">Mengapa tipe data itu dipakai</h2>
+          </div>
+          <p class="section-text">
+            Inti pemilihannya sederhana: angka kecil pakai tipe kecil, tanggal pakai tipe tanggal, teks bebas pakai text, dan path file disimpan sebagai string. Ini membuat struktur database tetap rapi dan efisien.
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <article class="content-card">
+            <h3 class="card-title">Tipe numerik</h3>
+            <p class="card-text">
+              <span class="code">int unsigned</span> dipakai untuk ID, harga, dan total denda karena datanya positif dan bisa tumbuh besar.
+              <span class="code">tinyint unsigned</span> cocok untuk role, status, dan kondisi karena nilainya hanya beberapa pilihan tetap.
+              <span class="code">smallint unsigned</span> cocok untuk stok karena lebih hemat daripada integer besar.
+            </p>
+          </article>
+          <article class="content-card">
+            <h3 class="card-title">Tipe teks</h3>
+            <p class="card-text">
+              <span class="code">varchar</span> dipakai untuk data pendek dan terstruktur seperti nama, email, kode, atau path file.
+              <span class="code">text</span> dipakai untuk alamat, deskripsi, dan laporan karena isinya bisa panjang dan tidak selalu bisa diprediksi.
+            </p>
+          </article>
+          <article class="content-card">
+            <h3 class="card-title">Tipe waktu dan biner</h3>
+            <p class="card-text">
+              <span class="code">date</span> dipakai jika yang penting hanya tanggal.
+              <span class="code">timestamp</span> dipakai untuk audit waktu buat dan update data.
+              <span class="code">varbinary(16)</span> dipakai untuk IP address agar bisa menyimpan IPv4 dan IPv6 dengan lebih rapi.
+            </p>
+          </article>
+        </div>
+
+        <article class="table-card" style="margin-top: 16px;">
+          <div class="table-head">
+            <h3>Rationale per kolom penting</h3>
+            <span class="subtle">Ringkasan singkat alasan pemakaian tipe data</span>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Kolom</th>
+                  <th>Tipe</th>
+                  <th>Alasan</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>role, status, tipe, kondisi</td><td>tinyint unsigned</td><td>Hanya punya beberapa nilai pilihan tetap, jadi angka kecil lebih efisien daripada string panjang.</td></tr>
+                <tr><td>nama, email, kode, telepon</td><td>varchar</td><td>Data teks pendek yang sering dicari dan ditampilkan, jadi tidak perlu text.</td></tr>
+                <tr><td>alamat, deskripsi, laporan</td><td>text</td><td>Potensi isi panjang tinggi, jadi text memberi ruang lebih leluasa.</td></tr>
+                <tr><td>tgl_pinjam, tgl_kembali_*</td><td>date</td><td>Yang dibutuhkan hanya tanggal, bukan jam.</td></tr>
+                <tr><td>created_at, updated_at</td><td>timestamp</td><td>Perlu catatan waktu otomatis untuk audit dan urutan data.</td></tr>
+                <tr><td>ip_address</td><td>varbinary(16)</td><td>Lebih efisien untuk menyimpan alamat IP dan mendukung IPv6.</td></tr>
+                <tr><td>gambar, bukti_*</td><td>varchar(255)</td><td>Yang disimpan hanya path file, bukan file biner gambar itu sendiri.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section class="section" id="fitur">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Letak File Fitur</div>
+            <h2 class="section-title">Fitur apa ada di file mana</h2>
+          </div>
+          <p class="section-text">
+            Karena aplikasi ini berbasis SPA, lokasi file fitur biasanya berada di <span class="code">resources/js/pages</span>, <span class="code">resources/js/components</span>, dan <span class="code">app/Http/Controllers/Api</span>.
+          </p>
+        </div>
+
+        <article class="table-card">
+          <div class="table-head">
+            <h3>Map fitur dan file utama</h3>
+            <span class="subtle">Contoh login bukan di auth/login.blade.php, tetapi di Vue page</span>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fitur</th>
+                  <th>File utama</th>
+                  <th>Catatan</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Landing page</td><td><span class="code">resources/js/pages/LandingPage.vue</span></td><td>Halaman beranda publik, menampilkan hero, fitur, alat unggulan, dan testimoni.</td></tr>
+                <tr><td>Login</td><td><span class="code">resources/js/pages/Login.vue</span></td><td>Form login SPA. API-nya di <span class="code">app/Http/Controllers/Api/AuthController.php</span>.</td></tr>
+                <tr><td>Registrasi</td><td><span class="code">resources/js/pages/Registrasi.vue</span></td><td>Form pendaftaran peminjam baru.</td></tr>
+                <tr><td>Daftar alat publik</td><td><span class="code">resources/js/pages/Alat.vue</span></td><td>Menampilkan alat untuk peminjam dan pengajuan peminjaman.</td></tr>
+                <tr><td>Peminjaman saya</td><td><span class="code">resources/js/pages/PeminjamanSaya.vue</span></td><td>Riwayat transaksi milik peminjam.</td></tr>
+                <tr><td>Dashboard admin</td><td><span class="code">resources/js/pages/DashboardAdmin.vue</span></td><td>Ringkasan data pengguna, alat, peminjaman, dan log.</td></tr>
+                <tr><td>Dashboard owner</td><td><span class="code">resources/js/pages/DashboardOwner.vue</span></td><td>Ringkasan khusus owner.</td></tr>
+                <tr><td>Dashboard staff</td><td><span class="code">resources/js/pages/DashboardStaff.vue</span></td><td>Ringkasan untuk operasional staff.</td></tr>
+                <tr><td>Dashboard peminjam</td><td><span class="code">resources/js/pages/DashboardPeminjam.vue</span></td><td>Ringkasan peminjaman pribadi.</td></tr>
+                <tr><td>Manajemen user</td><td><span class="code">resources/js/pages/ManagementUser.vue</span></td><td>CRUD data user.</td></tr>
+                <tr><td>Manajemen alat</td><td><span class="code">resources/js/pages/ManagementAlat.vue</span></td><td>CRUD alat.</td></tr>
+                <tr><td>Manajemen kategori</td><td><span class="code">resources/js/pages/ManagementKategori.vue</span></td><td>CRUD kategori.</td></tr>
+                <tr><td>Manajemen peminjaman</td><td><span class="code">resources/js/pages/ManagementPeminjaman.vue</span></td><td>CRUD transaksi peminjaman.</td></tr>
+                <tr><td>Pengembalian</td><td><span class="code">resources/js/pages/PengembalianStaff.vue</span></td><td>Konfirmasi pengembalian dan hitung denda.</td></tr>
+                <tr><td>Laporan</td><td><span class="code">resources/js/pages/Laporan.vue</span></td><td>Laporan untuk admin dan staff.</td></tr>
+                <tr><td>Notifikasi</td><td><span class="code">resources/js/pages/Notifikasi.vue</span></td><td>Notifikasi per role.</td></tr>
+                <tr><td>Log aktivitas</td><td><span class="code">resources/js/pages/LogAktivitas.vue</span></td><td>Riwayat aktivitas sistem.</td></tr>
+                <tr><td>Akun</td><td><span class="code">resources/js/components/account/AccountSettingsCard.vue</span></td><td>Pengaturan profil dan password.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <div class="grid-2" style="margin-top: 16px;">
+          <article class="content-card">
+            <h3 class="card-title">File pendukung penting</h3>
+            <p class="card-text">
+              Router utama ada di <span class="code">resources/js/router/index.js</span>.
+              Layout sidebar role ada di <span class="code">resources/js/components/layout</span>.
+              Komponen pengelolaan data generik ada di <span class="code">resources/js/components/admin/CrudTablePage.vue</span>.
+              Endpoint API ada di <span class="code">routes/api.php</span>.
+            </p>
+          </article>
+          <article class="content-card">
+            <h3 class="card-title">Catatan struktur</h3>
+            <p class="card-text">
+              Di proyek ini tidak ada file <span class="code">auth/login.blade.php</span> seperti aplikasi Blade tradisional.
+              Karena front-end memakai Vue SPA, login dan register berada di page Vue, lalu berkomunikasi dengan controller API Laravel.
+            </p>
+          </article>
+        </div>
+
+        <div class="note" style="margin-top: 16px;">
+          Catatan stabilitas: form yang mengunggah file sekarang dipusatkan lewat <span class="code">resources/js/lib/api.js</span>.
+          Jika request memakai <span class="code">FormData</span> dengan metode <span class="code">PUT</span> atau <span class="code">PATCH</span>,
+          helper akan mengubahnya menjadi <span class="code">POST</span> dan menambahkan <span class="code">_method</span> secara otomatis.
+          Pola ini dipakai agar upload file tetap terbaca konsisten oleh Laravel dan PHP.
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Daftar Fitur</div>
+            <h2 class="section-title">Penjelasan setiap fitur</h2>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <article class="content-card">
+            <h3 class="card-title">Landing page</h3>
+            <p class="card-text">Menampilkan identitas aplikasi, manfaat utama, daftar alat, workflow peminjaman, testimoni, dan form feedback publik.</p>
+          </article>
+          <article class="content-card">
+            <h3 class="card-title">Login dan registrasi</h3>
+            <p class="card-text">User bisa masuk dengan email dan password atau mendaftar sebagai peminjam baru. Setelah login, session disimpan di localStorage.</p>
+          </article>
+          <article class="content-card">
+            <h3 class="card-title">Manajemen user</h3>
+            <p class="card-text">Admin dapat membuat, mengubah, dan menghapus pengguna, mengatur role, status, profil, dan foto akun.</p>
+          </article>
+          <article class="content-card">
+            <h3 class="card-title">Manajemen alat</h3>
+            <p class="card-text">CRUD alat, stok, kondisi, status, lokasi, harga asli, dan gambar alat agar inventaris selalu mutakhir.</p>
+          </article>
+          <article class="content-card">
+            <h3 class="card-title">Manajemen kategori</h3>
+            <p class="card-text">CRUD kategori alat seperti Elektronik, Mekanik, Safety, atau kategori lain sesuai kebutuhan gudang.</p>
+          </article>
+          <article class="content-card">
+            <h3 class="card-title">Manajemen peminjaman</h3>
+            <p class="card-text">Staff bisa membuat transaksi, mengubah status, menambahkan bukti, dan menjaga riwayat peminjaman tetap rapi. Upload file memakai pola aman melalui helper API.</p>
+          </article>
+          <article class="content-card">
+            <h3 class="card-title">Pengembalian</h3>
+            <p class="card-text">Staff mengonfirmasi status pengembalian, kondisi barang, dan sistem menghitung denda secara otomatis berdasarkan tanggal dan harga alat. Bukti pengembalian juga disimpan lewat alur upload yang kompatibel dengan Laravel.</p>
+          </article>
+          <article class="content-card">
+            <h3 class="card-title">Laporan</h3>
+            <p class="card-text">Menampilkan ringkasan transaksi dan data operasional untuk admin, staff, atau owner.</p>
+          </article>
+          <article class="content-card">
+            <h3 class="card-title">Notifikasi</h3>
+            <p class="card-text">Memberi info, warning, success, atau error kepada user berdasarkan aktivitas dan kondisi sistem.</p>
+          </article>
+          <article class="content-card">
+            <h3 class="card-title">Log aktivitas</h3>
+            <p class="card-text">Mencatat siapa melakukan apa, pada entitas apa, dan kapan aktivitas itu terjadi.</p>
+          </article>
+          <article class="content-card">
+            <h3 class="card-title">Akun dan profil</h3>
+            <p class="card-text">User dapat melihat dan memperbarui profil, avatar, dan password dari halaman akun masing-masing.</p>
+          </article>
+          <article class="content-card">
+            <h3 class="card-title">Feedback publik</h3>
+            <p class="card-text">Pengunjung landing page dapat memberi ulasan dan rating yang kemudian ditampilkan pada bagian testimoni.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="hak-akses">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Role & Hak Akses</div>
+            <h2 class="section-title">Pembagian role pengguna</h2>
+          </div>
+          <p class="section-text">
+            Pembagian akses mengikuti menu sidebar dan route yang tersedia pada router. Ini membuat setiap role fokus pada tugasnya sendiri tanpa membuka data yang tidak perlu.
+          </p>
+        </div>
+
+        <div class="access-grid">
+          <article class="role-card">
+            <div class="role-name">Admin</div>
+            <ul>
+              <li>Akses paling lengkap ke dashboard dan data master.</li>
+              <li>Kelola user, alat, kategori, peminjaman, notifikasi, dan log aktivitas.</li>
+              <li>Mengelola akun serta melihat laporan administrasi.</li>
+            </ul>
+          </article>
+          <article class="role-card">
+            <div class="role-name">Owner</div>
+            <ul>
+              <li>Melihat statistik dan ringkasan operasional.</li>
+              <li>Akses alat, peminjaman, notifikasi, dan akun owner.</li>
+              <li>Fokus pada monitoring dan pengambilan keputusan.</li>
+            </ul>
+          </article>
+          <article class="role-card">
+            <div class="role-name">Staff</div>
+            <ul>
+              <li>Menangani peminjaman, pengembalian, laporan, notifikasi, dan akun staff.</li>
+              <li>Bertugas sebagai operator harian di proses transaksi.</li>
+              <li>Dapat memeriksa kondisi barang dan menghitung denda.</li>
+            </ul>
+          </article>
+          <article class="role-card">
+            <div class="role-name">Peminjam</div>
+            <ul>
+              <li>Mengakses daftar alat, riwayat peminjaman, notifikasi, dan akun pribadi.</li>
+              <li>Melihat status pengajuan serta perkembangan transaksi miliknya.</li>
+              <li>Role ini adalah akun default saat registrasi baru.</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="note">
+          Berdasarkan router, halaman publik hanya mencakup landing, login, dan register. Setelah autentikasi, user diarahkan ke dashboard sesuai role melalui <span class="code">resources/js/auth/session.js</span>.
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Tabel yang Dihapus</div>
+            <h2 class="section-title">Status setelah database dibersihkan</h2>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <article class="content-card">
+            <h3 class="card-title">Tabel yang sudah tidak dipakai</h3>
+            <p class="card-text">
+              <span class="code">cache</span>, <span class="code">cache_locks</span>, <span class="code">jobs</span>, <span class="code">job_batches</span>, <span class="code">failed_jobs</span>, <span class="code">sessions</span>, dan <span class="code">password_reset_tokens</span> sudah dihapus karena driver aplikasi dipindah ke file/sync.
+            </p>
+          </article>
+          <article class="content-card">
+            <h3 class="card-title">Dampaknya</h3>
+            <p class="card-text">
+              Database jadi lebih ramping dan hanya menyimpan data inti aplikasi. Login, register, peminjaman, notifikasi, laporan, dan log tetap jalan karena semuanya bergantung pada tabel aktif yang masih tersisa.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <strong style="color: var(--text);">TrustEquip.id Documentation</strong><br>
+        Dibuat agar mudah dibaca di desktop dan mobile, dengan fokus pada penjelasan struktur database, fitur, dan hak akses.
+      </footer>
+    </main>
+  </div>
+</body>
+</html>
