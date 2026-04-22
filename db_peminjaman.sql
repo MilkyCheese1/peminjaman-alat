@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Waktu pembuatan: 22 Apr 2026 pada 08.51
+-- Waktu pembuatan: 22 Apr 2026 pada 12.05
 -- Versi server: 8.4.3
 -- Versi PHP: 8.3.26
 
@@ -98,41 +98,18 @@ CREATE TABLE `borrowings` (
 --
 
 INSERT INTO `borrowings` (`id`, `kode`, `peminjam_id`, `nama_peminjam`, `divisi`, `alat_id`, `alat_harga_asli`, `nama_alat`, `kategori`, `petugas_id`, `petugas_nama`, `keperluan`, `tgl_pinjam`, `tgl_kembali_rencana`, `tgl_kembali_aktual`, `status_pengembalian`, `kondisi_pengembalian`, `laporan_peminjam`, `laporan_staff`, `status`, `biaya`, `denda_kerusakan`, `denda_kehilangan`, `denda_keterlambatan`, `catatan`, `gambar`, `bukti_pengambilan`, `bukti_pengembalian`, `created_at`, `updated_at`) VALUES
-(1, 'PMJ-20260410-001', 6, 'Budi Peminjam', 'Produksi', 1, 0, 'Multimeter Digital', 'Elektronik', 3, 'Raka Staff', 'Cek tegangan panel', '2026-04-10', '2026-04-12', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, 0, 0, 'Menunggu persetujuan staff.', NULL, NULL, NULL, '2026-04-10 02:00:00', '2026-04-10 02:00:00'),
-(2, 'PMJ-20260410-002', 7, 'Siti Peminjam', 'QA', 5, 0, 'Caliper Digital', 'Kalibrasi', 4, 'Dina Staff', 'Pengukuran sampel batch 42', '2026-04-10', '2026-04-11', NULL, NULL, NULL, NULL, NULL, 2, 0, 0, 0, 0, 'Disetujui, siap diambil.', NULL, NULL, NULL, '2026-04-10 03:00:00', '2026-04-10 03:15:00'),
-(3, 'PMJ-20260411-001', 7, 'Siti Peminjam', 'QA', 5, 0, 'Caliper Digital', 'Kalibrasi', 4, 'Dina Staff', 'Pengukuran lanjutan', '2026-04-11', '2026-04-12', NULL, 'Belum Dikembalikan', NULL, NULL, 'Sedang dipinjam.', 4, 0, 0, 0, 0, 'Sedang dipinjam.', NULL, NULL, NULL, '2026-04-11 01:30:00', '2026-04-21 23:11:24'),
-(4, 'PMJ-20260411-002', 9, 'Maya Peminjam', 'Maintenance', 3, 0, 'Bor Listrik', 'Mekanik', 3, 'Raka Staff', 'Perbaikan pompa', '2026-04-11', '2026-04-13', '2026-04-13', NULL, NULL, NULL, NULL, 5, 0, 0, 0, 0, 'Dikembalikan dan dicek ulang.', NULL, NULL, NULL, '2026-04-11 02:15:00', '2026-04-13 09:30:00'),
+(1, 'PMJ-20260410-001', 6, 'Budi Peminjam', 'Produksi', NULL, 0, 'Multimeter Digital', 'Elektronik', 3, 'Raka Staff', 'Cek tegangan panel', '2026-04-10', '2026-04-12', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, 0, 0, 'Menunggu persetujuan staff.', NULL, NULL, NULL, '2026-04-10 02:00:00', '2026-04-10 02:00:00'),
+(2, 'PMJ-20260410-002', 7, 'Siti Peminjam', 'QA', NULL, 0, 'Caliper Digital', 'Kalibrasi', 4, 'Dina Staff', 'Pengukuran sampel batch 42', '2026-04-10', '2026-04-11', NULL, NULL, NULL, NULL, NULL, 2, 0, 0, 0, 0, 'Disetujui, siap diambil.', NULL, NULL, NULL, '2026-04-10 03:00:00', '2026-04-10 03:15:00'),
+(3, 'PMJ-20260411-001', 7, 'Siti Peminjam', 'QA', NULL, 0, 'Caliper Digital', 'Kalibrasi', 4, 'Dina Staff', 'Pengukuran lanjutan', '2026-04-11', '2026-04-12', NULL, 'Belum Dikembalikan', NULL, NULL, 'Sedang dipinjam.', 4, 0, 0, 0, 0, 'Sedang dipinjam.', NULL, NULL, NULL, '2026-04-11 01:30:00', '2026-04-21 23:11:24'),
+(4, 'PMJ-20260411-002', 9, 'Maya Peminjam', 'Maintenance', NULL, 850000, 'Bor Listrik', 'Mekanik', 3, 'Raka Staff', 'Perbaikan pompa', '2026-04-11', '2026-04-13', '2026-04-13', 'Dikembalikan', 'Normal', NULL, 'Dikembalikan dan dicek ulang.', 5, 0, 0, 0, 0, 'Dikembalikan dan dicek ulang.', NULL, NULL, NULL, '2026-04-11 02:15:00', '2026-04-22 03:21:18'),
 (5, 'PMJ-20260412-001', 10, 'Eko Peminjam', 'R&D', 9, 0, 'Proyektor HD', 'Presentasi', 5, 'Sari Staff', 'Demo proposal proyek', '2026-04-12', '2026-04-14', '2026-04-14', NULL, NULL, NULL, NULL, 6, 0, 0, 0, 0, 'Selesai tanpa kendala.', NULL, NULL, NULL, '2026-04-12 02:10:00', '2026-04-14 10:10:00'),
-(6, 'PMJ-20260412-002', 8, 'Andi Peminjam', 'Produksi', 4, 0, 'Kunci Torsi 1/2', 'Mekanik', 3, 'Raka Staff', 'Kalibrasi baut mesin', '2026-04-12', '2026-04-13', NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, 0, 'Ditolak karena alat sedang dibutuhkan tim lain.', NULL, NULL, NULL, '2026-04-12 04:20:00', '2026-04-12 04:45:00'),
-(7, 'PMJ-20260413-001', NULL, 'Guest Vendor', 'Tamu', 6, 0, 'Helm Safety', 'Safety', 4, 'Dina Staff', 'Kunjungan area produksi', '2026-04-13', '2026-04-13', '2026-04-13', NULL, NULL, NULL, NULL, 6, 0, 0, 0, 0, 'Transaksi tamu selesai di hari yang sama.', NULL, NULL, NULL, '2026-04-13 01:00:00', '2026-04-13 10:00:00'),
+(6, 'PMJ-20260412-002', 8, 'Andi Peminjam', 'Produksi', NULL, 0, 'Kunci Torsi 1/2', 'Mekanik', 3, 'Raka Staff', 'Kalibrasi baut mesin', '2026-04-12', '2026-04-13', NULL, NULL, NULL, NULL, NULL, 3, 0, 0, 0, 0, 'Ditolak karena alat sedang dibutuhkan tim lain.', NULL, NULL, NULL, '2026-04-12 04:20:00', '2026-04-12 04:45:00'),
+(7, 'PMJ-20260413-001', NULL, 'Guest Vendor', 'Tamu', NULL, 0, 'Helm Safety', 'Safety', 4, 'Dina Staff', 'Kunjungan area produksi', '2026-04-13', '2026-04-13', '2026-04-13', NULL, NULL, NULL, NULL, 6, 0, 0, 0, 0, 'Transaksi tamu selesai di hari yang sama.', NULL, NULL, NULL, '2026-04-13 01:00:00', '2026-04-13 10:00:00'),
 (8, 'PMJ-20260414-001', 6, 'Budi Peminjam', 'Produksi', 8, 0, 'Laptop Kantor', 'Komputer', 5, 'Sari Staff', 'Presentasi internal tim', '2026-04-14', '2026-04-16', NULL, NULL, NULL, NULL, NULL, 2, 0, 0, 0, 0, 'Disetujui, menunggu serah terima.', NULL, NULL, NULL, '2026-04-14 03:00:00', '2026-04-14 03:20:00'),
-(9, 'PMJ-20260415-001', 9, 'Maya Peminjam', 'QC', 7, 0, 'Speaker Portable', 'Audio', 3, 'Raka Staff', 'Briefing lapangan', '2026-04-15', '2026-04-17', '2026-04-22', 'Dikembalikan', 'Hilang', NULL, 'Sedang dipinjam.', 5, 0, 0, 0, 0, 'Sedang dipinjam.', NULL, NULL, NULL, '2026-04-15 06:30:00', '2026-04-21 23:23:39'),
+(9, 'PMJ-20260415-001', 9, 'Maya Peminjam', 'QC', 7, 900000, 'Speaker Portable', 'Audio', 3, 'Raka Staff', 'Briefing lapangan', '2026-04-15', '2026-04-17', '2026-04-22', 'Dikembalikan', 'Hilang', NULL, 'Sedang dipinjam.', 5, 4950000, 0, 1350000, 3600000, 'Sedang dipinjam.', NULL, NULL, '/uploads/borrowings/f44efd88-517b-4848-aedc-0220a4c7cc52.png', '2026-04-15 06:30:00', '2026-04-22 03:21:00'),
 (10, 'PMJ-20260416-001', 10, 'Eko Peminjam', 'IT', 10, 0, 'Router WiFi 6', 'Network', 4, 'Dina Staff', 'Uji koneksi ruangan meeting', '2026-04-16', '2026-04-18', NULL, NULL, NULL, NULL, NULL, 1, 0, 0, 0, 0, 'Menunggu verifikasi kelengkapan.', NULL, NULL, NULL, '2026-04-16 02:45:00', '2026-04-16 02:45:00'),
-(11, 'PMJ-20260421-001', NULL, 'Budi Peminjam', 'Internal', NULL, 0, 'Proyektor HD', 'Presentasi', NULL, 'Belum Ditugaskan', 'untuk rapat hari ini', '2026-04-21', '2026-04-22', NULL, NULL, NULL, NULL, NULL, 2, 0, 0, 0, 0, 'Permintaan telah disetujui dan siap diserahkan.', NULL, NULL, NULL, '2026-04-21 05:29:59', '2026-04-21 05:34:43');
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `cache`
---
-
-CREATE TABLE `cache` (
-  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `expiration` bigint NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `cache_locks`
---
-
-CREATE TABLE `cache_locks` (
-  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `owner` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `expiration` bigint NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+(11, 'PMJ-20260421-001', NULL, 'Budi Peminjam', 'Internal', NULL, 0, 'Proyektor HD', 'Presentasi', NULL, 'Belum Ditugaskan', 'untuk rapat hari ini', '2026-04-21', '2026-04-22', NULL, NULL, NULL, NULL, NULL, 2, 0, 0, 0, 0, 'Permintaan telah disetujui dan siap diserahkan.', NULL, NULL, NULL, '2026-04-21 05:29:59', '2026-04-21 05:34:43'),
+(12, 'PMJ-20260422-001', 5, 'Siti Peminjam', 'Internal', 7, 959490, 'ZEVAN Speaker Bluetooth Wireless Portable TWS 5.0 Super Xtra Bass Mini Stereo Musik Box - B62', 'Audio', NULL, 'Belum Ditugaskan', 'Buat presentasi', '2026-04-22', '2026-04-23', NULL, NULL, NULL, NULL, NULL, 4, 0, 0, 0, 0, 'Alat sudah diserahkan ke peminjam.', NULL, NULL, NULL, '2026-04-22 05:03:34', '2026-04-22 05:04:39');
 
 -- --------------------------------------------------------
 
@@ -159,29 +136,12 @@ INSERT INTO `categories` (`id`, `nama_kategori`, `kode_kategori`, `status`, `des
 (1, 'Elektronik', 'ELK', 1, 'Peralatan elektronik untuk pengukuran dan troubleshooting.', NULL, '2026-04-22 01:26:34', '2026-04-22 01:26:34'),
 (2, 'Mekanik', 'MEK', 1, 'Peralatan mekanik untuk perawatan dan perakitan.', NULL, '2026-04-22 01:26:34', '2026-04-22 01:26:34'),
 (3, 'Kalibrasi', 'KLB', 1, 'Perangkat kalibrasi dan standar pengukuran.', NULL, '2026-04-22 01:26:34', '2026-04-22 01:26:34'),
-(4, 'Safety', 'SFT', 1, 'Perlengkapan keselamatan kerja dan proteksi lapangan.', NULL, '2026-04-22 01:26:34', '2026-04-22 01:26:34'),
 (5, 'Audio', 'AUD', 1, 'Perangkat audio untuk meeting dan presentasi.', NULL, '2026-04-22 01:26:34', '2026-04-22 01:26:34'),
 (6, 'Komputer', 'KOM', 1, 'Peralatan komputer untuk administrasi dan produktivitas.', NULL, '2026-04-22 01:26:34', '2026-04-22 01:26:34'),
 (7, 'Dokumentasi', 'DOC', 1, 'Peralatan dokumentasi dan pencetakan data.', NULL, '2026-04-22 01:26:34', '2026-04-22 01:26:34'),
 (8, 'Presentasi', 'PRS', 1, 'Perangkat presentasi untuk briefing dan rapat.', NULL, '2026-04-22 01:26:34', '2026-04-22 01:26:34'),
 (9, 'Network', 'NET', 1, 'Perangkat jaringan dan konektivitas.', NULL, '2026-04-22 01:26:34', '2026-04-22 01:26:34'),
 (10, 'Perlengkapan Umum', 'GEN', 1, 'Perlengkapan umum untuk kebutuhan operasional harian.', NULL, '2026-04-22 01:26:34', '2026-04-22 01:26:34');
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `failed_jobs`
---
-
-CREATE TABLE `failed_jobs` (
-  `id` bigint UNSIGNED NOT NULL,
-  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -215,41 +175,6 @@ INSERT INTO `feedback_entries` (`id`, `nama`, `email`, `stars`, `pesan`, `status
 (9, 'Nadia', 'nadia@example.test', 1, 'Saya belum bisa mengakses semua fitur.', 3, '2026-04-16 01:40:00'),
 (10, 'Farhan', 'farhan@example.test', 4, 'Secara umum aplikasi sudah bagus dan stabil.', 1, '2026-04-16 10:25:00'),
 (11, 'Ilyas', 'ilyasardia@gmail.com', 5, 'alatnya beragam', 2, '2026-04-21 05:24:19');
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `jobs`
---
-
-CREATE TABLE `jobs` (
-  `id` bigint UNSIGNED NOT NULL,
-  `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `attempts` tinyint UNSIGNED NOT NULL,
-  `reserved_at` int UNSIGNED DEFAULT NULL,
-  `available_at` int UNSIGNED NOT NULL,
-  `created_at` int UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `job_batches`
---
-
-CREATE TABLE `job_batches` (
-  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `total_jobs` int NOT NULL,
-  `pending_jobs` int NOT NULL,
-  `failed_jobs` int NOT NULL,
-  `failed_job_ids` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `options` mediumtext COLLATE utf8mb4_unicode_ci,
-  `cancelled_at` int DEFAULT NULL,
-  `created_at` int NOT NULL,
-  `finished_at` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -320,41 +245,6 @@ INSERT INTO `notifications` (`id`, `user_id`, `judul`, `pesan`, `tipe`, `is_read
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `password_reset_tokens`
---
-
-CREATE TABLE `password_reset_tokens` (
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `sessions`
---
-
-CREATE TABLE `sessions` (
-  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `user_id` int UNSIGNED DEFAULT NULL,
-  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `user_agent` text COLLATE utf8mb4_unicode_ci,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_activity` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data untuk tabel `sessions`
---
-
-INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('Cg6T3RYHNaRSpcvLBZsknGMyGOGPy0dxms1Msj1H', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', 'eyJfdG9rZW4iOiJGb01nbHlrOXVFVW5tc1BDSXc3RmhlbFhETG9BVG5nUTd1aUJwa3haIiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MDAwIiwicm91dGUiOm51bGx9LCJfZmxhc2giOnsib2xkIjpbXSwibmV3IjpbXX19', 1776824375),
-('gsPStp2EciiePr6wApZzRAbviQaqqabjJhsjsJEa', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', 'eyJfdG9rZW4iOiJmemlzdGQ3bHRLOXp0anVGdTU0Y3U1c3VxTHQ5dlVMWWlaZ0kzc3U0IiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MDAwXC9tYW5hZ2VtZW50LXBlbWluamFtYW4iLCJyb3V0ZSI6bnVsbH0sIl9mbGFzaCI6eyJvbGQiOltdLCJuZXciOltdfX0=', 1776846322);
-
--- --------------------------------------------------------
-
---
 -- Struktur dari tabel `tools`
 --
 
@@ -378,16 +268,13 @@ CREATE TABLE `tools` (
 --
 
 INSERT INTO `tools` (`id`, `category_id`, `nama_alat`, `harga_asli`, `deskripsi`, `stok`, `kondisi`, `status`, `lokasi`, `gambar`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Multimeter Digital', 350000, 'Alat ukur listrik untuk tegangan, arus, dan resistansi.', 10, 1, 1, 'Gudang Elektronik', '/uploads/tools/multimeter-digital.svg', '2026-04-22 01:26:34', '2026-04-22 01:26:34'),
-(2, 1, 'Oscilloscope 100MHz', 12500000, 'Perangkat analisis sinyal untuk pengujian rangkaian elektronik.', 2, 2, 3, 'Lab Elektronik', '/uploads/tools/oscilloscope-100mhz.svg', '2026-04-22 01:26:34', '2026-04-22 01:26:34'),
-(3, 2, 'Bor Listrik', 850000, 'Bor listrik serbaguna untuk pekerjaan perakitan dan perawatan.', 4, 1, 1, 'Workshop', '/uploads/tools/bor-listrik.svg', '2026-04-22 01:26:34', '2026-04-22 01:26:34'),
-(4, 2, 'Kunci Torsi 1/2', 450000, 'Kunci torsi presisi untuk pengencangan baut sesuai spesifikasi.', 3, 2, 1, 'Workshop', '/uploads/tools/kunci-torsi-1-2.svg', '2026-04-22 01:26:34', '2026-04-22 01:26:34'),
-(5, 3, 'Caliper Digital', 300000, 'Alat ukur digital untuk pengukuran dimensi yang presisi.', 5, 1, 1, 'Lab Kalibrasi', '/uploads/tools/caliper-digital.svg', '2026-04-22 01:26:34', '2026-04-22 01:26:34'),
-(6, 4, 'Helm Safety', 175000, 'Helm pelindung untuk menunjang keselamatan kerja di lapangan.', 20, 1, 1, 'Gudang Safety', '/uploads/tools/helm-safety.svg', '2026-04-22 01:26:34', '2026-04-22 01:26:34'),
-(7, 5, 'Speaker Portable', 900000, 'Speaker portabel untuk kebutuhan audio meeting dan presentasi.', 6, 1, 1, 'Gudang Audio', '/uploads/tools/speaker-portable.svg', '2026-04-22 01:26:34', '2026-04-22 01:26:34'),
-(8, 6, 'Laptop Kantor', 9500000, 'Laptop kerja untuk administrasi, dokumentasi, dan presentasi.', 8, 1, 2, 'Ruang IT', '/uploads/tools/laptop-kantor.svg', '2026-04-22 01:26:34', '2026-04-22 01:26:34'),
-(9, 8, 'Proyektor HD', 6500000, 'Proyektor untuk menampilkan materi rapat dan presentasi.', 3, 1, 1, 'Gudang Presentasi', '/uploads/tools/proyektor-hd.svg', '2026-04-22 01:26:34', '2026-04-22 01:26:34'),
-(10, 9, 'Router WiFi 6', 1100000, 'Router jaringan untuk kebutuhan konektivitas ruang kerja.', 2, 3, 3, 'Ruang IT', '/uploads/tools/router-wifi-6.svg', '2026-04-22 01:26:34', '2026-04-22 01:26:34');
+(7, 5, 'ZEVAN Speaker Bluetooth Wireless Portable TWS 5.0 Super Xtra Bass Mini Stereo Musik Box - B62', 959490, '-Berat: 191gr\r\n\r\n-Bahan: plastik ABS\r\n\r\n-Kapasitas baterai: 1200mAh\r\n\r\n-Ukuran speaker: 40mm 40 magnetik eksternal magnetik\r\n\r\n-Daya pengeras suara: 4 ohm 3W *1\r\n\r\n-Tegangan pengisian daya: DC5Verg\r\n\r\n-Panggilan atau musik: 3-4 jam (tergantung Pemakaian)\r\n\r\n-Mode catu daya: miniUSB\r\n\r\n-Jarak Bluetooth: 10 meter\r\n\r\n-Respons frekuensi: 120HZ-20KHZ\r\n\r\n-NR≧70dB\r\n\r\n-Warna: Hitam\r\n\r\n-Dapat Digunakan: Panggilan telepon, Memory Card, USB\r\n\r\n-Ukuran kotak warna: 93*60*59MM\r\n\r\n-Ukuran produk: 82*59*57mm', 6, 1, 1, 'Gudang Audio', '/uploads/tools/c17d4162-e235-412f-a785-b73861e3b061.webp', '2026-04-22 01:26:34', '2026-04-22 05:02:32'),
+(8, 6, '3Notebook ASUS A416MAO-HD422 (N4020/4GB/256GB SSD/14\" HD/WIN 10 + OHS 2019)', 5499000, 'Notebook ASUS A416MAO-HD422\r\nIntel N4020\r\nDDR 4 4GB\r\n256GB SSD\r\nWebcam, Wifi, WO SD, Backlight Keyboard\r\nLayar 14\" HD\r\nWIN 10 Ori Home + Office Home Student 2019', 8, 1, 2, 'Ruang IT', '/uploads/tools/7d577a5c-fbf9-49ab-8cd6-0abe862bf003.webp', '2026-04-22 01:26:34', '2026-04-22 04:47:08'),
+(9, 8, 'Klaz Proyektor 1080p Full Hd 800 Ansi Auto Focus Gtv Dongle', 5999900, '-Proyektor 1080P Full HD untuk tayangan multimedia\r\n-Sealed projector dengan performa dust-proof saat digunakan\r\n-Kecerahan 8500 lumens untuk tampilan lebih terang\r\n-800 ANSI lumens mendukung kualitas viewing lebih baik\r\n-Display 5.0 inch TFT LCD untuk proyeksi\r\n-Optical offset 50 persen meningkatkan efek tampilan\r\n-Focus mendukung electric focus dan auto focus', 3, 1, 1, 'Gudang Presentasi', '/uploads/tools/3cac1ac6-49e4-41a0-8163-c556263826f6.webp', '2026-04-22 01:26:34', '2026-04-22 05:01:50'),
+(10, 9, 'Archer AX73 | AX1500 Wi-Fi 6 Router', 3918000, '-Teknologi Wi-Fi 6 — Archer AX10 dilengkapi teknologi Wi-Fi 6 untuk kecepatan lebih tinggi, kapasitas lebih besar, dan jaringan yang lebih lancar tanpa kemacetan.\n-Kecepatan Dual-Band 1.5 Gbps — Router dual-band Archer AX10 mencapai kecepatan hingga 1.5 Gbps (1201 Mbps pada pita 5 GHz dan 300 Mbps pada pita 2.4 GHz).†\n-Terhubung ke Banyak Perangkat Sekaligus — Mendukung lebih banyak koneksi bersamaan dan latensi lebih rendah berkat teknologi OFDMA dan MU-MIMO.\n-Cakupan Lebih Luas — Empat antena dan teknologi Beamforming memfokuskan sinyal ke tiap perangkat agar jangkauan lebih luas dan stabil.†\n-Port Gigabit Penuh — Nikmati kecepatan maksimal broadband hingga 1 Gbps.\n-Pengaturan Mudah — Selesaikan peningkatan jaringan Anda hanya dalam beberapa menit melalui aplikasi Tether.\n-Kompatibel dengan Alexa — Kendalikan router menggunakan perintah suara dan nikmati hidup lebih cerdas serta praktis bersama Amazon Alexa.', 2, 1, 1, 'Ruang IT', '/uploads/tools/92aba5fd-540e-41d9-bfee-2ecb26138f60.jpg', '2026-04-22 01:26:34', '2026-04-22 04:43:32'),
+(11, 10, 'ALEFJÄLL kursi kantor', 5000000, 'Kursi kantor ergonomis ini memiliki banyak fitur untuk membuat Anda tetap nyaman dan fokus, seperti sandaran yang dibentuk dengan baik dengan penyangga pinggang yang dapat disesuaikan dan kulit biji-bijian yang lembut dan bernapas.', 5, 1, 1, 'Ruang Rapat', '/uploads/tools/5704f2ca-d8d8-49b3-856d-57f0af33765a.webp', '2026-04-22 04:53:12', '2026-04-22 04:53:12'),
+(12, 1, 'Vention Kabel Ethernet CAT 6 RJ45 Gigabit LAN Network UTP ibk Round Black 2m', 25000, 'Specifications :\r\n\r\n- Code Produk (SKU) : IBKBF\r\n\r\n- Brand : Vention\r\n\r\n- Jacket : PVC\r\n\r\n- AWG: Flat : 32AWG ; Round:26AWG\r\n\r\n- Color : Black\r\n\r\n- OD : Round : 5.7mm\r\n\r\n- Interface : RJ45\r\n\r\n- Transmission Speed : 1000Mbps 250Mhz\r\n\r\n- Conductor : Oxygen-free Copper\r\n\r\n- Connector Chips Technics : Phosphor Bronze Gold-Plated\r\n\r\n\r\n\r\nFeatures :\r\n\r\n- Gigabit High Speed Data Transmission 1000 Mbps\r\n\r\n- Backward Compatible with Cat5e\r\n\r\n- Stable Cross Skeleton Structure, Reduce Loss', 2, 1, 1, 'inventaris', '/uploads/tools/24b19023-13bb-4d4c-aba6-41b06631d385.webp', '2026-04-22 04:56:03', '2026-04-22 04:56:03'),
+(13, 1, 'Robot Kabel HDMI High Definition 4K 2K 1080P 1M 1.5M 2M 3M 5M 10M HD Cable Male to Male', 100000, 'Keunggulan:\r\n\r\n1.Kabel HDMI highdefinition, tampilan 3D 4K*2K dan no delay\r\n\r\n2.Definisi tinggi visual 4K HD, 4K/60Hz, 18Gbps, kualitas gambar HDR\r\n\r\n3.Transmisi yang stabil. Nikmati visual nyata 3D setiap hari\r\n\r\n\r\n\r\nSpesifikasi:\r\n\r\n*Material: Tinned copper\r\n\r\n*Show: 4K*2K 60Hz\r\n\r\n*Outer mold: PVC\r\n\r\n*Quilt: PVC\r\n\r\n*Length: 1/1.5/2M/3M/5M\r\n\r\n*Interface: HDMI', 4, 1, 1, 'Invtentaris', '/uploads/tools/2a99f6b5-2b0d-4a20-b1b5-7956c58aa3ed.webp', '2026-04-22 04:57:55', '2026-04-22 04:57:55');
 
 -- --------------------------------------------------------
 
@@ -455,20 +342,6 @@ ALTER TABLE `borrowings`
   ADD KEY `idx_borrowings_return_status` (`status_pengembalian`,`tgl_kembali_rencana`);
 
 --
--- Indeks untuk tabel `cache`
---
-ALTER TABLE `cache`
-  ADD PRIMARY KEY (`key`),
-  ADD KEY `cache_expiration_index` (`expiration`);
-
---
--- Indeks untuk tabel `cache_locks`
---
-ALTER TABLE `cache_locks`
-  ADD PRIMARY KEY (`key`),
-  ADD KEY `cache_locks_expiration_index` (`expiration`);
-
---
 -- Indeks untuk tabel `categories`
 --
 ALTER TABLE `categories`
@@ -478,31 +351,11 @@ ALTER TABLE `categories`
   ADD KEY `idx_categories_name` (`nama_kategori`);
 
 --
--- Indeks untuk tabel `failed_jobs`
---
-ALTER TABLE `failed_jobs`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
-
---
 -- Indeks untuk tabel `feedback_entries`
 --
 ALTER TABLE `feedback_entries`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_feedback_status` (`status`,`created_at`);
-
---
--- Indeks untuk tabel `jobs`
---
-ALTER TABLE `jobs`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `jobs_queue_index` (`queue`);
-
---
--- Indeks untuk tabel `job_batches`
---
-ALTER TABLE `job_batches`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indeks untuk tabel `migrations`
@@ -516,20 +369,6 @@ ALTER TABLE `migrations`
 ALTER TABLE `notifications`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_notifications_user_read` (`user_id`,`is_read`,`created_at`);
-
---
--- Indeks untuk tabel `password_reset_tokens`
---
-ALTER TABLE `password_reset_tokens`
-  ADD PRIMARY KEY (`email`);
-
---
--- Indeks untuk tabel `sessions`
---
-ALTER TABLE `sessions`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `sessions_user_id_index` (`user_id`),
-  ADD KEY `sessions_last_activity_index` (`last_activity`);
 
 --
 -- Indeks untuk tabel `tools`
@@ -564,7 +403,7 @@ ALTER TABLE `activity_logs`
 -- AUTO_INCREMENT untuk tabel `borrowings`
 --
 ALTER TABLE `borrowings`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT untuk tabel `categories`
@@ -573,22 +412,10 @@ ALTER TABLE `categories`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT untuk tabel `failed_jobs`
---
-ALTER TABLE `failed_jobs`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT untuk tabel `feedback_entries`
 --
 ALTER TABLE `feedback_entries`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
-
---
--- AUTO_INCREMENT untuk tabel `jobs`
---
-ALTER TABLE `jobs`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `migrations`
@@ -606,7 +433,7 @@ ALTER TABLE `notifications`
 -- AUTO_INCREMENT untuk tabel `tools`
 --
 ALTER TABLE `tools`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
