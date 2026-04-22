@@ -1,5 +1,13 @@
 <template>
-  <div class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex items-center justify-center px-4 py-8">
+  <div class="relative min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex items-center justify-center px-4 py-8">
+    <button
+      type="button"
+      class="absolute left-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 shadow-sm transition hover:bg-slate-100 dark:border-white/10 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+      aria-label="Kembali"
+      @click="goBack"
+    >
+      &lt;
+    </button>
     <div class="w-full max-w-md">
       <!-- Logo/Title -->
       <div class="text-center mb-8">
@@ -60,14 +68,31 @@
             <label for="password" class="block text-sm font-medium text-slate-200 mb-2">
               Password
             </label>
-            <input
-              id="password"
-              v-model="form.password"
-              type="password"
-              required
-              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent placeholder-slate-500 dark:placeholder-slate-400"
-              placeholder="Masukkan password"
-            >
+            <div class="relative">
+              <input
+                id="password"
+                v-model="form.password"
+                :type="showPassword ? 'text' : 'password'"
+                required
+                class="w-full px-3 py-2 pr-12 border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent placeholder-slate-500 dark:placeholder-slate-400"
+                placeholder="Masukkan password"
+              >
+              <button
+                type="button"
+                class="absolute inset-y-0 right-0 flex items-center justify-center px-4 text-slate-500 transition hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                :aria-label="showPassword ? 'Sembunyikan password' : 'Tampilkan password'"
+                :title="showPassword ? 'Sembunyikan password' : 'Tampilkan password'"
+                @click="showPassword = !showPassword"
+              >
+                <svg v-if="showPassword" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7 .39-1.244 1.037-2.397 1.885-3.36m2.02-1.825A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.08 10.08 0 01-4.138 5.185M15 12a3 3 0 11-4.243-2.757M3 3l18 18" />
+                </svg>
+                <svg v-else class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 12c1.272-4.057 5.061-7 9.75-7 4.689 0 8.478 2.943 9.75 7-1.272 4.057-5.061 7-9.75 7-4.689 0-8.478-2.943-9.75-7z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           <!-- Confirm Password Field -->
@@ -147,27 +172,30 @@
 </template>
 
 <script>
+import { apiRequest } from '../lib/api'
+
 const REGISTRATION_STORAGE_KEY = 'trustequip_register_form'
 const REGISTRATION_TTL_MS = 2 * 60 * 60 * 1000 // 2 hours
 
 export default {
   name: 'Registrasi',
   data() {
-    return {
-      form: {
-        name: '',
-        email: '',
-        phone: '',
-        password: '',
-        password_confirmation: '',
-        terms: false
-      },
-      loading: false,
-      error: null,
-      success: null,
-      restoredFromStorage: false
-    }
-  },
+      return {
+        form: {
+          name: '',
+          email: '',
+          phone: '',
+          password: '',
+          password_confirmation: '',
+          terms: false
+        },
+        loading: false,
+        error: null,
+        success: null,
+        restoredFromStorage: false,
+        showPassword: false
+      }
+    },
   mounted() {
     this.loadSavedForm()
   },
@@ -180,6 +208,9 @@ export default {
     }
   },
   methods: {
+    goBack() {
+      this.$router.push('/')
+    },
     getSavedForm() {
       try {
         const raw = localStorage.getItem(REGISTRATION_STORAGE_KEY)
@@ -230,6 +261,7 @@ export default {
         password_confirmation: '',
         terms: false
       }
+      this.showPassword = false
       this.clearSavedForm()
     },
     async handleRegister() {
@@ -243,18 +275,22 @@ export default {
           throw new Error('Password tidak cocok')
         }
 
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500))
-
-        // Mock validation
-        if (this.form.name && this.form.email && this.form.phone && this.form.password && this.form.terms) {
-          console.log('Registration successful:', this.form)
-          this.success = 'Pendaftaran berhasil! Silakan periksa email Anda untuk verifikasi.'
-          // Reset form
-          this.resetForm()
-        } else {
-          throw new Error('Semua field harus diisi dan setujui syarat')
+        if (!this.form.terms) {
+          throw new Error('Anda harus menyetujui syarat dan ketentuan')
         }
+
+        await apiRequest('/api/auth/register', {
+          method: 'POST',
+          body: {
+            nama: this.form.name,
+            email: this.form.email,
+            telepon: this.form.phone,
+            password: this.form.password,
+          },
+        })
+
+        this.success = 'Pendaftaran berhasil! Silakan login menggunakan akun yang baru dibuat.'
+        this.resetForm()
       } catch (error) {
         this.error = error.message || 'Terjadi kesalahan saat pendaftaran'
       } finally {

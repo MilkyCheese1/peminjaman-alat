@@ -13,7 +13,7 @@
           </div>
 
           <div class="rounded-2xl border border-cyan-200 bg-cyan-50 px-4 py-3 text-sm text-cyan-900 dark:border-cyan-500/20 dark:bg-cyan-500/10 dark:text-cyan-100">
-            Data halaman ini disimpan di browser dengan <span class="font-semibold">localStorage</span>, tanpa database.
+            {{ dataSourceNote }}
           </div>
         </div>
 
@@ -205,7 +205,7 @@
                 v-else-if="field.type === 'textarea'"
                 :value="form[field.key]"
                 :placeholder="field.placeholder"
-                :required="field.required"
+                :required="isFieldRequired(field)"
                 :rows="field.rows"
                 class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100"
                 @input="updateField(field, $event.target.value)"
@@ -214,7 +214,7 @@
               <select
                 v-else-if="field.type === 'select'"
                 :value="form[field.key]"
-                :required="field.required"
+                :required="isFieldRequired(field)"
                 class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100"
                 @change="updateField(field, $event.target.value)"
               >
@@ -233,7 +233,7 @@
                 :type="field.type"
                 :value="form[field.key]"
                 :placeholder="field.placeholder"
-                :required="field.required"
+                :required="isFieldRequired(field)"
                 :min="field.min"
                 :max="field.max"
                 :step="field.step"
@@ -277,6 +277,7 @@
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import SidebarAdmin from '../layout/SidebarAdmin.vue'
 import Navbar from '../layout/Navbar.vue'
+import { apiRequest } from '../../lib/api'
 
 const props = defineProps({
   title: {
@@ -293,7 +294,11 @@ const props = defineProps({
   },
   storageKey: {
     type: String,
-    required: true,
+    default: '',
+  },
+  api: {
+    type: Object,
+    default: null,
   },
   fields: {
     type: Array,
@@ -326,11 +331,17 @@ const search = ref('')
 const editingId = ref(null)
 const isModalOpen = ref(false)
 const editingSnapshot = ref(null)
+const isLoading = ref(false)
 const feedback = ref({
   type: 'info',
   text: '',
 })
 const form = reactive({})
+const imageFiles = reactive({})
+const removedImages = reactive({})
+
+const apiEndpoint = computed(() => String(props.api?.endpoint || ''))
+const isApiMode = computed(() => apiEndpoint.value.length > 0)
 
 const normalizedFields = computed(() =>
   props.fields.map((field) => ({
@@ -342,6 +353,14 @@ const normalizedFields = computed(() =>
     ...field,
   })),
 )
+
+const dataSourceNote = computed(() => {
+  if (isApiMode.value) {
+    return `Data halaman ini diambil dari database (API: ${apiEndpoint.value}).`
+  }
+
+  return 'Data halaman ini disimpan di browser dengan localStorage, tanpa database.'
+})
 
 const displayedSummaryCards = computed(() => {
   if (props.summaryCards.length) {
@@ -406,10 +425,16 @@ const feedbackClass = computed(() => {
 })
 
 Object.assign(form, createEmptyForm())
+resetImageState()
 
-onMounted(() => {
-  loadItems()
-  setFeedback('info', `${titleCase(props.entityLabel)} siap dikelola. Klik tombol tambah untuk membuka form.`)
+onMounted(async () => {
+  await loadItems()
+
+  const readyText = isApiMode.value
+    ? `${titleCase(props.entityLabel)} siap dikelola dari database. Klik tombol tambah untuk membuka form.`
+    : `${titleCase(props.entityLabel)} siap dikelola. Klik tombol tambah untuk membuka form.`
+
+  setFeedback('info', readyText)
 
   if (typeof window !== 'undefined') {
     window.addEventListener('keydown', handleWindowKeydown)
@@ -446,6 +471,10 @@ function setFeedback(type, text) {
 }
 
 function persistItems() {
+  if (isApiMode.value) {
+    return
+  }
+
   if (typeof window === 'undefined') {
     return
   }
@@ -453,30 +482,45 @@ function persistItems() {
   window.localStorage.setItem(props.storageKey, JSON.stringify(items.value))
 }
 
-function loadItems() {
-  if (typeof window === 'undefined') {
-    items.value = clone(props.initialItems)
-    return
-  }
+async function loadItems() {
+  isLoading.value = true
 
-  const storedItems = window.localStorage.getItem(props.storageKey)
-
-  if (storedItems) {
-    try {
-      const parsedItems = JSON.parse(storedItems)
-
-      if (Array.isArray(parsedItems)) {
-        items.value = clone(parsedItems)
-        return
-      }
-    } catch (error) {
+  try {
+    if (isApiMode.value) {
+      const data = await apiRequest(apiEndpoint.value)
+      items.value = Array.isArray(data) ? clone(data) : []
+      return
     }
 
-    window.localStorage.removeItem(props.storageKey)
-  }
+    if (typeof window === 'undefined') {
+      items.value = clone(props.initialItems)
+      return
+    }
 
-  items.value = clone(props.initialItems)
-  persistItems()
+    const storedItems = window.localStorage.getItem(props.storageKey)
+
+    if (storedItems) {
+      try {
+        const parsedItems = JSON.parse(storedItems)
+
+        if (Array.isArray(parsedItems)) {
+          items.value = clone(parsedItems)
+          return
+        }
+      } catch (error) {
+      }
+
+      window.localStorage.removeItem(props.storageKey)
+    }
+
+    items.value = clone(props.initialItems)
+    persistItems()
+  } catch (error) {
+    setFeedback('error', error?.message || 'Gagal memuat data.')
+    items.value = []
+  } finally {
+    isLoading.value = false
+  }
 }
 
 function updateField(field, rawValue) {
@@ -485,6 +529,8 @@ function updateField(field, rawValue) {
 
 function clearImageField(field) {
   form[field.key] = ''
+  imageFiles[field.key] = null
+  removedImages[field.key] = true
 }
 
 function readFileAsDataUrl(file) {
@@ -542,6 +588,8 @@ async function handleImageChange(field, event) {
   }
 
   form[field.key] = await normalizeImageToSquareDataUrl(file)
+  imageFiles[field.key] = file
+  removedImages[field.key] = false
 
   if (event?.target) {
     event.target.value = ''
@@ -552,8 +600,22 @@ function buildPayload() {
   return normalizedFields.value.reduce((accumulator, field) => {
     const value = form[field.key]
 
+    if (field.type === 'image' && isApiMode.value) {
+      if (removedImages[field.key]) {
+        accumulator[field.key] = null
+      }
+
+      return accumulator
+    }
+
     if (typeof value === 'string') {
-      accumulator[field.key] = value.trim()
+      const trimmed = value.trim()
+
+      if (field.omitIfEmpty && trimmed === '') {
+        return accumulator
+      }
+
+      accumulator[field.key] = trimmed
       return accumulator
     }
 
@@ -575,7 +637,7 @@ function normalizeOptions(options = []) {
 
 function validatePayload(payload) {
   const missingField = normalizedFields.value.find((field) => {
-    if (!field.required) {
+    if (!isFieldRequired(field)) {
       return false
     }
 
@@ -596,10 +658,38 @@ function validatePayload(payload) {
   return true
 }
 
+function isFieldRequired(field) {
+  if (editingId.value) {
+    if (field.requiredOnEdit !== undefined) {
+      return Boolean(field.requiredOnEdit)
+    }
+
+    return Boolean(field.required)
+  }
+
+  if (field.requiredOnCreate !== undefined) {
+    return Boolean(field.requiredOnCreate)
+  }
+
+  return Boolean(field.required)
+}
+
 function resetFormState() {
   Object.assign(form, createEmptyForm())
+  resetImageState()
   editingId.value = null
   editingSnapshot.value = null
+}
+
+function resetImageState() {
+  for (const field of normalizedFields.value) {
+    if (field.type !== 'image') {
+      continue
+    }
+
+    imageFiles[field.key] = null
+    removedImages[field.key] = false
+  }
 }
 
 function closeModal({ keepFeedback = false } = {}) {
@@ -636,6 +726,11 @@ function submitForm() {
   const payload = buildPayload()
 
   if (!validatePayload(payload)) {
+    return
+  }
+
+  if (isApiMode.value) {
+    submitToApi(payload)
     return
   }
 
@@ -687,6 +782,11 @@ function removeItem(item) {
     }
   }
 
+  if (isApiMode.value) {
+    removeFromApi(item)
+    return
+  }
+
   items.value = items.value.filter((row) => row.id !== item.id)
   persistItems()
 
@@ -695,6 +795,86 @@ function removeItem(item) {
   }
 
   setFeedback('success', `${titleCase(props.entityLabel)} berhasil dihapus.`)
+}
+
+async function submitToApi(payload) {
+  try {
+    isLoading.value = true
+
+    const hasFile = Object.values(imageFiles).some(Boolean)
+    const body = hasFile ? toFormData(payload) : payload
+
+    if (editingId.value) {
+      const updated = await apiRequest(`${apiEndpoint.value}/${editingId.value}`, {
+        method: 'PUT',
+        body,
+      })
+
+      items.value = items.value.map((item) => (item.id === editingId.value ? updated : item))
+      closeModal({ keepFeedback: true })
+      setFeedback('success', `${titleCase(props.entityLabel)} berhasil diperbarui.`)
+      return
+    }
+
+    const created = await apiRequest(apiEndpoint.value, {
+      method: 'POST',
+      body,
+    })
+
+    items.value = [created, ...items.value]
+    closeModal({ keepFeedback: true })
+    setFeedback('success', `${titleCase(props.entityLabel)} baru berhasil ditambahkan.`)
+  } catch (error) {
+    setFeedback('error', error?.message || 'Gagal menyimpan data.')
+  } finally {
+    isLoading.value = false
+  }
+}
+
+function toFormData(payload) {
+  const formData = new FormData()
+
+  for (const [key, value] of Object.entries(payload || {})) {
+    if (value === undefined) {
+      continue
+    }
+
+    if (value === null) {
+      formData.append(key, '')
+      continue
+    }
+
+    formData.append(key, String(value))
+  }
+
+  for (const [key, file] of Object.entries(imageFiles)) {
+    if (!file) {
+      continue
+    }
+
+    formData.append(key, file)
+  }
+
+  return formData
+}
+
+async function removeFromApi(item) {
+  try {
+    isLoading.value = true
+    await apiRequest(`${apiEndpoint.value}/${item.id}`, { method: 'DELETE' })
+
+    items.value = items.value.filter((row) => row.id !== item.id)
+
+    if (editingId.value === item.id) {
+      closeModal({ keepFeedback: true })
+    }
+
+    setFeedback('success', `${titleCase(props.entityLabel)} berhasil dihapus.`)
+  } catch (error) {
+    setFeedback('error', error?.message || 'Gagal menghapus data.')
+  } finally {
+    isLoading.value = false
+  }
 }
 
 function getCellDisplay(column, item) {

@@ -3,7 +3,7 @@
     <button type="button" class="absolute inset-0 bg-slate-950/70" aria-label="Tutup" @click="emitClose" />
 
     <div
-      class="relative w-full max-w-5xl overflow-hidden rounded-[2.25rem] border border-cyan-200 bg-white shadow-2xl shadow-slate-950/60 dark:border-cyan-500/20 dark:bg-slate-950"
+      class="modal-scroll relative w-full max-w-5xl max-h-[90vh] overflow-y-auto overflow-x-hidden rounded-[2.25rem] border border-cyan-200 bg-white shadow-2xl shadow-slate-950/60 dark:border-cyan-500/20 dark:bg-slate-950"
       role="dialog"
       aria-modal="true"
     >
@@ -224,7 +224,11 @@ function validate() {
     errors.policy = 'Anda harus menyetujui kebijakan peminjaman.'
   }
 
-  return !errors.alasan && !errors.hari && !errors.policy
+  return (
+    !errors.alasan &&
+    !errors.hari &&
+    !errors.policy
+  )
 }
 
 function submit() {
@@ -243,4 +247,16 @@ function submit() {
     policy: Boolean(form.policy),
   })
 }
+ 
 </script>
+
+<style scoped>
+.modal-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.modal-scroll::-webkit-scrollbar {
+  display: none;
+}
+</style>

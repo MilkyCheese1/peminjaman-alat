@@ -1,9 +1,10 @@
 <template>
   <CrudTablePage
     title="Management Alat"
-    subtitle="Kelola data alat, stok, kondisi, dan lokasi penyimpanan tanpa perlu database."
+    subtitle="Kelola data alat, stok, kondisi, dan lokasi penyimpanan dari database."
     entity-label="alat"
     storage-key="admin-management-tools"
+    :api="{ endpoint: '/api/tools' }"
     :fields="fields"
     :columns="columns"
     :summary-cards="summaryCards"
@@ -13,13 +14,28 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import CrudTablePage from '../components/admin/CrudTablePage.vue'
-import { getCategoryOptions } from '../data/adminManagement'
+import { apiRequest } from '../lib/api'
+
+const categoryOptions = ref([])
+
+onMounted(async () => {
+  try {
+    const categories = await apiRequest('/api/categories?status=Aktif')
+
+    categoryOptions.value = Array.isArray(categories)
+      ? categories.map((category) => ({
+          label: category.namaKategori,
+          value: category.id,
+        }))
+      : []
+  } catch (error) {
+    categoryOptions.value = []
+  }
+})
 
 const fields = computed(() => {
-  const categoryOptions = getCategoryOptions()
-
   return [
     {
       key: 'namaAlat',
@@ -29,12 +45,12 @@ const fields = computed(() => {
       required: true,
     },
     {
-      key: 'kategori',
+      key: 'category_id',
       label: 'Kategori',
       type: 'select',
-      options: categoryOptions.length ? categoryOptions : ['Umum'],
+      options: categoryOptions.value.length ? categoryOptions.value : [],
       required: true,
-      help: 'Pilihan kategori membaca data aktif dari halaman Management Kategori.',
+      help: 'Pilihan kategori membaca data aktif dari database.',
     },
     {
       key: 'stok',
@@ -71,7 +87,7 @@ const fields = computed(() => {
       label: 'Gambar Alat',
       type: 'image',
       required: false,
-      help: 'Opsional. Gambar disimpan di browser (localStorage).',
+      help: 'Opsional. Gambar disimpan di database.',
     },
   ]
 })

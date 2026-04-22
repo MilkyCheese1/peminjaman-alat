@@ -94,35 +94,33 @@
                 <div class="grid gap-4 sm:grid-cols-2">
                   <div class="rounded-3xl bg-slate-100/90 dark:bg-slate-950/90 p-5 shadow-inner shadow-slate-900/10">
                     <p class="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">Ketersediaan</p>
-                    <h2 class="mt-3 text-3xl font-semibold text-slate-900 dark:text-white">98% Aktif</h2>
-                    <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">Alat siap dipinjam kapan saja.</p>
+                    <h2 class="mt-3 text-3xl font-semibold text-slate-900 dark:text-white">
+                      {{ statsLoading ? 'Memuat...' : `${availabilityPercent}% Aktif` }}
+                    </h2>
+                    <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
+                      {{ statsLoading ? 'Mengambil data alat dari database.' : `${availableToolsCount} dari ${totalToolsCount} alat siap dipinjam.` }}
+                    </p>
                   </div>
                   <div class="rounded-3xl bg-cyan-500/10 p-5 ring-1 ring-cyan-300/20">
                     <p class="text-xs uppercase tracking-[0.3em] text-cyan-700 dark:text-cyan-200">Kepercayaan</p>
-                    <h2 class="mt-3 text-3xl font-semibold text-slate-900 dark:text-white">8.5/10</h2>
-                    <p class="mt-2 text-sm leading-6 text-slate-700 dark:text-cyan-100/80">Rating pengguna yang puas.</p>
+                    <h2 class="mt-3 text-3xl font-semibold text-slate-900 dark:text-white">
+                      {{ statsLoading ? 'Memuat...' : trustScoreLabel }}
+                    </h2>
+                    <p class="mt-2 text-sm leading-6 text-slate-700 dark:text-cyan-100/80">
+                      {{ statsLoading ? 'Menghitung peminjaman yang selesai.' : `${completedBorrowingsCount} transaksi selesai dari ${totalBorrowingsCount} peminjaman.` }}
+                    </p>
                   </div>
                   <div class="sm:col-span-2 rounded-3xl bg-cyan-50/90 dark:bg-cyan-500/10 p-5 border border-cyan-200/70 dark:border-cyan-500/20">
                     <div class="flex items-center justify-between">
                       <div>
                         <p class="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">Peminjaman</p>
-                        <h3 class="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">120+</h3>
+                        <h3 class="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">
+                          {{ statsLoading ? 'Memuat...' : totalBorrowingsLabel }}
+                        </h3>
                       </div>
-                      <div class="rounded-2xl bg-slate-100/80 dark:bg-slate-800/80 px-3 py-2 text-xs uppercase tracking-[0.3em] text-slate-700 dark:text-slate-300">Realtime</div>
+                      <div class="rounded-2xl bg-slate-100/80 dark:bg-slate-800/80 px-3 py-2 text-xs uppercase tracking-[0.3em] text-slate-700 dark:text-slate-300">Database</div>
                     </div>
-                    <p class="mt-4 text-sm leading-6 text-slate-600 dark:text-slate-400">Semua status alat terlihat dalam satu layar.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="mt-6 rounded-[2rem] bg-slate-100/90 dark:bg-slate-900/80 p-6 text-slate-700 dark:text-slate-300 ring-1 ring-slate-200/70 dark:ring-white/10">
-                <div class="grid grid-cols-2 gap-4">
-                  <div class="rounded-3xl bg-slate-100/90 dark:bg-slate-950/90 p-4">
-                    <p class="text-xs uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Waktu</p>
-                    <p class="mt-3 text-xl font-semibold text-slate-900 dark:text-white">2 menit</p>
-                  </div>
-                  <div class="rounded-3xl bg-slate-100/90 dark:bg-slate-950/90 p-4">
-                    <p class="text-xs uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Proses</p>
-                    <p class="mt-3 text-xl font-semibold text-slate-900 dark:text-white">Langsung</p>
+                    <p class="mt-4 text-sm leading-6 text-slate-600 dark:text-slate-400">Data peminjaman ditarik langsung dari tabel borrowings.</p>
                   </div>
                 </div>
               </div>
@@ -140,32 +138,50 @@
             <p class="mt-4 max-w-2xl mx-auto text-base text-slate-600 dark:text-slate-400">Sistem terintegrasi untuk mengelola peminjaman alat kantor dengan efisien dan transparan.</p>
           </div>
 
-          <div class="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
-            <div class="grid gap-6 sm:grid-cols-3">
-              <div class="bento-card rounded-[2rem] bg-cyan-50/90 dark:bg-cyan-500/10 border border-cyan-200/70 dark:border-cyan-500/20 p-6 shadow-2xl shadow-slate-950/20">
-                <h3 class="mt-2 text-xl font-semibold text-slate-900 dark:text-white">Ajukan Permintaan</h3>
-                <p class="mt-3 text-slate-600 dark:text-slate-400">Pilih alat yang dibutuhkan dan kirim permintaan peminjaman ke administrator.</p>
+          <div class="grid gap-6">
+            <div class="summary-card rounded-[2rem] border border-cyan-200/70 dark:border-cyan-500/20 bg-cyan-50/95 dark:bg-cyan-500/10 p-8 shadow-2xl shadow-slate-950/20">
+              <div class="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <p class="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-700/80 dark:text-cyan-200/80">Alur Peminjaman</p>
+                  <h3 class="mt-3 text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">Sederhana, cepat, dan transparan</h3>
+                </div>
+                <div class="rounded-2xl border border-cyan-200/70 dark:border-cyan-500/20 bg-white/80 dark:bg-slate-950/60 px-4 py-3 text-right">
+                  <p class="text-xs uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Rata-rata proses</p>
+                  <p class="mt-1 text-2xl font-semibold text-slate-900 dark:text-white">&lt; 1 hari</p>
+                </div>
               </div>
-              <div class="bento-card rounded-[2rem] bg-cyan-500/10 border border-cyan-300/20 p-6 shadow-2xl shadow-cyan-500/10">
-                <h3 class="mt-2 text-xl font-semibold text-slate-900 dark:text-white">Proses Persetujuan</h3>
-                <p class="mt-3 text-slate-700 dark:text-cyan-100">Admin memeriksa ketersediaan dan menyetujui permintaan sebelum alat diambil.</p>
-              </div>
-              <div class="bento-card rounded-[2rem] bg-cyan-50/90 dark:bg-cyan-500/10 border border-cyan-200/70 dark:border-cyan-500/20 p-6 shadow-2xl shadow-slate-950/20">
-                <h3 class="mt-2 text-xl font-semibold text-slate-900 dark:text-white">Ambil Alat</h3>
-                <p class="mt-3 text-slate-600 dark:text-slate-400">Setelah disetujui, ambil alat di lokasi yang ditentukan dan mulai gunakan sesuai kebutuhan.</p>
-              </div>
-            </div>
 
-            <div class="grid gap-6">
-              <div class="bento-card rounded-[2rem] bg-cyan-50/90 dark:bg-cyan-500/10 border border-cyan-200/70 dark:border-cyan-500/20 p-8 shadow-2xl shadow-slate-950/20">
-                <h3 class="text-3xl font-semibold text-slate-900 dark:text-white">Alur Peminjaman Sederhana</h3>
-                <p class="mt-4 text-slate-600 dark:text-slate-400">Sistem dirancang untuk membuat proses pinjam, setujui, dan ambil menjadi cepat dan transparan bagi staf kantor.</p>
-                <ul class="mt-6 space-y-4 text-slate-700 dark:text-slate-300">
-                  <li class="flex items-start gap-3"><span class="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-cyan-500 dark:bg-cyan-300"></span>Ajukan alat yang dibutuhkan melalui katalog internal.</li>
-                  <li class="flex items-start gap-3"><span class="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-cyan-500 dark:bg-cyan-300"></span>Administrator memproses dan menyetujui permintaan secara cepat.</li>
-                  <li class="flex items-start gap-3"><span class="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-cyan-500 dark:bg-cyan-300"></span>Ambil alat di gudang kantor saat disetujui, lalu kembali setelah selesai.</li>
-                </ul>
+              <p class="mt-5 max-w-2xl text-base leading-7 text-slate-600 dark:text-slate-400">Sistem dirancang untuk membuat proses pinjam, setujui, dan ambil terasa rapi bagi staf kantor maupun pengelola inventaris.</p>
+
+              <div class="mt-8 grid gap-4 sm:grid-cols-3">
+                <div class="rounded-3xl bg-white/80 dark:bg-slate-950/60 p-4 ring-1 ring-cyan-200/50 dark:ring-white/10">
+                  <p class="text-xs uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Ajukan</p>
+                  <p class="mt-2 text-sm leading-6 text-slate-700 dark:text-slate-300">Pilih alat dari katalog internal.</p>
+                </div>
+                <div class="rounded-3xl bg-white/80 dark:bg-slate-950/60 p-4 ring-1 ring-cyan-200/50 dark:ring-white/10">
+                  <p class="text-xs uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Setujui</p>
+                  <p class="mt-2 text-sm leading-6 text-slate-700 dark:text-slate-300">Admin memproses dengan cepat.</p>
+                </div>
+                <div class="rounded-3xl bg-white/80 dark:bg-slate-950/60 p-4 ring-1 ring-cyan-200/50 dark:ring-white/10">
+                  <p class="text-xs uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Ambil</p>
+                  <p class="mt-2 text-sm leading-6 text-slate-700 dark:text-slate-300">Ambil alat dan gunakan sesuai kebutuhan.</p>
+                </div>
               </div>
+
+              <ul class="mt-8 space-y-4 text-slate-700 dark:text-slate-300">
+                <li class="flex items-start gap-3">
+                  <span class="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-cyan-500 dark:bg-cyan-300"></span>
+                  Ajukan alat yang dibutuhkan melalui katalog internal.
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-cyan-500 dark:bg-cyan-300"></span>
+                  Administrator memproses dan menyetujui permintaan secara cepat.
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="mt-1 inline-flex h-2.5 w-2.5 rounded-full bg-cyan-500 dark:bg-cyan-300"></span>
+                  Ambil alat di gudang kantor saat disetujui, lalu kembali setelah selesai.
+                </li>
+              </ul>
             </div>
           </div>
         </div>
@@ -238,48 +254,97 @@
             <h2 class="mt-3 text-4xl font-semibold tracking-tight text-slate-900 dark:text-white">Dipercaya oleh pekerja, pelajar, dan kontraktor</h2>
           </div>
 
-          <div class="grid gap-6 md:grid-cols-3">
-            <div class="rounded-[2rem] bg-cyan-50/90 dark:bg-cyan-500/10 p-8 ring-1 ring-cyan-200/70 dark:ring-cyan-500/20 shadow-2xl shadow-slate-950/20">
-              <div class="mb-5 flex items-center gap-3">
-                <div class="flex h-12 w-12 items-center justify-center rounded-3xl bg-cyan-500/10 text-cyan-700 dark:text-cyan-200">A</div>
-                <div>
-                  <p class="text-lg font-semibold text-slate-900 dark:text-white">Ahmad</p>
-                  <p class="text-sm text-slate-500 dark:text-slate-400">Pengguna</p>
+          <div class="relative overflow-hidden">
+            <div v-if="testimonialsLoading" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div v-for="index in 3" :key="index" class="rounded-[2rem] border border-slate-200/70 dark:border-white/10 bg-white/70 dark:bg-slate-900/70 p-7 shadow-xl shadow-slate-950/10">
+                <div class="animate-pulse space-y-4">
+                  <div class="flex items-center gap-3">
+                    <div class="h-12 w-12 rounded-3xl bg-slate-200 dark:bg-slate-700"></div>
+                    <div class="space-y-2">
+                      <div class="h-4 w-32 rounded bg-slate-200 dark:bg-slate-700"></div>
+                      <div class="h-3 w-20 rounded bg-slate-200 dark:bg-slate-700"></div>
+                    </div>
+                  </div>
+                  <div class="h-4 w-28 rounded bg-slate-200 dark:bg-slate-700"></div>
+                  <div class="space-y-2">
+                    <div class="h-4 rounded bg-slate-200 dark:bg-slate-700"></div>
+                    <div class="h-4 rounded bg-slate-200 dark:bg-slate-700"></div>
+                    <div class="h-4 w-4/5 rounded bg-slate-200 dark:bg-slate-700"></div>
+                  </div>
                 </div>
               </div>
-              <div class="mb-4 flex gap-1">
-                <span v-for="i in 5" :key="i" class="text-yellow-400">★</span>
-              </div>
-              <p class="text-slate-600 dark:text-slate-400">"Sangat mudah meminjam alat di sini. Prosesnya cepat dan alatnya berkualitas."</p>
             </div>
-            <div class="rounded-[2rem] bg-cyan-50/90 dark:bg-cyan-500/10 p-8 ring-1 ring-cyan-200/70 dark:ring-cyan-500/20 shadow-2xl shadow-slate-950/20">
-              <div class="mb-5 flex items-center gap-3">
-                <div class="flex h-12 w-12 items-center justify-center rounded-3xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-200">B</div>
-                <div>
-                  <p class="text-lg font-semibold text-slate-900 dark:text-white">Budi</p>
-                  <p class="text-sm text-slate-500 dark:text-slate-400">Kontraktor</p>
-                </div>
+
+            <div
+              v-else
+              class="flex transition-transform duration-500 ease-in-out"
+              :style="{ transform: `translateX(-${currentTestimonialSlide * (100 / testimonialVisibleSlides)}%)` }"
+            >
+              <div
+                v-for="(item, index) in [...testimonials, ...testimonials]"
+                :key="`${item.name}-${index}`"
+                class="flex-shrink-0 w-full md:w-1/2 lg:w-1/3 px-3"
+              >
+                <article class="bento-card h-full rounded-[2rem] border border-cyan-200/70 dark:border-cyan-500/20 bg-gradient-to-br from-cyan-50 via-white to-cyan-100/80 dark:from-cyan-500/10 dark:via-slate-900/80 dark:to-cyan-500/5 p-7 shadow-2xl shadow-slate-950/20">
+                  <div class="flex h-full flex-col">
+                    <div class="mb-5 flex items-center gap-3">
+                      <div class="flex h-12 w-12 items-center justify-center rounded-3xl" :class="item.avatarClass">{{ item.initial }}</div>
+                      <div>
+                        <p class="text-lg font-semibold text-slate-900 dark:text-white">{{ item.name }}</p>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">{{ item.role }}</p>
+                      </div>
+                    </div>
+                    <div class="mb-4 flex gap-1">
+                      <span
+                        v-for="star in 5"
+                        :key="star"
+                        class="text-lg"
+                        :class="star <= item.stars ? 'text-yellow-400' : 'text-slate-300 dark:text-slate-600'"
+                      >
+                        &#9733;
+                      </span>
+                    </div>
+                    <p class="flex-1 text-slate-600 dark:text-slate-400 leading-7">
+                      "{{ item.message }}"
+                    </p>
+                  </div>
+                </article>
               </div>
-              <div class="mb-4 flex gap-1">
-                <span v-for="i in 5" :key="i" class="text-yellow-400">★</span>
-              </div>
-              <p class="text-slate-600 dark:text-slate-400">"Koleksi alat lengkap dan harga terjangkau. Recommended!"</p>
             </div>
-            <div class="rounded-[2rem] bg-cyan-50/90 dark:bg-cyan-500/10 p-8 ring-1 ring-cyan-200/70 dark:ring-cyan-500/20 shadow-2xl shadow-slate-950/20">
-              <div class="mb-5 flex items-center gap-3">
-                <div class="flex h-12 w-12 items-center justify-center rounded-3xl bg-sky-500/10 text-sky-700 dark:text-sky-200">C</div>
-                <div>
-                  <p class="text-lg font-semibold text-slate-900 dark:text-white">Citra</p>
-                  <p class="text-sm text-slate-500 dark:text-slate-400">Mahasiswa</p>
-                </div>
-              </div>
-              <div class="mb-4 flex gap-1">
-                <span v-for="i in 5" :key="i" class="text-yellow-400">★</span>
-              </div>
-              <p class="text-slate-600 dark:text-slate-400">"Interface yang user-friendly. Mudah digunakan bahkan untuk pemula."</p>
-            </div>
+
+            <button
+              type="button"
+              class="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-slate-950/80 p-3 text-white shadow-lg shadow-slate-950/20 backdrop-blur-sm transition hover:bg-slate-800 dark:bg-slate-100/10 dark:hover:bg-slate-100/20"
+              aria-label="Testimoni sebelumnya"
+              @click="prevTestimonialSlide"
+            >
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-slate-950/80 p-3 text-white shadow-lg shadow-slate-950/20 backdrop-blur-sm transition hover:bg-slate-800 dark:bg-slate-100/10 dark:hover:bg-slate-100/20"
+              aria-label="Testimoni berikutnya"
+              @click="nextTestimonialSlide"
+            >
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
 
+          <div class="mt-6 flex justify-center gap-2">
+            <button
+              v-for="(item, index) in testimonials"
+              :key="item.id ?? item.name"
+              type="button"
+              class="h-3 w-3 rounded-full transition"
+              :class="testimonials.length && currentTestimonialSlide % testimonials.length === index ? 'bg-cyan-500' : 'bg-slate-300 dark:bg-slate-700'"
+              :aria-label="`Lihat testimoni ${item.name}`"
+              @click="goToTestimonialSlide(index)"
+            />
+          </div>
           <div class="mt-16 rounded-[2rem] border border-slate-200/70 bg-slate-100/90 dark:bg-slate-900/80 p-10 shadow-2xl shadow-slate-950/10">
             <h3 class="text-center text-2xl font-semibold text-slate-900 dark:text-white">Berikan Penilaian Anda</h3>
             <p class="mt-2 text-center text-slate-600 dark:text-slate-400">Bagikan pengalaman Anda menggunakan Trustequip</p>
@@ -443,6 +508,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { apiRequest } from '../lib/api'
 import { useDarkMode } from '../composables/useDarkMode'
 
 const { isDarkMode, toggleDarkMode, initDarkMode } = useDarkMode()
@@ -450,9 +516,12 @@ const { isDarkMode, toggleDarkMode, initDarkMode } = useDarkMode()
 const scrollY = ref(0)
 const mobileMenuOpen = ref(false)
 const currentSlide = ref(0)
-const testimoni = ref({
-  email: '',
-  message: ''
+const currentTestimonialSlide = ref(0)
+const statsLoading = ref(true)
+const testimonialsLoading = ref(true)
+const landingStats = ref({
+  tools: [],
+  borrowings: [],
 })
 const rating = ref({
   name: '',
@@ -460,6 +529,57 @@ const rating = ref({
   stars: 0,
   message: ''
 })
+const defaultTestimonials = [
+  {
+    name: 'Ahmad',
+    role: 'Pengguna',
+    initial: 'A',
+    avatarClass: 'bg-cyan-500/10 text-cyan-700 dark:text-cyan-200',
+    stars: 5,
+    message: 'Sangat mudah meminjam alat di sini. Prosesnya cepat, alurnya jelas, dan alatnya selalu siap ketika saya butuhkan untuk pekerjaan yang cukup padat.',
+  },
+  {
+    name: 'Budi',
+    role: 'Kontraktor',
+    initial: 'B',
+    avatarClass: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-200',
+    stars: 5,
+    message: 'Koleksi alat lengkap, harga terjangkau, dan petugasnya responsif saat saya butuh alat tambahan di tengah pekerjaan.',
+  },
+  {
+    name: 'Citra',
+    role: 'Mahasiswa',
+    initial: 'C',
+    avatarClass: 'bg-sky-500/10 text-sky-700 dark:text-sky-200',
+    stars: 5,
+    message: 'Interface yang user-friendly. Mudah digunakan bahkan untuk pemula, dan detail informasinya cukup membantu saat saya memilih alat.',
+  },
+  {
+    name: 'Dewi',
+    role: 'Admin Kantor',
+    initial: 'D',
+    avatarClass: 'bg-violet-500/10 text-violet-700 dark:text-violet-200',
+    stars: 5,
+    message: 'Pencatatan peminjaman jadi jauh lebih rapi. Saya bisa memantau status alat dan riwayat transaksi tanpa ribet.',
+  },
+  {
+    name: 'Eka',
+    role: 'Staff Operasional',
+    initial: 'E',
+    avatarClass: 'bg-amber-500/10 text-amber-700 dark:text-amber-200',
+    stars: 5,
+    message: 'Saya suka karena status alat dan informasi peminjaman terlihat jelas. Sangat membantu saat jam kerja sedang padat.',
+  },
+  {
+    name: 'Fajar',
+    role: 'Tim Proyek',
+    initial: 'F',
+    avatarClass: 'bg-rose-500/10 text-rose-700 dark:text-rose-200',
+    stars: 5,
+    message: 'Alurnya terasa sederhana, dan respon staff cepat. Kami jadi lebih efisien saat butuh alat mendadak untuk meeting atau presentasi.',
+  },
+]
+const testimonials = ref([...defaultTestimonials])
 const alat = ref([
   {
     id: 1,
@@ -519,6 +639,116 @@ const alat = ref([
   }
 ])
 
+const toolStatusMap = {
+  tersedia: 'tersedia',
+  dipinjam: 'dipinjam',
+  maintenance: 'maintenance',
+  '1': 'tersedia',
+  '2': 'dipinjam',
+  '3': 'maintenance',
+}
+
+const borrowingStatusMap = {
+  pending: 'pending',
+  disetujui: 'disetujui',
+  ditolak: 'ditolak',
+  dipinjam: 'dipinjam',
+  dikembalikan: 'dikembalikan',
+  selesai: 'selesai',
+  '1': 'pending',
+  '2': 'disetujui',
+  '3': 'ditolak',
+  '4': 'dipinjam',
+  '5': 'dikembalikan',
+  '6': 'selesai',
+}
+
+const testimonialAvatarClasses = [
+  'bg-cyan-500/10 text-cyan-700 dark:text-cyan-200',
+  'bg-emerald-500/10 text-emerald-700 dark:text-emerald-200',
+  'bg-sky-500/10 text-sky-700 dark:text-sky-200',
+  'bg-violet-500/10 text-violet-700 dark:text-violet-200',
+  'bg-amber-500/10 text-amber-700 dark:text-amber-200',
+  'bg-rose-500/10 text-rose-700 dark:text-rose-200',
+]
+
+function normalizeStatus(value, map = {}) {
+  const key = String(value ?? '').trim().toLowerCase()
+  return map[key] ?? key
+}
+
+function makeTestimonialInitial(name) {
+  const value = String(name ?? '').trim()
+  return value ? value.charAt(0).toUpperCase() : 'U'
+}
+
+function mapFeedbackToTestimonial(entry, index = 0) {
+  const name = String(entry?.nama ?? 'Pengguna').trim() || 'Pengguna'
+  const stars = Number(entry?.stars ?? 5)
+
+  return {
+    id: entry?.id ?? `${Date.now()}-${index}`,
+    name,
+    role: 'Pengguna',
+    initial: makeTestimonialInitial(name),
+    avatarClass: testimonialAvatarClasses[index % testimonialAvatarClasses.length],
+    stars: Number.isFinite(stars) && stars > 0 ? Math.min(5, Math.max(1, stars)) : 5,
+    message: String(entry?.pesan ?? '').trim() || 'Pengalaman penggunaan Trustequip sangat membantu.',
+    createdAt: entry?.createdAt ?? null,
+  }
+}
+
+function getFallbackTestimonials() {
+  return defaultTestimonials.map((item, index) => ({
+    ...item,
+    id: index + 1,
+  }))
+}
+
+function isToolAvailable(tool) {
+  const status = normalizeStatus(tool?.status, toolStatusMap)
+  const stok = Number(tool?.stok ?? 0)
+  return status === 'tersedia' && stok > 0
+}
+
+function isBorrowingCompleted(item) {
+  const status = normalizeStatus(item?.status, borrowingStatusMap)
+  return status === 'dikembalikan' || status === 'selesai'
+}
+
+function formatCompactNumber(value) {
+  const amount = Number(value || 0)
+
+  if (amount >= 1000000) {
+    return `${(amount / 1000000).toFixed(1)} jt`
+  }
+
+  if (amount >= 1000) {
+    const scaled = amount / 1000
+    return `${scaled >= 10 ? Math.round(scaled) : scaled.toFixed(1)} rb`
+  }
+
+  return `${amount}`
+}
+
+const totalToolsCount = computed(() => (Array.isArray(landingStats.value.tools) ? landingStats.value.tools.length : 0))
+const availableToolsCount = computed(() => (Array.isArray(landingStats.value.tools) ? landingStats.value.tools.filter(isToolAvailable).length : 0))
+const availabilityPercent = computed(() => {
+  const total = totalToolsCount.value
+  if (!total) return 0
+  return Math.round((availableToolsCount.value / total) * 100)
+})
+
+const totalBorrowingsCount = computed(() => (Array.isArray(landingStats.value.borrowings) ? landingStats.value.borrowings.length : 0))
+const completedBorrowingsCount = computed(() => (Array.isArray(landingStats.value.borrowings) ? landingStats.value.borrowings.filter(isBorrowingCompleted).length : 0))
+const trustScore = computed(() => {
+  const total = totalBorrowingsCount.value
+  if (!total) return 0
+  return Math.min(10, Math.max(0, (completedBorrowingsCount.value / total) * 10))
+})
+const totalBorrowingsLabel = computed(() => formatCompactNumber(totalBorrowingsCount.value))
+const trustScoreLabel = computed(() => `${trustScore.value.toFixed(1)}/10`)
+
 const shape1Style = computed(() => ({
   transform: `translateY(${scrollY.value * 0.08}px)`,
 }))
@@ -541,24 +771,57 @@ const visibleSlides = computed(() => {
   return 1
 })
 
-const submitTestimoni = () => {
-  console.log('Testimoni submitted:', testimoni.value)
-  testimoni.value = { email: '', message: '' }
-  alert('Terima kasih atas testimoni Anda!')
+const testimonialVisibleSlides = visibleSlides
+
+async function loadTestimonials() {
+  testimonialsLoading.value = true
+
+  try {
+    const data = await apiRequest('/api/feedback')
+    const entries = Array.isArray(data) ? data : []
+    testimonials.value = entries.length
+      ? entries.map((entry, index) => mapFeedbackToTestimonial(entry, index))
+      : getFallbackTestimonials()
+    currentTestimonialSlide.value = 0
+  } catch (error) {
+    testimonials.value = getFallbackTestimonials()
+    currentTestimonialSlide.value = 0
+  } finally {
+    testimonialsLoading.value = false
+  }
 }
 
-const submitRating = () => {
+const submitRating = async () => {
   if (rating.value.stars === 0) {
     alert('Silakan berikan rating bintang terlebih dahulu')
     return
   }
-  console.log('Rating submitted:', rating.value)
-  alert('Terima kasih atas penilaian Anda! Rating akan kami tinjau.')
-  rating.value = {
-    name: '',
-    email: '',
-    stars: 0,
-    message: ''
+
+  try {
+    const created = await apiRequest('/api/feedback', {
+      method: 'POST',
+      body: {
+        nama: rating.value.name,
+        email: rating.value.email,
+        stars: rating.value.stars,
+        pesan: rating.value.message,
+      },
+    })
+
+    testimonials.value = [
+      mapFeedbackToTestimonial(created, 0),
+      ...testimonials.value,
+    ]
+    currentTestimonialSlide.value = 0
+    rating.value = {
+      name: '',
+      email: '',
+      stars: 0,
+      message: '',
+    }
+    alert('Terima kasih! Review Anda langsung ditampilkan di testimoni.')
+  } catch (error) {
+    alert(error?.message || 'Terjadi kesalahan saat mengirim review.')
   }
 }
 
@@ -574,12 +837,54 @@ const goToSlide = (index) => {
   currentSlide.value = index
 }
 
+const nextTestimonialSlide = () => {
+  if (!testimonials.value.length) return
+  currentTestimonialSlide.value = (currentTestimonialSlide.value + 1) % testimonials.value.length
+}
+
+const prevTestimonialSlide = () => {
+  if (!testimonials.value.length) return
+  currentTestimonialSlide.value = currentTestimonialSlide.value === 0
+    ? testimonials.value.length - 1
+    : currentTestimonialSlide.value - 1
+}
+
+const goToTestimonialSlide = (index) => {
+  if (!testimonials.value.length) return
+  currentTestimonialSlide.value = index
+}
+
 const handleScroll = () => {
   scrollY.value = window.scrollY
 }
 
+async function loadLandingStats() {
+  statsLoading.value = true
+
+  try {
+    const [toolsResult, borrowingsResult] = await Promise.allSettled([
+      apiRequest('/api/tools'),
+      apiRequest('/api/borrowings'),
+    ])
+
+    landingStats.value = {
+      tools: toolsResult.status === 'fulfilled' && Array.isArray(toolsResult.value) ? toolsResult.value : [],
+      borrowings: borrowingsResult.status === 'fulfilled' && Array.isArray(borrowingsResult.value) ? borrowingsResult.value : [],
+    }
+  } catch (error) {
+    landingStats.value = {
+      tools: [],
+      borrowings: [],
+    }
+  } finally {
+    statsLoading.value = false
+  }
+}
+
 onMounted(() => {
   initDarkMode()
+  loadLandingStats()
+  loadTestimonials()
   window.addEventListener('scroll', handleScroll, { passive: true })
 })
 
@@ -596,6 +901,19 @@ onUnmounted(() => {
   transform: translateY(-6px);
   border-color: rgba(56, 189, 248, 0.35);
   background-color: rgba(240, 249, 255, 0.98);
+}
+
+.summary-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.summary-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(34, 211, 238, 0.16), transparent 38%);
+  pointer-events: none;
 }
 
 :global(.dark) .bento-card:hover,

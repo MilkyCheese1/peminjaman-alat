@@ -17,22 +17,30 @@ import ManagementAlat from '../pages/ManagementAlat.vue';
 import ManagementKategori from '../pages/ManagementKategori.vue';
 import ManagementPeminjaman from '../pages/ManagementPeminjaman.vue';
 import LaporanStaff from '../pages/Laporan.vue';
+import Notifikasi from '../pages/Notifikasi.vue';
+import LogAktivitas from '../pages/LogAktivitas.vue';
+import AlatOwner from '../pages/AlatOwner.vue';
+import PeminjamanOwner from '../pages/PeminjamanOwner.vue';
+import { getAuthSession, isAuthenticated, roleRedirectPath } from '../auth/session';
 
 const routes = [
   {
     path: '/',
     name: 'Landing',
     component: LandingPage,
+    meta: { public: true },
   },
   {
     path: '/login',
     name: 'Login',
     component: Login,
+    meta: { public: true },
   },
   {
     path: '/register',
     name: 'Registrasi',
     component: Registrasi,
+    meta: { public: true },
   },
   {
     path: '/dashboard/admin',
@@ -45,6 +53,16 @@ const routes = [
     name: 'DashboardOwner',
     redirect: '/statistik-owner',
     alias: '/dashboard/owner/',
+  },
+  {
+    path: '/alat-owner',
+    name: 'AlatOwner',
+    component: AlatOwner,
+  },
+  {
+    path: '/peminjaman-owner',
+    name: 'PeminjamanOwner',
+    component: PeminjamanOwner,
   },
   {
     path: '/dashboard/peminjam',
@@ -109,6 +127,35 @@ const routes = [
     component: StatistikPeminjam,
   },
   {
+    path: '/notifikasi-admin',
+    name: 'NotifikasiAdmin',
+    component: Notifikasi,
+    props: { role: 'admin' },
+  },
+  {
+    path: '/notifikasi-owner',
+    name: 'NotifikasiOwner',
+    component: Notifikasi,
+    props: { role: 'owner' },
+  },
+  {
+    path: '/notifikasi-staff',
+    name: 'NotifikasiStaff',
+    component: Notifikasi,
+    props: { role: 'staff' },
+  },
+  {
+    path: '/notifikasi-peminjam',
+    name: 'NotifikasiPeminjam',
+    component: Notifikasi,
+    props: { role: 'peminjam' },
+  },
+  {
+    path: '/log-aktivitas-admin',
+    name: 'LogAktivitasAdmin',
+    component: LogAktivitas,
+  },
+  {
     path: '/management-user',
     name: 'ManagementUser',
     component: ManagementUser,
@@ -138,6 +185,25 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to) => {
+  if (to?.meta?.public) {
+    if (to.name === 'Login' || to.name === 'Registrasi') {
+      const session = getAuthSession();
+      if (session) {
+        return { path: roleRedirectPath(session.role), replace: true };
+      }
+    }
+
+    return true;
+  }
+
+  if (isAuthenticated()) {
+    return true;
+  }
+
+  return { name: 'Login', replace: true, query: { redirect: to.fullPath } };
 });
 
 export default router;

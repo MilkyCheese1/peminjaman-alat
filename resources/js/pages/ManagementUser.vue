@@ -4,6 +4,7 @@
     subtitle="Kelola akun admin, owner, staff, dan peminjam langsung dari dashboard admin."
     entity-label="user"
     storage-key="admin-management-users"
+    :api="{ endpoint: '/api/users' }"
     :fields="fields"
     :columns="columns"
     :summary-cards="summaryCards"
@@ -51,6 +52,16 @@ const fields = [
     placeholder: '08xx-xxxx-xxxx',
     required: true,
   },
+  {
+    key: 'password',
+    label: 'Password',
+    type: 'password',
+    placeholder: 'Minimal 6 karakter',
+    requiredOnCreate: true,
+    requiredOnEdit: false,
+    omitIfEmpty: true,
+    help: 'Wajib diisi saat membuat user. Saat edit, kosongkan jika tidak ingin mengubah password.',
+  },
 ]
 
 const columns = [
@@ -94,7 +105,7 @@ const summaryCards = [
     label: 'Total User',
     value: (items) => items.length,
     tone: 'cyan',
-    caption: 'Seluruh akun yang tersimpan di browser admin.',
+    caption: 'Seluruh akun yang tercatat di sistem.',
   },
   {
     label: 'User Aktif',

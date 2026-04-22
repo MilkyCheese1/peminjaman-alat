@@ -1,7 +1,10 @@
-export const staffBorrowingStorageKey = 'staff-management-peminjaman'
-export const staffReportReferenceDate = '2026-04-20'
+export function getTodayLocalISODate() {
+  const now = new Date()
+  const local = new Date(now.getTime() - now.getTimezoneOffset() * 60 * 1000)
+  return local.toISOString().slice(0, 10)
+}
 
-export const staffBorrowingSeed = []
+export const staffReportReferenceDate = getTodayLocalISODate()
 
 export const staffBorrowingStatusOptions = [
   'Pending',
@@ -14,45 +17,6 @@ export const staffBorrowingStatusOptions = [
 
 export function cloneStaffBorrowing(value) {
   return JSON.parse(JSON.stringify(value))
-}
-
-export function getStaffBorrowings() {
-  if (typeof window === 'undefined') {
-    return []
-  }
-
-  const storedValue = window.localStorage.getItem(staffBorrowingStorageKey)
-
-  if (storedValue) {
-    try {
-      const parsedValue = JSON.parse(storedValue)
-
-      if (Array.isArray(parsedValue)) {
-        return cloneStaffBorrowing(parsedValue)
-      }
-    } catch (error) {
-    }
-
-    window.localStorage.removeItem(staffBorrowingStorageKey)
-  }
-
-  const fallbackData = []
-  saveStaffBorrowings(fallbackData)
-  return fallbackData
-}
-
-export function saveStaffBorrowings(items) {
-  if (typeof window === 'undefined') {
-    return
-  }
-
-  window.localStorage.setItem(staffBorrowingStorageKey, JSON.stringify(items))
-}
-
-export function resetStaffBorrowings() {
-  const initialData = []
-  saveStaffBorrowings(initialData)
-  return initialData
 }
 
 export function formatRupiah(value) {

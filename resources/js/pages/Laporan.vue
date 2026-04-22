@@ -231,7 +231,7 @@
             <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5">
               <h4 class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Catatan Laporan</h4>
               <p class="mt-3 text-sm leading-7 text-slate-700">
-                Laporan ini dibuat berdasarkan data transaksi peminjaman yang tersimpan pada browser staff dan digunakan untuk evaluasi operasional harian serta arsip internal.
+                Laporan ini dibuat berdasarkan data transaksi peminjaman yang tersimpan pada database dan digunakan untuk evaluasi operasional harian serta arsip internal.
               </p>
             </div>
 
@@ -290,10 +290,10 @@
 import { computed, onMounted, ref } from 'vue'
 import SidebarStaff from '../components/layout/SidebarStaff.vue'
 import Navbar from '../components/layout/Navbar.vue'
+import { apiRequest } from '../lib/api'
 import {
   formatDateIndonesia,
   formatRupiah,
-  getStaffBorrowings,
   staffReportReferenceDate,
 } from '../data/staffBorrowing'
 
@@ -311,8 +311,17 @@ const reportModes = [
 ]
 
 onMounted(() => {
-  items.value = getStaffBorrowings()
+  loadItems()
 })
+
+async function loadItems() {
+  try {
+    const data = await apiRequest('/api/borrowings')
+    items.value = Array.isArray(data) ? data : []
+  } catch (error) {
+    items.value = []
+  }
+}
 
 const availableYears = computed(() => {
   const years = new Set(items.value.map((item) => String(item.tanggalPinjam).slice(0, 4)))

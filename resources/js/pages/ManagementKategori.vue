@@ -4,6 +4,7 @@
     subtitle="Susun kategori alat agar pengelolaan inventaris tetap rapi dan mudah dicari."
     entity-label="kategori"
     storage-key="admin-management-categories"
+    :api="{ endpoint: '/api/categories' }"
     :fields="fields"
     :columns="columns"
     :summary-cards="summaryCards"
@@ -50,7 +51,7 @@ const fields = [
     label: 'Gambar Kategori',
     type: 'image',
     required: false,
-    help: 'Opsional. Gambar disimpan di browser (localStorage).',
+    help: 'Opsional. Gambar disimpan di database.',
   },
 ]
 

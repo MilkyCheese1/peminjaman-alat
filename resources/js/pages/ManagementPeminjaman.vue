@@ -26,7 +26,7 @@
           <article class="bg-blue-100 dark:bg-blue-900/40 border border-blue-300 dark:border-blue-700/50 rounded-3xl p-6 shadow-2xl shadow-slate-950/40">
             <p class="text-sm font-medium opacity-80">Total Peminjaman</p>
             <p class="mt-3 text-3xl font-bold">{{ items.length }}</p>
-            <p class="mt-2 text-sm opacity-80">Semua transaksi peminjaman yang tersimpan di browser staff.</p>
+            <p class="mt-2 text-sm opacity-80">Semua transaksi peminjaman yang tersimpan di database.</p>
           </article>
 
           <article class="bg-yellow-100 dark:bg-yellow-900/40 border border-yellow-300 dark:border-yellow-700/50 rounded-3xl p-6 shadow-2xl shadow-slate-950/40">
@@ -359,7 +359,7 @@
                   v-if="form.gambar"
                   type="button"
                   class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-white/10 dark:text-slate-200 dark:hover:bg-slate-800"
-                  @click="form.gambar = ''"
+                  @click="clearImage()"
                 >
                   Hapus Gambar
                 </button>
@@ -372,7 +372,7 @@
                 <img :src="form.gambar" alt="Preview gambar" class="h-44 w-full rounded-xl object-cover" />
               </div>
 
-              <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Opsional. Gambar disimpan di browser (localStorage).</p>
+              <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Opsional. Gambar disimpan di database.</p>
             </div>
           </div>
           </div>
@@ -409,14 +409,12 @@
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import SidebarStaff from '../components/layout/SidebarStaff.vue'
 import Navbar from '../components/layout/Navbar.vue'
+import { apiRequest } from '../lib/api'
 import {
   cloneStaffBorrowing,
   createBorrowingCode,
-  createBorrowingId,
   formatDateIndonesia,
   formatRupiah,
-  getStaffBorrowings,
-  saveStaffBorrowings,
   staffBorrowingStatusOptions,
   staffReportReferenceDate,
 } from '../data/staffBorrowing'
@@ -425,8 +423,12 @@ const items = ref([])
 const search = ref('')
 const statusFilter = ref('Semua')
 const editingId = ref(null)
+const editingKode = ref('')
 const isModalOpen = ref(false)
 const editingSnapshot = ref(null)
+const isSaving = ref(false)
+const gambarFile = ref(null)
+const gambarRemoved = ref(false)
 const feedback = ref({
   type: 'info',
   text: '',
@@ -476,8 +478,8 @@ const feedbackClass = computed(() => {
   return map[feedback.value.type] ?? map.info
 })
 
-onMounted(() => {
-  loadItems()
+onMounted(async () => {
+  await loadItems()
   setFeedback('info', 'Data peminjaman staff siap dikelola. Gunakan tombol aksi cepat untuk memproses transaksi.')
 
   if (typeof window !== 'undefined') {
@@ -501,7 +503,7 @@ function createEmptyForm() {
     tanggalKembaliRencana: staffReportReferenceDate,
     tanggalKembaliAktual: '',
     status: 'Pending',
-    petugas: 'Raka Staff',
+    petugas: 'Staff Operasional',
     keperluan: '',
     biaya: 0,
     catatan: '',
@@ -513,12 +515,14 @@ function setFeedback(type, text) {
   feedback.value = { type, text }
 }
 
-function loadItems() {
-  items.value = getStaffBorrowings()
-}
-
-function persistItems() {
-  saveStaffBorrowings(items.value)
+async function loadItems() {
+  try {
+    const data = await apiRequest('/api/borrowings')
+    items.value = Array.isArray(data) ? cloneStaffBorrowing(data) : []
+  } catch (error) {
+    items.value = []
+    setFeedback('error', error?.message || 'Gagal memuat data peminjaman.')
+  }
 }
 
 function formatCompactCurrency(value) {
@@ -596,8 +600,11 @@ function openCreateModal() {
 
 function startEdit(item) {
   editingId.value = item.id
+  editingKode.value = item.kode
   editingSnapshot.value = cloneStaffBorrowing(item)
   Object.assign(form, createEmptyForm(), cloneStaffBorrowing(item))
+  gambarFile.value = null
+  gambarRemoved.value = false
   isModalOpen.value = true
   setFeedback('info', `Transaksi ${item.kode} siap diedit.`)
 }
@@ -605,18 +612,25 @@ function startEdit(item) {
 function restoreForm() {
   if (editingId.value && editingSnapshot.value) {
     Object.assign(form, createEmptyForm(), cloneStaffBorrowing(editingSnapshot.value))
+    gambarFile.value = null
+    gambarRemoved.value = false
     setFeedback('info', 'Perubahan form dikembalikan ke data awal transaksi.')
     return
   }
 
   Object.assign(form, createEmptyForm())
+  gambarFile.value = null
+  gambarRemoved.value = false
   setFeedback('info', 'Form transaksi baru sudah dikosongkan.')
 }
 
 function resetFormState() {
   Object.assign(form, createEmptyForm())
   editingId.value = null
+  editingKode.value = ''
   editingSnapshot.value = null
+  gambarFile.value = null
+  gambarRemoved.value = false
 }
 
 function closeModal({ keepFeedback = false } = {}) {
@@ -665,7 +679,6 @@ function buildPayload() {
     keperluan: String(form.keperluan).trim(),
     biaya: Number(form.biaya || 0),
     catatan: String(form.catatan || '').trim(),
-    gambar: String(form.gambar || ''),
   }
 }
 
@@ -687,46 +700,97 @@ function handleImageChange(event) {
   }
 
   reader.readAsDataURL(file)
+  gambarFile.value = file
+  gambarRemoved.value = false
 }
 
-function submitForm() {
+function clearImage() {
+  form.gambar = ''
+  gambarFile.value = null
+  gambarRemoved.value = true
+}
+
+async function submitForm() {
   if (!validateForm()) {
     return
   }
 
   const payload = buildPayload()
 
-  if (editingId.value) {
-    items.value = items.value.map((item) =>
-      item.id === editingId.value
-        ? {
-            ...item,
-            ...payload,
-          }
-        : item,
-    )
-
-    persistItems()
-    closeModal({ keepFeedback: true })
-    setFeedback('success', 'Transaksi peminjaman berhasil diperbarui.')
-    return
+  if (gambarRemoved.value) {
+    payload.gambar = null
   }
 
-  items.value = [
-    {
-      id: createBorrowingId(),
-      kode: createBorrowingCode(items.value, payload.tanggalPinjam),
-      ...payload,
-    },
-    ...items.value,
-  ]
+  try {
+    isSaving.value = true
 
-  persistItems()
-  closeModal({ keepFeedback: true })
-  setFeedback('success', 'Transaksi peminjaman baru berhasil ditambahkan.')
+    if (editingId.value) {
+      const body = gambarFile.value ? toFormData({ kode: editingKode.value, ...payload }, gambarFile.value) : { kode: editingKode.value, ...payload }
+      const updated = await apiRequest(`/api/borrowings/${editingId.value}`, { method: 'PUT', body })
+
+      items.value = items.value.map((item) => (item.id === editingId.value ? updated : item))
+      closeModal({ keepFeedback: true })
+      setFeedback('success', 'Transaksi peminjaman berhasil diperbarui.')
+      return
+    }
+
+    const createBody = { kode: createBorrowingCode(items.value, payload.tanggalPinjam), ...payload }
+    const body = gambarFile.value ? toFormData(createBody, gambarFile.value) : createBody
+    const created = await apiRequest('/api/borrowings', { method: 'POST', body })
+
+    items.value = [created, ...items.value]
+    closeModal({ keepFeedback: true })
+    setFeedback('success', 'Transaksi peminjaman baru berhasil ditambahkan.')
+  } catch (error) {
+    setFeedback('error', error?.message || 'Gagal menyimpan transaksi.')
+  } finally {
+    isSaving.value = false
+  }
 }
 
-function applyQuickAction(item, action) {
+function toFormData(payload, file) {
+  const formData = new FormData()
+
+  for (const [key, value] of Object.entries(payload || {})) {
+    if (value === undefined) {
+      continue
+    }
+
+    if (value === null) {
+      formData.append(key, '')
+      continue
+    }
+
+    formData.append(key, String(value))
+  }
+
+  if (file) {
+    formData.append('gambar', file)
+  }
+
+  return formData
+}
+
+function buildBorrowingPayloadFromItem(item) {
+  return {
+    kode: item.kode,
+    namaPeminjam: String(item.namaPeminjam).trim(),
+    divisi: String(item.divisi).trim(),
+    namaAlat: String(item.namaAlat).trim(),
+    kategori: String(item.kategori).trim(),
+    tanggalPinjam: item.tanggalPinjam,
+    tanggalKembaliRencana: item.tanggalKembaliRencana,
+    tanggalKembaliAktual: item.tanggalKembaliAktual || null,
+    status: item.status,
+    petugas: String(item.petugas).trim(),
+    keperluan: String(item.keperluan).trim(),
+    biaya: Number(item.biaya || 0),
+    catatan: String(item.catatan || '').trim(),
+    gambar: String(item.gambar || ''),
+  }
+}
+
+async function applyQuickAction(item, action) {
   const actionMap = {
     approve: {
       status: 'Disetujui',
@@ -757,21 +821,29 @@ function applyQuickAction(item, action) {
     return
   }
 
-  items.value = items.value.map((row) =>
-    row.id === item.id
-      ? {
-          ...row,
-          ...nextState,
-          tanggalKembaliAktual: nextState.tanggalKembaliAktual ?? row.tanggalKembaliAktual,
-        }
-      : row,
-  )
+  const nextItem = {
+    ...item,
+    ...nextState,
+    tanggalKembaliAktual: nextState.tanggalKembaliAktual ?? item.tanggalKembaliAktual,
+  }
 
-  persistItems()
-  setFeedback('success', `Transaksi ${item.kode} berhasil diperbarui ke status ${nextState.status}.`)
+  try {
+    isSaving.value = true
+    const updated = await apiRequest(`/api/borrowings/${item.id}`, {
+      method: 'PUT',
+      body: buildBorrowingPayloadFromItem(nextItem),
+    })
+
+    items.value = items.value.map((row) => (row.id === item.id ? updated : row))
+    setFeedback('success', `Transaksi ${item.kode} berhasil diperbarui ke status ${nextState.status}.`)
+  } catch (error) {
+    setFeedback('error', error?.message || 'Gagal memperbarui transaksi.')
+  } finally {
+    isSaving.value = false
+  }
 }
 
-function removeItem(item) {
+async function removeItem(item) {
   if (typeof window !== 'undefined') {
     const confirmed = window.confirm(`Hapus transaksi ${item.kode}?`)
 
@@ -780,14 +852,22 @@ function removeItem(item) {
     }
   }
 
-  items.value = items.value.filter((row) => row.id !== item.id)
-  persistItems()
+  try {
+    isSaving.value = true
+    await apiRequest(`/api/borrowings/${item.id}`, { method: 'DELETE' })
 
-  if (editingId.value === item.id) {
-    closeModal({ keepFeedback: true })
+    items.value = items.value.filter((row) => row.id !== item.id)
+
+    if (editingId.value === item.id) {
+      closeModal({ keepFeedback: true })
+    }
+
+    setFeedback('success', `Transaksi ${item.kode} berhasil dihapus.`)
+  } catch (error) {
+    setFeedback('error', error?.message || 'Gagal menghapus transaksi.')
+  } finally {
+    isSaving.value = false
   }
-
-  setFeedback('success', `Transaksi ${item.kode} berhasil dihapus.`)
 }
 
 function handleWindowKeydown(event) {
