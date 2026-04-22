@@ -1,58 +1,96 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# TrustEquip.id
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+TrustEquip.id adalah aplikasi peminjaman alat berbasis Laravel + Vue untuk mengelola inventaris, transaksi peminjaman, pengembalian, laporan, notifikasi, dan hak akses user.
 
-## About Laravel
+## Fitur utama
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Landing page publik
+- Login dan registrasi
+- Manajemen user
+- Manajemen alat dan kategori
+- Manajemen peminjaman
+- Konfirmasi pengembalian dan perhitungan denda
+- Laporan admin, owner, dan staff
+- Notifikasi
+- Log aktivitas
+- Profil dan akun user
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Struktur penting
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Frontend utama: `resources/js`
+- Halaman utama: `resources/js/pages`
+- Komponen bersama: `resources/js/components`
+- Router Vue: `resources/js/router/index.js`
+- API Laravel: `routes/api.php`
+- Controller transaksi: `app/Http/Controllers/Api/BorrowingController.php`
+- Dokumentasi aplikasi: `dokumentasi-trustequip.html`
+- Dump database: `db_peminjaman.sql`
 
-## Learning Laravel
+## Setup cepat
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 1. Siapkan file environment
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Jalankan PowerShell:
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```powershell
+.\setup.ps1
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Script ini akan:
 
-## Contributing
+- membuat `.env` dari `.env.example` jika belum ada
+- menjalankan `composer install` jika tersedia
+- menjalankan `npm install` jika tersedia
+- membuat `APP_KEY`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 2. Atur database
 
-## Code of Conduct
+File `db_peminjaman.sql` sudah disiapkan untuk import manual ke MySQL.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Contoh:
 
-## Security Vulnerabilities
+```bash
+mysql -u root -p nama_database < db_peminjaman.sql
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Pastikan isi `.env` disesuaikan dengan database lokal kamu:
 
-## License
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=nama_database
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 3. Jalankan aplikasi
+
+Gunakan salah satu:
+
+```bat
+start-dev.bat
+```
+
+atau:
+
+```bash
+npm run start
+```
+
+## Catatan upload file
+
+Project ini memakai helper `resources/js/lib/api.js` untuk request API. Jika form mengirim `FormData` dengan metode `PUT` atau `PATCH`, helper akan otomatis mengubahnya menjadi `POST` + `_method` supaya upload file tetap kompatibel dengan Laravel.
+
+## Catatan dokumentasi
+
+File `dokumentasi-trustequip.html` berisi:
+
+- penjelasan aplikasi
+- tabel database aktif
+- relasi antar tabel
+- alasan tipe data per kolom
+- lokasi file fitur
+- penjelasan fitur
+- pembagian role dan hak akses
+
