@@ -111,7 +111,7 @@
                     >
                       {{ getCellDisplay(column, item) }}
                     </span>
-                    <span v-else>{{ getCellDisplay(column, item) }}</span>
+                    <span v-else :class="cellTextClass(column)">{{ getCellDisplay(column, item) }}</span>
                   </dd>
                 </div>
               </dl>
@@ -165,7 +165,7 @@
                     >
                       {{ getCellDisplay(column, item) }}
                     </span>
-                    <span v-else>{{ getCellDisplay(column, item) }}</span>
+                    <span v-else :class="cellTextClass(column)">{{ getCellDisplay(column, item) }}</span>
                   </td>
                   <td class="px-4 py-4 text-right">
                     <div class="flex justify-end gap-2">
@@ -948,14 +948,33 @@ function getCellDisplay(column, item) {
   const value = item[column.key]
 
   if (typeof column.format === 'function') {
-    return column.format(value, item)
+    const formatted = column.format(value, item)
+    return column.truncate ? truncateText(formatted, column.truncateLength) : formatted
   }
 
   if (value === null || value === undefined || value === '') {
     return column.empty ?? '-'
   }
 
-  return value
+  return column.truncate ? truncateText(value, column.truncateLength) : value
+}
+
+function cellTextClass(column) {
+  return column.truncate ? 'inline-block max-w-full truncate align-bottom' : ''
+}
+
+function truncateText(value, maxLength = 60) {
+  const text = String(value ?? '').trim()
+
+  if (!text) {
+    return '-'
+  }
+
+  if (text.length <= maxLength) {
+    return text
+  }
+
+  return `${text.slice(0, Math.max(0, maxLength - 3)).trimEnd()}...`
 }
 
 function resolveBadgeTone(column, item) {

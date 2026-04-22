@@ -58,7 +58,7 @@ const fields = computed(() => {
       label: 'Harga Asli',
       type: 'number',
       min: 0,
-      step: 1000,
+      step: 1,
       placeholder: '0',
       required: true,
       help: 'Dipakai sebagai dasar perhitungan denda kerusakan, kehilangan, dan keterlambatan.',
@@ -140,6 +140,8 @@ const columns = [
     key: 'deskripsi',
     label: 'Deskripsi',
     format: (value) => String(value || '-'),
+    truncate: true,
+    truncateLength: 56,
   },
   {
     key: 'kondisi',
