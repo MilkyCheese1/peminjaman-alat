@@ -345,6 +345,19 @@ function toFormData(payload, file) {
 }
 
 async function applyQuickAction(item, action) {
+  if (action === 'approve') {
+    const enteredCode = window.prompt(`Ketik kode transaksi untuk approve:\n${item.kode}`)
+
+    if (enteredCode === null) {
+      return
+    }
+
+    if (enteredCode.trim() !== String(item.kode || '').trim()) {
+      setFeedback('error', 'Kode transaksi tidak cocok. Approve dibatalkan.')
+      return
+    }
+  }
+
   const nextState = resolveBorrowingActionState(action, staffReportReferenceDate)
 
   if (!nextState) {

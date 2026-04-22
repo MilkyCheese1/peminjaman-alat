@@ -185,6 +185,10 @@ class BorrowingController extends Controller
             'buktiPengembalian' => ['nullable'],
         ]);
 
+        if (trim((string) $data['kode']) !== trim((string) $borrowing->kode)) {
+            abort(422, 'Kode transaksi harus sama dengan transaksi yang sedang diproses.');
+        }
+
         $alatHargaAsli = $this->fineService->resolveToolPriceByInput($data['alatId'] ?? $borrowing->alat_id, $data['alatHargaAsli'] ?? $borrowing->alat_harga_asli);
         $effectiveReturnStatus = $data['statusPengembalian'] ?? (
             in_array($data['status'], ['Dikembalikan', 'Selesai'], true) ? 'Dikembalikan' : $borrowing->status_pengembalian
