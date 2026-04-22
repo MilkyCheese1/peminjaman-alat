@@ -12,25 +12,25 @@
       <main class="flex-1 p-6">
         <section class="no-print mb-8 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
-            <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Laporan Staff</h1>
+            <h1 class="text-3xl font-bold text-slate-900 dark:text-white">{{ reportContext.title }}</h1>
             <p class="mt-2 text-slate-700 dark:text-slate-300">
-              Rekap transaksi peminjaman dalam format harian, bulanan, tahunan, dan sepanjang waktu dengan form resmi siap cetak.
+              {{ reportContext.subtitle }}
             </p>
           </div>
 
           <div class="flex flex-col gap-3 sm:flex-row">
             <router-link
-              to="/management-peminjaman"
+              :to="reportContext.backTo"
               class="inline-flex items-center justify-center rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-white/10 dark:text-slate-200 dark:hover:bg-slate-800"
             >
-              Kembali ke Management Peminjaman
+              {{ reportContext.backLabel }}
             </router-link>
             <button
               type="button"
               class="inline-flex items-center justify-center rounded-full bg-cyan-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
               @click="printOfficialForm"
             >
-              Cetak Form Resmi
+              Cetak
             </button>
           </div>
         </section>
@@ -129,15 +129,15 @@
 
         <section class="print-area rounded-[2rem] border border-slate-200 bg-white p-8 shadow-2xl shadow-slate-950/20 dark:border-white/10 dark:bg-white">
           <div class="mb-8 flex items-start justify-between gap-6 border-b border-slate-200 pb-6">
-            <div class="flex items-center gap-4">
-              <div class="flex h-16 w-16 items-center justify-center rounded-3xl bg-slate-900 text-lg font-bold text-white">
+                <div class="flex items-center gap-4">
+                  <div class="flex h-16 w-16 items-center justify-center rounded-3xl bg-slate-900 text-lg font-bold text-white">
                 SA
               </div>
               <div>
                 <p class="text-sm font-semibold uppercase tracking-[0.25em] text-slate-500">Sistem Peminjaman Alat</p>
-                <h2 class="mt-2 text-3xl font-bold text-slate-900">Form Laporan Resmi Staff</h2>
+                <h2 class="mt-2 text-3xl font-bold text-slate-900">Form Laporan Resmi {{ reportContext.documentLabel }}</h2>
                 <p class="mt-2 max-w-2xl text-sm text-slate-600">
-                  Dokumen rekapitulasi transaksi peminjaman alat internal yang disusun untuk kebutuhan monitoring dan pelaporan operasional.
+                  {{ reportContext.printSubtitle }}
                 </p>
               </div>
             </div>
@@ -147,6 +147,7 @@
               <p class="mt-2"><span class="font-semibold">Jenis Laporan:</span> {{ activeModeLabel }}</p>
               <p class="mt-2"><span class="font-semibold">Periode:</span> {{ reportLabel }}</p>
               <p class="mt-2"><span class="font-semibold">Tanggal Cetak:</span> {{ printedAtLabel }}</p>
+              <p class="mt-2"><span class="font-semibold">Bagian:</span> {{ reportContext.documentLabel }}</p>
             </div>
           </div>
 
@@ -178,7 +179,7 @@
                 </p>
               </div>
               <div class="rounded-2xl bg-slate-100 px-4 py-2 text-sm text-slate-700">
-                Dicetak oleh: <span class="font-semibold">Staff Operasional</span>
+                Dicetak oleh: <span class="font-semibold">{{ reportContext.printedBy }}</span>
               </div>
             </div>
 
@@ -192,6 +193,7 @@
                     <th class="border border-slate-200 px-3 py-3 text-left text-xs font-semibold uppercase tracking-[0.2em] text-slate-700">Alat</th>
                     <th class="border border-slate-200 px-3 py-3 text-left text-xs font-semibold uppercase tracking-[0.2em] text-slate-700">Tanggal</th>
                     <th class="border border-slate-200 px-3 py-3 text-left text-xs font-semibold uppercase tracking-[0.2em] text-slate-700">Status</th>
+                    <th class="border border-slate-200 px-3 py-3 text-left text-xs font-semibold uppercase tracking-[0.2em] text-slate-700">Bukti</th>
                     <th class="border border-slate-200 px-3 py-3 text-right text-xs font-semibold uppercase tracking-[0.2em] text-slate-700">Denda</th>
                   </tr>
                 </thead>
@@ -214,11 +216,56 @@
                       <div>Pinjam: {{ formatDateIndonesia(item.tanggalPinjam) }}</div>
                       <div class="mt-1 text-xs text-slate-500">Kembali: {{ formatDateIndonesia(item.tanggalKembaliAktual || item.tanggalKembaliRencana) }}</div>
                     </td>
-                    <td class="border border-slate-200 px-3 py-3 text-sm text-slate-700">{{ item.status }}</td>
+                    <td class="border border-slate-200 px-3 py-3 text-sm text-slate-700">
+                      <div
+                        :class="[
+                          'inline-flex items-center gap-2 text-xs font-semibold tracking-wide',
+                          resolveBorrowingStatusBadge(item.status).toneClass,
+                        ]"
+                      >
+                        <span :class="resolveBorrowingStatusBadge(item.status).iconClass" aria-hidden="true"></span>
+                        {{ resolveBorrowingStatusBadge(item.status).label }}
+                      </div>
+                      <div class="mt-2">
+                        <span
+                          :class="[
+                            'inline-flex items-center gap-2 text-xs font-semibold tracking-wide',
+                            resolveReturnStatusBadge(item).toneClass,
+                          ]"
+                        >
+                          <span :class="resolveReturnStatusBadge(item).iconClass" aria-hidden="true"></span>
+                          {{ resolveReturnStatusBadge(item).label }}
+                        </span>
+                      </div>
+                    </td>
+                    <td class="border border-slate-200 px-3 py-3 text-sm text-slate-700">
+                      <div class="flex flex-col gap-2">
+                        <div>
+                          <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">Ambil</p>
+                          <img
+                            v-if="item.buktiPengambilan || item.gambar"
+                            :src="item.buktiPengambilan || item.gambar"
+                            alt="Bukti pengambilan"
+                            class="mt-1 h-14 w-20 rounded-lg border border-slate-200 object-cover"
+                          />
+                          <span v-else class="text-xs text-slate-500">-</span>
+                        </div>
+                        <div>
+                          <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">Kembali</p>
+                          <img
+                            v-if="item.buktiPengembalian"
+                            :src="item.buktiPengembalian"
+                            alt="Bukti pengembalian"
+                            class="mt-1 h-14 w-20 rounded-lg border border-slate-200 object-cover"
+                          />
+                          <span v-else class="text-xs text-slate-500">-</span>
+                        </div>
+                      </div>
+                    </td>
                     <td class="border border-slate-200 px-3 py-3 text-right text-sm text-slate-700">{{ formatRupiah(item.biaya) }}</td>
                   </tr>
                   <tr v-if="!reportItems.length">
-                    <td colspan="7" class="border border-slate-200 px-3 py-8 text-center text-sm text-slate-500">
+                    <td colspan="8" class="border border-slate-200 px-3 py-8 text-center text-sm text-slate-500">
                       Tidak ada data transaksi untuk periode laporan ini.
                     </td>
                   </tr>
@@ -270,8 +317,8 @@
             <div class="text-center">
               <p class="text-sm text-slate-600">Disusun oleh,</p>
               <div class="h-24"></div>
-              <p class="font-semibold text-slate-900">Staff Operasional</p>
-              <p class="text-sm text-slate-500">Pengelola Peminjaman Alat</p>
+              <p class="font-semibold text-slate-900">{{ reportContext.signerName }}</p>
+              <p class="text-sm text-slate-500">{{ reportContext.signerRole }}</p>
             </div>
             <div class="text-center">
               <p class="text-sm text-slate-600">Mengetahui,</p>
@@ -288,17 +335,52 @@
 
 <script setup>
 import { computed, onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import SidebarStaff from '../components/layout/SidebarStaff.vue'
 import Navbar from '../components/layout/Navbar.vue'
 import { apiRequest } from '../lib/api'
+import { resolveBorrowingStatusBadge } from '../utils/borrowingStatusBadge'
+import { resolveReturnStatusBadge } from '../utils/returnStatusBadge'
 import {
   formatDateIndonesia,
   formatRupiah,
   staffReportReferenceDate,
 } from '../data/staffBorrowing'
 
+const route = useRoute()
+const defaultMode = route.name === 'LaporanAdmin' ? 'all-time' : 'daily'
+const isAdminReport = computed(() => route.name === 'LaporanAdmin')
+
+const reportContext = computed(() => {
+  if (isAdminReport.value) {
+    return {
+      title: 'Laporan Admin',
+      subtitle: 'Ringkasan transaksi peminjaman dalam format harian, bulanan, tahunan, dan sepanjang waktu untuk monitoring admin.',
+      backTo: '/dashboard/admin',
+      backLabel: 'Kembali ke Dashboard',
+      documentLabel: 'Admin',
+      printSubtitle: 'Dokumen rekapitulasi transaksi peminjaman alat internal untuk monitoring admin dan pelaporan operasional.',
+      printedBy: 'Admin Operasional',
+      signerName: 'Admin Operasional',
+      signerRole: 'Pengelola Monitoring Sistem',
+    }
+  }
+
+  return {
+    title: 'Laporan Staff',
+    subtitle: 'Rekap transaksi peminjaman dalam format harian, bulanan, tahunan, dan sepanjang waktu dengan form resmi siap cetak.',
+    backTo: '/management-peminjaman',
+    backLabel: 'Kembali',
+    documentLabel: 'Staff',
+    printSubtitle: 'Dokumen rekapitulasi transaksi peminjaman alat internal yang disusun untuk kebutuhan monitoring dan pelaporan operasional.',
+    printedBy: 'Staff Operasional',
+    signerName: 'Staff Operasional',
+    signerRole: 'Pengelola Peminjaman Alat',
+  }
+})
+
 const items = ref([])
-const selectedMode = ref('daily')
+const selectedMode = ref(defaultMode)
 const dailyDate = ref(staffReportReferenceDate)
 const monthlyValue = ref(staffReportReferenceDate.slice(0, 7))
 const selectedYear = ref(staffReportReferenceDate.slice(0, 4))

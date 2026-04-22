@@ -73,10 +73,15 @@ class AuthController extends Controller
         return [
             'id' => $user->id,
             'nama' => $user->nama,
+            'nik' => $user->nik,
             'email' => $user->email,
             'role' => $roleLabel,
             'status' => $statusLabel,
             'telepon' => $user->telepon,
+            'jenis_kelamin' => $user->jenis_kelamin,
+            'tempat_lahir' => $user->tempat_lahir,
+            'tanggal_lahir' => $user->tanggal_lahir?->toDateString(),
+            'alamat' => $user->alamat,
             'gambar' => $user->gambar,
         ];
     }

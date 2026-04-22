@@ -39,6 +39,8 @@ class ToolController extends Controller
         $data = $request->validate([
             'category_id' => ['required', 'integer', 'exists:categories,id'],
             'namaAlat' => ['required', 'string', 'max:100'],
+            'deskripsi' => ['nullable', 'string', 'max:1000'],
+            'hargaAsli' => ['nullable', 'integer', 'min:0'],
             'stok' => ['required', 'integer', 'min:0', 'max:65535'],
             'kondisi' => ['required', 'string', Rule::in(array_keys(self::KONDISI_MAP))],
             'status' => ['required', 'string', Rule::in(array_keys(self::STATUS_MAP))],
@@ -50,6 +52,8 @@ class ToolController extends Controller
         $tool = Tool::create([
             'category_id' => (int) $data['category_id'],
             'nama_alat' => $data['namaAlat'],
+            'deskripsi' => $data['deskripsi'] ?? null,
+            'harga_asli' => (int) ($data['hargaAsli'] ?? 0),
             'stok' => (int) $data['stok'],
             'kondisi' => self::KONDISI_MAP[$data['kondisi']],
             'status' => self::STATUS_MAP[$data['status']],
@@ -67,6 +71,8 @@ class ToolController extends Controller
         $data = $request->validate([
             'category_id' => ['required', 'integer', 'exists:categories,id'],
             'namaAlat' => ['required', 'string', 'max:100'],
+            'deskripsi' => ['nullable', 'string', 'max:1000'],
+            'hargaAsli' => ['nullable', 'integer', 'min:0'],
             'stok' => ['required', 'integer', 'min:0', 'max:65535'],
             'kondisi' => ['required', 'string', Rule::in(array_keys(self::KONDISI_MAP))],
             'status' => ['required', 'string', Rule::in(array_keys(self::STATUS_MAP))],
@@ -76,6 +82,8 @@ class ToolController extends Controller
         $updatePayload = [
             'category_id' => (int) $data['category_id'],
             'nama_alat' => $data['namaAlat'],
+            'deskripsi' => $data['deskripsi'] ?? null,
+            'harga_asli' => (int) ($data['hargaAsli'] ?? 0),
             'stok' => (int) $data['stok'],
             'kondisi' => self::KONDISI_MAP[$data['kondisi']],
             'status' => self::STATUS_MAP[$data['status']],
@@ -109,6 +117,8 @@ class ToolController extends Controller
             'category_id' => $tool->category_id,
             'kategori' => $tool->category?->nama_kategori ?? '-',
             'namaAlat' => $tool->nama_alat,
+            'deskripsi' => $tool->deskripsi,
+            'hargaAsli' => (int) $tool->harga_asli,
             'stok' => (int) $tool->stok,
             'kondisi' => $kondisiLabel,
             'status' => $statusLabel,

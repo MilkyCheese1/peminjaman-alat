@@ -127,7 +127,7 @@ export default {
         return borrowerName === sessionName || borrowerName === sessionEmail
       })
 
-      return matched.length ? matched : (Array.isArray(this.borrowings) ? this.borrowings : [])
+      return matched
     },
     activeBorrowingsCount() {
       return this.userBorrowings.filter((item) => ACTIVE_STATUSES.includes(item.status)).length
@@ -210,7 +210,17 @@ export default {
     async loadBorrowings() {
       this.loading = true
       try {
-        const data = await apiRequest('/api/borrowings')
+        const sessionId = Number(this.session?.id || 0)
+        const sessionName = String(this.session?.nama || '').trim()
+        const sessionEmail = String(this.session?.email || '').trim()
+        const query = new URLSearchParams()
+
+        if (sessionId) query.set('peminjamId', String(sessionId))
+        if (sessionName) query.set('peminjamNama', sessionName)
+        if (sessionEmail) query.set('peminjamEmail', sessionEmail)
+
+        const path = query.toString() ? `/api/borrowings?${query.toString()}` : '/api/borrowings'
+        const data = await apiRequest(path)
         this.borrowings = Array.isArray(data) ? data : []
       } catch (error) {
         this.borrowings = []

@@ -1,7 +1,7 @@
 <template>
   <CrudTablePage
     title="Management Alat"
-    subtitle="Kelola data alat, stok, kondisi, dan lokasi penyimpanan dari database."
+    subtitle="Kelola data alat, deskripsi, stok, kondisi, dan lokasi penyimpanan dari database."
     entity-label="alat"
     storage-key="admin-management-tools"
     :api="{ endpoint: '/api/tools' }"
@@ -9,7 +9,7 @@
     :columns="columns"
     :summary-cards="summaryCards"
     primary-field="namaAlat"
-    :search-keys="['namaAlat', 'kategori', 'status', 'kondisi', 'lokasi']"
+    :search-keys="['namaAlat', 'deskripsi', 'hargaAsli', 'kategori', 'status', 'kondisi', 'lokasi']"
   />
 </template>
 
@@ -43,6 +43,25 @@ const fields = computed(() => {
       type: 'text',
       placeholder: 'Contoh: Multimeter Digital',
       required: true,
+    },
+    {
+      key: 'deskripsi',
+      label: 'Deskripsi Alat',
+      type: 'textarea',
+      rows: 4,
+      placeholder: 'Jelaskan kegunaan dan informasi singkat alat',
+      required: false,
+      help: 'Deskripsi ini akan ditampilkan di landing page pada section Alat.',
+    },
+    {
+      key: 'hargaAsli',
+      label: 'Harga Asli',
+      type: 'number',
+      min: 0,
+      step: 1000,
+      placeholder: '0',
+      required: true,
+      help: 'Dipakai sebagai dasar perhitungan denda kerusakan, kehilangan, dan keterlambatan.',
     },
     {
       key: 'category_id',
@@ -106,6 +125,21 @@ const columns = [
     label: 'Stok',
     align: 'right',
     format: (value) => `${value} unit`,
+  },
+  {
+    key: 'hargaAsli',
+    label: 'Harga Asli',
+    align: 'right',
+    format: (value) => new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      maximumFractionDigits: 0,
+    }).format(Number(value || 0)),
+  },
+  {
+    key: 'deskripsi',
+    label: 'Deskripsi',
+    format: (value) => String(value || '-'),
   },
   {
     key: 'kondisi',

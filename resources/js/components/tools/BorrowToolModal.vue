@@ -9,7 +9,9 @@
     >
       <div class="flex items-start justify-between gap-4 border-b border-slate-200 px-6 py-5 dark:border-slate-800">
         <div class="min-w-0">
-          <p class="text-sm font-semibold text-slate-500 dark:text-slate-400">Pengajuan Peminjaman</p>
+          <p class="text-sm font-semibold text-slate-500 dark:text-slate-400">
+            {{ isDetailMode ? 'Detail Alat' : 'Pengajuan Peminjaman' }}
+          </p>
           <h2 class="mt-1 truncate text-xl font-extrabold text-slate-900 dark:text-white">
             {{ tool?.namaAlat || 'Detail Alat' }}
           </h2>
@@ -63,17 +65,74 @@
                 </p>
               </div>
               <div class="col-span-2 rounded-3xl bg-slate-100 px-5 py-4 dark:bg-slate-800/60">
-                <p class="text-xs font-semibold text-slate-500 dark:text-slate-400">Denda</p>
-                <p class="mt-2 text-sm text-slate-700 dark:text-slate-200">
-                  {{ formattedFine }}
-                  <span class="text-xs text-slate-500 dark:text-slate-400">(per hari keterlambatan)</span>
-                </p>
+                <p class="text-xs font-semibold text-slate-500 dark:text-slate-400">Aturan Denda</p>
+                <div class="mt-2 space-y-2 text-sm text-slate-700 dark:text-slate-200">
+                  <p>Kerusakan, kehilangan, dan keterlambatan akan dihitung otomatis oleh sistem saat pengembalian.</p>
+                  <p class="text-xs text-slate-500 dark:text-slate-400">
+                    Staff akan memeriksa kondisi barang dan menetapkan laporan pengembalian setelah alat kembali.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section class="px-6 py-6">
+        <section v-if="isDetailMode" class="px-6 py-6">
+          <div class="space-y-5">
+            <div class="rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4 dark:border-slate-800 dark:bg-slate-900/40">
+              <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">Info Singkat</p>
+              <div class="mt-3 grid grid-cols-1 gap-3 text-sm text-slate-700 dark:text-slate-200">
+                <div class="flex items-center justify-between gap-4">
+                  <span class="text-slate-500 dark:text-slate-400">Kategori</span>
+                  <span class="font-semibold">{{ tool?.kategori || '-' }}</span>
+                </div>
+                <div class="flex items-center justify-between gap-4">
+                  <span class="text-slate-500 dark:text-slate-400">Kondisi</span>
+                  <span class="font-semibold">{{ tool?.kondisi || '-' }}</span>
+                </div>
+                <div class="flex items-center justify-between gap-4">
+                  <span class="text-slate-500 dark:text-slate-400">Status</span>
+                  <span class="font-semibold" :class="availabilityClass">{{ tool?.status || '-' }}</span>
+                </div>
+                <div class="flex items-center justify-between gap-4">
+                  <span class="text-slate-500 dark:text-slate-400">Stok</span>
+                  <span class="font-semibold">{{ Number(tool?.stok || 0) }} unit</span>
+                </div>
+                <div class="flex items-center justify-between gap-4">
+                  <span class="text-slate-500 dark:text-slate-400">Lokasi</span>
+                  <span class="font-semibold">{{ tool?.lokasi || '-' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4 dark:border-slate-800 dark:bg-slate-900/40">
+              <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">Catatan</p>
+              <p class="mt-2 text-sm text-slate-700 dark:text-slate-200">
+                Gunakan tombol di bawah untuk menutup pop up ini. Jika alat ingin dipinjam, kembali ke tombol Pinjam pada kartu alat.
+              </p>
+            </div>
+
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+              <button
+                type="button"
+                class="inline-flex items-center justify-center rounded-full bg-cyan-500 px-6 py-3 text-sm font-extrabold text-white transition hover:bg-cyan-600 disabled:cursor-not-allowed disabled:opacity-60 dark:text-slate-950 dark:hover:bg-cyan-400"
+                :disabled="!isAvailable"
+                @click="$emit('borrow', tool)"
+              >
+                Pinjam Sekarang
+              </button>
+              <button
+                type="button"
+                class="inline-flex items-center justify-center rounded-full bg-slate-200 px-6 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                @click="emitClose"
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section v-else class="px-6 py-6">
           <form class="space-y-5" @submit.prevent="submit">
             <div>
               <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-200">Alasan peminjaman</label>
@@ -155,9 +214,14 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+  mode: {
+    type: String,
+    default: 'borrow',
+    validator: (value) => ['borrow', 'detail'].includes(value),
+  },
 })
 
-const emit = defineEmits(['close', 'submit'])
+const emit = defineEmits(['close', 'submit', 'borrow'])
 
 const form = reactive({
   alasan: '',
@@ -174,11 +238,7 @@ const errors = reactive({
 const isAvailable = computed(() => props.tool?.status === 'Tersedia' && Number(props.tool?.stok || 0) > 0)
 
 const availabilityClass = computed(() => (isAvailable.value ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'))
-
-const formattedFine = computed(() => {
-  const fine = Number(props.tool?.denda || props.tool?.dendaHarian || 0)
-  return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(fine || 0)
-})
+const isDetailMode = computed(() => props.mode === 'detail')
 
 watch(
   () => [props.open, props.tool?.id],
@@ -232,6 +292,11 @@ function validate() {
 }
 
 function submit() {
+  if (isDetailMode.value) {
+    emit('borrow', props.tool)
+    return
+  }
+
   if (!isAvailable.value) {
     return
   }

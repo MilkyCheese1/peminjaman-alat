@@ -198,10 +198,15 @@ export default {
 
       const payload = new FormData()
       payload.append('nama', this.profile?.nama || session?.nama || this.fallbackName)
+      payload.append('nik', this.profile?.nik || session?.nik || '')
       payload.append('email', this.profile?.email || session?.email || '')
       payload.append('role', this.profile?.role || session?.role || this.fallbackRole)
       payload.append('status', this.profile?.status || session?.status || 'Aktif')
       payload.append('telepon', this.profile?.telepon || session?.telepon || '')
+      payload.append('jenis_kelamin', this.profile?.jenis_kelamin || session?.jenis_kelamin || '')
+      payload.append('tempat_lahir', this.profile?.tempat_lahir || session?.tempat_lahir || '')
+      payload.append('tanggal_lahir', this.profile?.tanggal_lahir || session?.tanggal_lahir || '')
+      payload.append('alamat', this.profile?.alamat || session?.alamat || '')
       payload.append('gambar', file)
 
       this.uploading = true

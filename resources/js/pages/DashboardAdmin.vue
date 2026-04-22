@@ -35,12 +35,12 @@
             </svg>
             Management User
           </router-link>
-          <button class="app-card app-card--cyan p-4 hover:bg-cyan-100 dark:hover:bg-cyan-500/15 transition duration-300">
+          <router-link to="/laporan-admin" class="app-card app-card--cyan p-4 hover:bg-cyan-100 dark:hover:bg-cyan-500/15 transition duration-300 block">
             <svg class="w-8 h-8 mb-2 text-cyan-600 dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
             Laporan
-          </button>
+          </router-link>
         </div>
 
         <!-- Management Tables -->
@@ -104,7 +104,15 @@
 
         <!-- Reports Section -->
         <div class="mt-8">
-          <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Laporan Sistem</h2>
+          <div class="mb-4 flex items-center justify-between gap-3">
+            <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Laporan Sistem</h2>
+            <router-link
+              to="/laporan-admin"
+              class="inline-flex items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-white/10 dark:text-slate-200 dark:hover:bg-slate-800"
+            >
+              Buka Laporan
+            </router-link>
+          </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="app-card app-card--cyan p-6">
               <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-4">Peminjaman Bulanan</h3>

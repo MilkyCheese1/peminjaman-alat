@@ -10,9 +10,8 @@
     </button>
     <div class="w-full max-w-md">
       <!-- Logo/Title -->
-      <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Peminjaman Alat</h1>
-        <p class="text-slate-600 dark:text-slate-400">Masuk ke akun Anda</p>
+      <div class="text-center mb-8 flex flex-col items-center gap-4">
+        <BrandLogo brand-name="TrustEquip.id" subtitle="Masuk ke akun Anda" layout="stacked" size="lg" />
       </div>
 
       <!-- Login Form -->
@@ -111,9 +110,13 @@
 <script>
 import { apiRequest } from '../lib/api'
 import { roleRedirectPath, setAuthSession } from '../auth/session'
+import BrandLogo from '../components/BrandLogo.vue'
 
 export default {
   name: 'Login',
+  components: {
+    BrandLogo,
+  },
   data() {
       return {
         form: {
@@ -158,7 +161,7 @@ export default {
         }
       } catch (error) {
         this.error = error.message || 'Terjadi kesalahan saat login'
-        this.resetForm()
+        this.form.password = ''
       } finally {
         this.loading = false
       }

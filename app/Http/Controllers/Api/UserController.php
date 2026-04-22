@@ -38,10 +38,15 @@ class UserController extends Controller
     {
         $data = $request->validate([
             'nama' => ['required', 'string', 'max:100'],
+            'nik' => ['nullable', 'string', 'max:50'],
             'email' => ['required', 'email', 'max:120', 'unique:users,email'],
             'role' => ['required', 'string', Rule::in(array_keys(self::ROLE_MAP))],
             'status' => ['required', 'string', Rule::in(array_keys(self::STATUS_MAP))],
             'telepon' => ['required', 'string', 'max:20'],
+            'jenis_kelamin' => ['nullable', 'string', Rule::in(['Laki-laki', 'Perempuan', 'Lainnya'])],
+            'tempat_lahir' => ['nullable', 'string', 'max:100'],
+            'tanggal_lahir' => ['nullable', 'date'],
+            'alamat' => ['nullable', 'string'],
             'password' => ['required', 'string', 'min:6'],
             'gambar' => ['nullable'],
         ]);
@@ -50,10 +55,15 @@ class UserController extends Controller
 
         $user = User::create([
             'nama' => $data['nama'],
+            'nik' => $data['nik'] ?? null,
             'email' => $data['email'],
             'role' => self::ROLE_MAP[$data['role']],
             'status' => self::STATUS_MAP[$data['status']],
             'telepon' => $data['telepon'],
+            'jenis_kelamin' => $data['jenis_kelamin'] ?? null,
+            'tempat_lahir' => $data['tempat_lahir'] ?? null,
+            'tanggal_lahir' => $data['tanggal_lahir'] ?? null,
+            'alamat' => $data['alamat'] ?? null,
             'password_hash' => Hash::make($data['password']),
             'gambar' => $gambar,
         ]);
@@ -65,20 +75,30 @@ class UserController extends Controller
     {
         $data = $request->validate([
             'nama' => ['required', 'string', 'max:100'],
+            'nik' => ['nullable', 'string', 'max:50'],
             'email' => ['required', 'email', 'max:120', Rule::unique('users', 'email')->ignore($user->id)],
             'role' => ['required', 'string', Rule::in(array_keys(self::ROLE_MAP))],
             'status' => ['required', 'string', Rule::in(array_keys(self::STATUS_MAP))],
             'telepon' => ['required', 'string', 'max:20'],
+            'jenis_kelamin' => ['nullable', 'string', Rule::in(['Laki-laki', 'Perempuan', 'Lainnya'])],
+            'tempat_lahir' => ['nullable', 'string', 'max:100'],
+            'tanggal_lahir' => ['nullable', 'date'],
+            'alamat' => ['nullable', 'string'],
             'password' => ['nullable', 'string', 'min:6'],
             'gambar' => ['nullable'],
         ]);
 
         $updatePayload = [
             'nama' => $data['nama'],
+            'nik' => $data['nik'] ?? null,
             'email' => $data['email'],
             'role' => self::ROLE_MAP[$data['role']],
             'status' => self::STATUS_MAP[$data['status']],
             'telepon' => $data['telepon'],
+            'jenis_kelamin' => $data['jenis_kelamin'] ?? null,
+            'tempat_lahir' => $data['tempat_lahir'] ?? null,
+            'tanggal_lahir' => $data['tanggal_lahir'] ?? null,
+            'alamat' => $data['alamat'] ?? null,
         ];
 
         if (isset($data['password']) && $data['password'] !== '') {
@@ -128,10 +148,15 @@ class UserController extends Controller
         return [
             'id' => $user->id,
             'nama' => $user->nama,
+            'nik' => $user->nik,
             'email' => $user->email,
             'role' => $roleLabel,
             'status' => $statusLabel,
             'telepon' => $user->telepon,
+            'jenis_kelamin' => $user->jenis_kelamin,
+            'tempat_lahir' => $user->tempat_lahir,
+            'tanggal_lahir' => $user->tanggal_lahir?->toDateString(),
+            'alamat' => $user->alamat,
             'gambar' => $user->gambar,
         ];
     }

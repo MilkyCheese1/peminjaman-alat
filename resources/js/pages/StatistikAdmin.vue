@@ -23,6 +23,24 @@
           </div>
         </div>
 
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div class="app-card app-card--cyan p-6">
+            <p class="text-sm text-slate-600 dark:text-slate-400">Terlambat Hari Ini</p>
+            <p class="mt-2 text-3xl font-bold text-rose-600 dark:text-rose-400">{{ overdueBorrowings.length }}</p>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">Transaksi aktif yang melewati tanggal rencana.</p>
+          </div>
+          <div class="app-card app-card--cyan p-6">
+            <p class="text-sm text-slate-600 dark:text-slate-400">Butuh Perhatian</p>
+            <p class="mt-2 text-3xl font-bold text-amber-600 dark:text-amber-400">{{ issueBorrowings.length }}</p>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">Barang yang dilaporkan rusak atau hilang.</p>
+          </div>
+          <div class="app-card app-card--cyan p-6">
+            <p class="text-sm text-slate-600 dark:text-slate-400">Aktivitas Tercatat</p>
+            <p class="mt-2 text-3xl font-bold text-cyan-600 dark:text-cyan-400">{{ recentBorrowings.length }}</p>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">Transaksi terbaru yang bisa ditinjau lebih cepat.</p>
+          </div>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <div class="app-card app-card--cyan p-6">
             <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6">Distribusi Pengguna</h2>
@@ -55,6 +73,46 @@
           </div>
         </div>
 
+        <div class="app-card app-card--cyan p-6 mb-8">
+          <div class="mb-6 flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+            <div>
+              <h2 class="text-xl font-bold text-slate-900 dark:text-white">Transaksi Terkini</h2>
+              <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                Lima transaksi terakhir berdasarkan waktu pembaruan data.
+              </p>
+            </div>
+            <router-link
+              to="/log-aktivitas-admin"
+              class="inline-flex items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-white/10 dark:text-slate-200 dark:hover:bg-slate-800"
+            >
+              Lihat Audit Trail
+            </router-link>
+          </div>
+
+          <div v-if="recentBorrowings.length" class="space-y-3">
+            <div
+              v-for="item in recentBorrowings"
+              :key="item.id"
+              class="rounded-2xl bg-slate-100 p-4 text-sm text-slate-700 dark:bg-slate-800/50 dark:text-slate-300"
+            >
+              <div class="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <p class="font-semibold text-slate-900 dark:text-white">{{ item.kode }}</p>
+                  <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                    {{ item.namaPeminjam }} - {{ item.namaAlat }} - {{ item.status }}
+                  </p>
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400">
+                  {{ formatDateTime(item.updatedAt || item.createdAt) }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div v-else class="rounded-2xl bg-slate-100 p-4 text-sm text-slate-700 dark:bg-slate-800/50 dark:text-slate-300">
+            Belum ada transaksi terbaru.
+          </div>
+        </div>
+
         <div class="app-card app-card--cyan p-6">
           <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6">Aktivitas Terbaru</h2>
           <div v-if="loading" class="rounded-2xl bg-slate-100 dark:bg-slate-800/50 p-4 text-sm text-slate-700 dark:text-slate-300">
@@ -63,7 +121,7 @@
           <div v-else-if="recentActivities.length" class="space-y-3">
             <div v-for="item in recentActivities" :key="item.id" class="rounded-2xl bg-slate-100 dark:bg-slate-800/50 p-4 text-sm text-slate-700 dark:text-slate-300">
               <p class="font-semibold text-slate-900 dark:text-white">{{ item.deskripsi }}</p>
-              <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ item.aksi }} • {{ item.entitas }} • {{ formatDateTime(item.createdAt) }}</p>
+              <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ item.aksi }} · {{ item.entitas }} · {{ formatDateTime(item.createdAt) }}</p>
             </div>
           </div>
           <div v-else class="rounded-2xl bg-slate-100 dark:bg-slate-800/50 p-4 text-sm text-slate-700 dark:text-slate-300">
@@ -79,6 +137,8 @@
 import SidebarAdmin from '../components/layout/SidebarAdmin.vue'
 import Navbar from '../components/layout/Navbar.vue'
 import { apiRequest } from '../lib/api'
+import { calculateBorrowingFine } from '../data/returnFine'
+import { getTodayLocalISODate } from '../data/staffBorrowing'
 
 export default {
   name: 'StatistikAdmin',
@@ -118,12 +178,36 @@ export default {
       const rows = [
         { label: 'Aktif', value: count('dipinjam') + count('disetujui') + count('pending'), valueClass: 'text-cyan-400', barClass: 'bg-cyan-500' },
         { label: 'Selesai', value: count('dikembalikan') + count('selesai'), valueClass: 'text-green-400', barClass: 'bg-green-500' },
-        { label: 'Terlambat', value: 0, valueClass: 'text-orange-400', barClass: 'bg-orange-500' },
+        { label: 'Terlambat', value: this.overdueBorrowings.length, valueClass: 'text-orange-400', barClass: 'bg-orange-500' },
       ]
       return rows.map((row) => ({ ...row, percent: Math.round((row.value / total) * 100) }))
     },
     recentActivities() {
       return this.activityLogs.slice(0, 5)
+    },
+    activeBorrowings() {
+      return this.borrowings.filter((item) => ['Pending', 'Disetujui', 'Dipinjam'].includes(item.status) || item.statusPengembalian === 'Belum Dikembalikan')
+    },
+    overdueBorrowings() {
+      return this.activeBorrowings.filter((item) => {
+        const preview = calculateBorrowingFine({
+          price: Number(item.alatHargaAsli || item.alat_harga_asli || 0),
+          dueDate: item.tanggalKembaliRencana,
+          actualDate: getTodayLocalISODate(),
+          statusPengembalian: item.statusPengembalian || 'Belum Dikembalikan',
+          kondisiPengembalian: item.kondisiPengembalian || 'Normal',
+        })
+
+        return preview.daysLate > 0
+      })
+    },
+    issueBorrowings() {
+      return this.borrowings.filter((item) => ['Rusak', 'Hilang'].includes(String(item.kondisiPengembalian || '').trim()))
+    },
+    recentBorrowings() {
+      return [...this.borrowings]
+        .sort((left, right) => new Date(right.updatedAt || right.createdAt || 0) - new Date(left.updatedAt || left.createdAt || 0))
+        .slice(0, 5)
     },
   },
   async created() {
@@ -155,7 +239,7 @@ export default {
     formatDateTime(value) {
       if (!value) return '-'
       try {
-        return new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value.replace(' ', 'T')))
+        return new Intl.DateTimeFormat('id-ID', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(String(value).replace(' ', 'T')))
       } catch (error) {
         return value
       }
@@ -163,7 +247,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-/* Additional styles if needed */
-</style>

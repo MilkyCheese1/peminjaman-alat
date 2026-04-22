@@ -92,10 +92,12 @@
         </section>
 
         <BorrowToolModal
-          :open="isBorrowModalOpen"
+          :open="isToolModalOpen"
           :tool="selectedTool"
-          @close="closeBorrowModal"
+          :mode="toolModalMode"
+          @close="closeToolModal"
           @submit="submitBorrowRequest"
+          @borrow="switchToBorrowMode"
         />
       </main>
     </div>
@@ -130,7 +132,8 @@ export default {
       appliedStatus: '',
       loading: false,
       error: null,
-      isBorrowModalOpen: false,
+      isToolModalOpen: false,
+      toolModalMode: 'borrow',
       selectedTool: null,
     }
   },
@@ -146,7 +149,7 @@ export default {
           if (status && tool.status !== status) return false
           if (!keyword) return true
 
-          return [tool.namaAlat, tool.kategori, tool.status, tool.kondisi, tool.lokasi]
+          return [tool.namaAlat, tool.kategori, tool.status, tool.kondisi, tool.lokasi, tool.hargaAsli]
             .some((value) => String(value ?? '').toLowerCase().includes(keyword))
         })
     },
@@ -188,31 +191,26 @@ export default {
     },
     handleBorrow(tool) {
       this.selectedTool = tool ?? null
-      this.isBorrowModalOpen = true
+      this.toolModalMode = 'borrow'
+      this.isToolModalOpen = true
     },
     handleDetail(tool) {
-      if (typeof window === 'undefined') {
-        return
-      }
-
-      window.alert(
-        [
-          `Nama: ${tool?.namaAlat ?? '-'}`,
-          `Kategori: ${tool?.kategori ?? '-'}`,
-          `Status: ${tool?.status ?? '-'}`,
-          `Kondisi: ${tool?.kondisi ?? '-'}`,
-          `Stok: ${tool?.stok ?? 0}`,
-          `Lokasi: ${tool?.lokasi ?? '-'}`,
-        ].join('\n'),
-      )
+      this.selectedTool = tool ?? null
+      this.toolModalMode = 'detail'
+      this.isToolModalOpen = true
     },
-    closeBorrowModal() {
-      this.isBorrowModalOpen = false
+    closeToolModal() {
+      this.isToolModalOpen = false
       this.selectedTool = null
+      this.toolModalMode = 'borrow'
+    },
+    switchToBorrowMode(tool) {
+      this.selectedTool = tool ?? this.selectedTool
+      this.toolModalMode = 'borrow'
     },
     async submitBorrowRequest(payload) {
       if (typeof window === 'undefined') {
-        this.closeBorrowModal()
+        this.closeToolModal()
         return
       }
 
@@ -233,6 +231,8 @@ export default {
             peminjamId: session?.id ?? null,
             namaPeminjam: borrowerName,
             divisi: borrowerDivision,
+            alatId: this.selectedTool?.id ?? null,
+            alatHargaAsli: Number(this.selectedTool?.hargaAsli || 0),
             namaAlat: this.selectedTool?.namaAlat,
             kategori: this.selectedTool?.kategori,
             tanggalPinjam: today,
@@ -250,7 +250,7 @@ export default {
       } catch (error) {
         window.alert(error?.message || 'Gagal mengirim pengajuan peminjaman.')
       } finally {
-        this.closeBorrowModal()
+        this.closeToolModal()
       }
     },
   },

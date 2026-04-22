@@ -33,7 +33,62 @@
             </div>
           </div>
 
-          <div class="overflow-x-auto">
+          <div class="space-y-4 lg:hidden">
+            <article
+              v-for="item in filteredItems"
+              :key="item.id"
+              class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900"
+            >
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ item.kode }}</p>
+                  <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ item.namaPeminjam }}</p>
+                </div>
+                <span
+                  :class="[
+                    'inline-flex items-center gap-2 text-xs font-semibold tracking-wide',
+                    resolveBorrowingStatusBadge(item.status).toneClass,
+                  ]"
+                >
+                  <span :class="resolveBorrowingStatusBadge(item.status).iconClass" aria-hidden="true"></span>
+                  {{ resolveBorrowingStatusBadge(item.status).label }}
+                </span>
+              </div>
+
+              <div class="mt-4 space-y-2 text-sm text-slate-700 dark:text-slate-200">
+                <p><span class="font-semibold">Alat:</span> {{ item.namaAlat }}</p>
+                <p><span class="font-semibold">Divisi:</span> {{ item.divisi }}</p>
+                <p><span class="font-semibold">Tanggal:</span> {{ item.tanggalPinjam }} - {{ item.tanggalKembaliRencana }}</p>
+                <p><span class="font-semibold">Kembali:</span> {{ resolveReturnStatusBadge(item).label }}</p>
+                <p><span class="font-semibold">Biaya:</span> {{ formatRupiah(item.biaya) }}</p>
+              </div>
+
+              <div class="mt-4 flex flex-col gap-2">
+                <div class="flex flex-col gap-2">
+                  <div class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Ambil</div>
+                  <img
+                    v-if="item.buktiPengambilan || item.gambar"
+                    :src="item.buktiPengambilan || item.gambar"
+                    alt="Bukti pengambilan"
+                    class="h-32 w-full rounded-2xl border border-slate-200 object-cover dark:border-slate-700"
+                  />
+                  <span v-else class="text-xs text-slate-500 dark:text-slate-400">-</span>
+                </div>
+                <div class="flex flex-col gap-2">
+                  <div class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Kembali</div>
+                  <img
+                    v-if="item.buktiPengembalian"
+                    :src="item.buktiPengembalian"
+                    alt="Bukti pengembalian"
+                    class="h-32 w-full rounded-2xl border border-slate-200 object-cover dark:border-slate-700"
+                  />
+                  <span v-else class="text-xs text-slate-500 dark:text-slate-400">-</span>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="hidden overflow-x-auto lg:block">
             <table class="min-w-full">
               <thead>
                 <tr class="border-b border-slate-200 dark:border-slate-800">
@@ -43,6 +98,7 @@
                   <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">Divisi</th>
                   <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">Tanggal</th>
                   <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">Status</th>
+                  <th class="px-4 py-3 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">Bukti</th>
                   <th class="px-4 py-3 text-right text-sm font-semibold text-slate-700 dark:text-slate-300">Biaya</th>
                 </tr>
               </thead>
@@ -57,18 +113,56 @@
                   <td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-200">{{ item.namaAlat }}</td>
                   <td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-200">{{ item.divisi }}</td>
                   <td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-200">
-                    {{ item.tanggalPinjam }} → {{ item.tanggalKembaliRencana }}
+                    {{ item.tanggalPinjam }} - {{ item.tanggalKembaliRencana }}
                   </td>
                   <td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-200">
-                    <span :class="['inline-flex rounded-full px-3 py-1 text-xs font-semibold', statusToneClass(item.status)]">
-                      {{ item.status }}
+                    <span
+                      :class="[
+                        'inline-flex items-center gap-2 text-xs font-semibold tracking-wide',
+                        resolveBorrowingStatusBadge(item.status).toneClass,
+                      ]"
+                    >
+                      <span :class="resolveBorrowingStatusBadge(item.status).iconClass" aria-hidden="true"></span>
+                      {{ resolveBorrowingStatusBadge(item.status).label }}
                     </span>
+                    <div class="mt-2">
+                      <span
+                        :class="[
+                          'inline-flex items-center gap-2 text-xs font-semibold tracking-wide',
+                          resolveReturnStatusBadge(item).toneClass,
+                        ]"
+                      >
+                        <span :class="resolveReturnStatusBadge(item).iconClass" aria-hidden="true"></span>
+                        {{ resolveReturnStatusBadge(item).label }}
+                      </span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-4 text-sm text-slate-700 dark:text-slate-200">
+                    <div class="flex flex-col gap-2">
+                      <div class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Ambil</div>
+                      <img
+                        v-if="item.buktiPengambilan || item.gambar"
+                        :src="item.buktiPengambilan || item.gambar"
+                        alt="Bukti pengambilan"
+                        class="h-16 w-24 rounded-xl border border-slate-200 object-cover dark:border-slate-700"
+                      />
+                      <span v-else class="text-xs text-slate-500 dark:text-slate-400">-</span>
+
+                      <div class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Kembali</div>
+                      <img
+                        v-if="item.buktiPengembalian"
+                        :src="item.buktiPengembalian"
+                        alt="Bukti pengembalian"
+                        class="h-16 w-24 rounded-xl border border-slate-200 object-cover dark:border-slate-700"
+                      />
+                      <span v-else class="text-xs text-slate-500 dark:text-slate-400">-</span>
+                    </div>
                   </td>
                   <td class="px-4 py-4 text-right text-sm text-slate-700 dark:text-slate-200">{{ formatRupiah(item.biaya) }}</td>
                 </tr>
 
                 <tr v-if="!filteredItems.length">
-                  <td colspan="7" class="px-4 py-8 text-center text-sm text-slate-600 dark:text-slate-300">
+                  <td colspan="8" class="px-4 py-8 text-center text-sm text-slate-600 dark:text-slate-300">
                     Tidak ada transaksi yang cocok.
                   </td>
                 </tr>
@@ -86,6 +180,8 @@ import { computed, onMounted, ref } from 'vue'
 import SidebarOwner from '../components/layout/SidebarOwner.vue'
 import Navbar from '../components/layout/Navbar.vue'
 import { apiRequest } from '../lib/api'
+import { resolveBorrowingStatusBadge } from '../utils/borrowingStatusBadge'
+import { resolveReturnStatusBadge } from '../utils/returnStatusBadge'
 
 const items = ref([])
 const search = ref('')
@@ -113,19 +209,6 @@ onMounted(async () => {
   }
 })
 
-function statusToneClass(status) {
-  const map = {
-    Pending: 'bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-200',
-    Disetujui: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-500/15 dark:text-cyan-200',
-    Dipinjam: 'bg-violet-100 text-violet-800 dark:bg-violet-500/15 dark:text-violet-200',
-    Dikembalikan: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-200',
-    Selesai: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-200',
-    Ditolak: 'bg-rose-100 text-rose-800 dark:bg-rose-500/15 dark:text-rose-200',
-  }
-
-  return map[status] ?? 'bg-slate-200 text-slate-800 dark:bg-slate-700 dark:text-slate-100'
-}
-
 function formatRupiah(value) {
   return new Intl.NumberFormat('id-ID', {
     style: 'currency',
@@ -133,5 +216,5 @@ function formatRupiah(value) {
     maximumFractionDigits: 0,
   }).format(Number(value || 0))
 }
-</script>
 
+</script>

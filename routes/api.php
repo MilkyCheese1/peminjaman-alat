@@ -20,6 +20,7 @@ Route::apiResource('tools', ToolController::class)->except(['show']);
 Route::apiResource('users', UserController::class)->except(['show']);
 Route::put('/users/{user}/password', [UserController::class, 'updatePassword']);
 Route::apiResource('borrowings', BorrowingController::class)->except(['show']);
+Route::put('/borrowings/{borrowing}/return', [BorrowingController::class, 'confirmReturn']);
 Route::apiResource('feedback', FeedbackController::class)->only(['index', 'store']);
 Route::apiResource('notifications', NotificationController::class)->only(['index']);
 Route::apiResource('activity-logs', ActivityLogController::class)->only(['index']);

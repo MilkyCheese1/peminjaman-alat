@@ -10,9 +10,8 @@
     </button>
     <div class="w-full max-w-md">
       <!-- Logo/Title -->
-      <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Peminjaman Alat</h1>
-        <p class="text-slate-600 dark:text-slate-400">Buat akun baru</p>
+      <div class="text-center mb-8 flex flex-col items-center gap-4">
+        <BrandLogo brand-name="TrustEquip.id" subtitle="Buat akun baru" layout="stacked" size="lg" />
       </div>
 
       <!-- Registration Form -->
@@ -173,12 +172,16 @@
 
 <script>
 import { apiRequest } from '../lib/api'
+import BrandLogo from '../components/BrandLogo.vue'
 
 const REGISTRATION_STORAGE_KEY = 'trustequip_register_form'
 const REGISTRATION_TTL_MS = 2 * 60 * 60 * 1000 // 2 hours
 
 export default {
   name: 'Registrasi',
+  components: {
+    BrandLogo,
+  },
   data() {
       return {
         form: {
@@ -293,6 +296,9 @@ export default {
         this.resetForm()
       } catch (error) {
         this.error = error.message || 'Terjadi kesalahan saat pendaftaran'
+        if (this.error === 'Password tidak cocok') {
+          this.form.password_confirmation = ''
+        }
       } finally {
         this.loading = false
       }

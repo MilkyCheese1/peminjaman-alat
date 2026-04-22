@@ -16,6 +16,7 @@ import ManagementUser from '../pages/ManagementUser.vue';
 import ManagementAlat from '../pages/ManagementAlat.vue';
 import ManagementKategori from '../pages/ManagementKategori.vue';
 import ManagementPeminjaman from '../pages/ManagementPeminjaman.vue';
+import PengembalianStaff from '../pages/PengembalianStaff.vue';
 import LaporanStaff from '../pages/Laporan.vue';
 import Notifikasi from '../pages/Notifikasi.vue';
 import LogAktivitas from '../pages/LogAktivitas.vue';
@@ -174,6 +175,16 @@ const routes = [
     path: '/management-peminjaman',
     name: 'ManagementPeminjaman',
     component: ManagementPeminjaman,
+  },
+  {
+    path: '/pengembalian-staff',
+    name: 'PengembalianStaff',
+    component: PengembalianStaff,
+  },
+  {
+    path: '/laporan-admin',
+    name: 'LaporanAdmin',
+    component: LaporanStaff,
   },
   {
     path: '/laporan-staff',

@@ -50,46 +50,57 @@ INSERT INTO categories (id, nama_kategori, kode_kategori, status, deskripsi, gam
 -- kondisi: 1=Baik,2=PerluKalibrasi,3=RusakRingan,4=RusakBerat
 -- status : 1=Tersedia,2=Dipinjam,3=Maintenance
 -- =========================================================
-INSERT INTO tools (id, category_id, nama_alat, stok, kondisi, status, lokasi, gambar, created_at, updated_at) VALUES
-(1, 1, 'Multimeter Digital', 10, 1, 1, 'Gudang Elektronik', NULL, '2026-04-02 09:00:00', '2026-04-02 09:00:00'),
-(2, 1, 'Oscilloscope 100MHz', 2, 2, 3, 'Lab Elektronik', NULL, '2026-04-02 09:05:00', '2026-04-18 13:00:00'),
-(3, 2, 'Bor Listrik', 4, 1, 1, 'Workshop', NULL, '2026-04-02 09:10:00', '2026-04-02 09:10:00'),
-(4, 2, 'Kunci Torsi 1/2', 3, 2, 1, 'Workshop', NULL, '2026-04-02 09:15:00', '2026-04-02 09:15:00'),
-(5, 3, 'Caliper Digital', 5, 1, 1, 'Lab Kalibrasi', NULL, '2026-04-02 09:20:00', '2026-04-11 11:00:00'),
-(6, 4, 'Helm Safety', 20, 1, 1, 'Gudang Safety', NULL, '2026-04-02 09:25:00', '2026-04-02 09:25:00'),
-(7, 5, 'Speaker Portable', 6, 1, 1, 'Gudang Audio', NULL, '2026-04-02 09:30:00', '2026-04-02 09:30:00'),
-(8, 6, 'Laptop Kantor', 8, 1, 2, 'Ruang IT', NULL, '2026-04-02 09:35:00', '2026-04-20 09:00:00'),
-(9, 8, 'Proyektor HD', 3, 1, 1, 'Gudang Presentasi', NULL, '2026-04-02 09:40:00', '2026-04-02 09:40:00'),
-(10, 9, 'Router WiFi 6', 2, 3, 3, 'Ruang IT', NULL, '2026-04-02 09:45:00', '2026-04-16 15:40:00');
+INSERT INTO tools (id, category_id, nama_alat, harga_asli, deskripsi, stok, kondisi, status, lokasi, gambar, created_at, updated_at) VALUES
+(1, 1, 'Multimeter Digital', 350000, 'Alat ukur listrik untuk pemeriksaan tegangan, arus, dan resistansi.', 10, 1, 1, 'Gudang Elektronik', NULL, '2026-04-02 09:00:00', '2026-04-02 09:00:00'),
+(2, 1, 'Oscilloscope 100MHz', 12500000, 'Perangkat analisis sinyal untuk pengujian rangkaian elektronik.', 2, 2, 3, 'Lab Elektronik', NULL, '2026-04-02 09:05:00', '2026-04-18 13:00:00'),
+(3, 2, 'Bor Listrik', 850000, 'Bor listrik serbaguna untuk pekerjaan perakitan dan perawatan.', 4, 1, 1, 'Workshop', NULL, '2026-04-02 09:10:00', '2026-04-02 09:10:00'),
+(4, 2, 'Kunci Torsi 1/2', 450000, 'Kunci torsi presisi untuk pengencangan baut sesuai spesifikasi.', 3, 2, 1, 'Workshop', NULL, '2026-04-02 09:15:00', '2026-04-02 09:15:00'),
+(5, 3, 'Caliper Digital', 300000, 'Alat ukur digital untuk pengukuran dimensi yang presisi.', 5, 1, 1, 'Lab Kalibrasi', NULL, '2026-04-02 09:20:00', '2026-04-11 11:00:00'),
+(6, 4, 'Helm Safety', 175000, 'Helm pelindung untuk menunjang keselamatan kerja di lapangan.', 20, 1, 1, 'Gudang Safety', NULL, '2026-04-02 09:25:00', '2026-04-02 09:25:00'),
+(7, 5, 'Speaker Portable', 900000, 'Speaker portabel untuk kebutuhan audio meeting dan presentasi.', 6, 1, 1, 'Gudang Audio', NULL, '2026-04-02 09:30:00', '2026-04-02 09:30:00'),
+(8, 6, 'Laptop Kantor', 9500000, 'Laptop kerja untuk administrasi, dokumentasi, dan presentasi.', 8, 1, 2, 'Ruang IT', NULL, '2026-04-02 09:35:00', '2026-04-20 09:00:00'),
+(9, 8, 'Proyektor HD', 6500000, 'Proyektor untuk menampilkan materi rapat dan presentasi.', 3, 1, 1, 'Gudang Presentasi', NULL, '2026-04-02 09:40:00', '2026-04-02 09:40:00'),
+(10, 9, 'Router WiFi 6', 1100000, 'Router jaringan untuk kebutuhan konektivitas ruang kerja.', 2, 3, 3, 'Ruang IT', NULL, '2026-04-02 09:45:00', '2026-04-16 15:40:00');
 
 -- =========================================================
 -- BORROWINGS
 -- status: 1=Pending,2=Disetujui,3=Ditolak,4=Dipinjam,5=Dikembalikan,6=Selesai
 -- =========================================================
 INSERT INTO borrowings (
-  id, kode, peminjam_id, nama_peminjam, divisi, alat_id, nama_alat, kategori, petugas_id, petugas_nama,
-  keperluan, tgl_pinjam, tgl_kembali_rencana, tgl_kembali_aktual, status, biaya, catatan, gambar, created_at, updated_at
+  id, kode, peminjam_id, nama_peminjam, divisi, alat_id, alat_harga_asli, nama_alat, kategori, petugas_id, petugas_nama,
+  keperluan, tgl_pinjam, tgl_kembali_rencana, tgl_kembali_aktual, status, status_pengembalian, kondisi_pengembalian,
+  laporan_peminjam, laporan_staff, denda_kerusakan, denda_kehilangan, denda_keterlambatan, biaya, catatan, gambar, created_at, updated_at
 ) VALUES
-(1, 'PMJ-20260410-001', 6, 'Budi Peminjam', 'Produksi', 1, 'Multimeter Digital', 'Elektronik', 3, 'Raka Staff',
- 'Cek tegangan panel', '2026-04-10', '2026-04-12', NULL, 1, 0, 'Menunggu persetujuan staff.', NULL, '2026-04-10 09:00:00', '2026-04-10 09:00:00'),
-(2, 'PMJ-20260410-002', 7, 'Siti Peminjam', 'QA', 5, 'Caliper Digital', 'Kalibrasi', 4, 'Dina Staff',
- 'Pengukuran sampel batch 42', '2026-04-10', '2026-04-11', NULL, 2, 0, 'Disetujui, siap diambil.', NULL, '2026-04-10 10:00:00', '2026-04-10 10:15:00'),
-(3, 'PMJ-20260411-001', 7, 'Siti Peminjam', 'QA', 5, 'Caliper Digital', 'Kalibrasi', 4, 'Dina Staff',
- 'Pengukuran lanjutan', '2026-04-11', '2026-04-12', NULL, 4, 0, 'Sedang dipinjam.', NULL, '2026-04-11 08:30:00', '2026-04-11 08:45:00'),
-(4, 'PMJ-20260411-002', 9, 'Maya Peminjam', 'Maintenance', 3, 'Bor Listrik', 'Mekanik', 3, 'Raka Staff',
- 'Perbaikan pompa', '2026-04-11', '2026-04-13', '2026-04-13', 5, 0, 'Dikembalikan dan dicek ulang.', NULL, '2026-04-11 09:15:00', '2026-04-13 16:30:00'),
-(5, 'PMJ-20260412-001', 10, 'Eko Peminjam', 'R&D', 9, 'Proyektor HD', 'Presentasi', 5, 'Sari Staff',
- 'Demo proposal proyek', '2026-04-12', '2026-04-14', '2026-04-14', 6, 0, 'Selesai tanpa kendala.', NULL, '2026-04-12 09:10:00', '2026-04-14 17:10:00'),
-(6, 'PMJ-20260412-002', 8, 'Andi Peminjam', 'Produksi', 4, 'Kunci Torsi 1/2', 'Mekanik', 3, 'Raka Staff',
- 'Kalibrasi baut mesin', '2026-04-12', '2026-04-13', NULL, 3, 0, 'Ditolak karena alat sedang dibutuhkan tim lain.', NULL, '2026-04-12 11:20:00', '2026-04-12 11:45:00'),
-(7, 'PMJ-20260413-001', NULL, 'Guest Vendor', 'Tamu', 6, 'Helm Safety', 'Safety', 4, 'Dina Staff',
- 'Kunjungan area produksi', '2026-04-13', '2026-04-13', '2026-04-13', 6, 0, 'Transaksi tamu selesai di hari yang sama.', NULL, '2026-04-13 08:00:00', '2026-04-13 17:00:00'),
-(8, 'PMJ-20260414-001', 6, 'Budi Peminjam', 'Produksi', 8, 'Laptop Kantor', 'Komputer', 5, 'Sari Staff',
- 'Presentasi internal tim', '2026-04-14', '2026-04-16', NULL, 2, 0, 'Disetujui, menunggu serah terima.', NULL, '2026-04-14 10:00:00', '2026-04-14 10:20:00'),
-(9, 'PMJ-20260415-001', 9, 'Maya Peminjam', 'QC', 7, 'Speaker Portable', 'Audio', 3, 'Raka Staff',
- 'Briefing lapangan', '2026-04-15', '2026-04-17', NULL, 4, 0, 'Sedang dipinjam.', NULL, '2026-04-15 13:30:00', '2026-04-15 13:45:00'),
-(10, 'PMJ-20260416-001', 10, 'Eko Peminjam', 'IT', 10, 'Router WiFi 6', 'Network', 4, 'Dina Staff',
- 'Uji koneksi ruangan meeting', '2026-04-16', '2026-04-18', NULL, 1, 0, 'Menunggu verifikasi kelengkapan.', NULL, '2026-04-16 09:45:00', '2026-04-16 09:45:00');
+(1, 'PMJ-20260410-001', 6, 'Budi Peminjam', 'Produksi', 1, 350000, 'Multimeter Digital', 'Elektronik', 3, 'Raka Staff',
+ 'Cek tegangan panel', '2026-04-10', '2026-04-12', NULL, 1, 'Belum Dikembalikan', NULL,
+ 'Alat masih dipakai untuk pengecekan panel.', NULL, 0, 0, 0, 0, 'Menunggu persetujuan staff.', NULL, '2026-04-10 09:00:00', '2026-04-10 09:00:00'),
+(2, 'PMJ-20260410-002', 7, 'Siti Peminjam', 'QA', 5, 300000, 'Caliper Digital', 'Kalibrasi', 4, 'Dina Staff',
+ 'Pengukuran sampel batch 42', '2026-04-10', '2026-04-11', NULL, 2, 'Belum Dikembalikan', NULL,
+ NULL, NULL, 0, 0, 0, 150000, 'Disetujui, siap diambil.', NULL, '2026-04-10 10:00:00', '2026-04-10 10:15:00'),
+(3, 'PMJ-20260411-001', 7, 'Siti Peminjam', 'QA', 5, 300000, 'Caliper Digital', 'Kalibrasi', 4, 'Dina Staff',
+ 'Pengukuran lanjutan', '2026-04-11', '2026-04-12', NULL, 4, 'Belum Dikembalikan', NULL,
+ NULL, NULL, 0, 0, 0, 150000, 'Sedang dipinjam.', NULL, '2026-04-11 08:30:00', '2026-04-11 08:45:00'),
+(4, 'PMJ-20260411-002', 9, 'Maya Peminjam', 'Maintenance', 3, 850000, 'Bor Listrik', 'Mekanik', 3, 'Raka Staff',
+ 'Perbaikan pompa', '2026-04-11', '2026-04-13', '2026-04-13', 5, 'Dikembalikan', 'Normal',
+ 'Kondisi normal saat dikembalikan.', 'Diperiksa dan dinyatakan normal.', 0, 0, 0, 0, 'Dikembalikan dan dicek ulang.', NULL, '2026-04-11 09:15:00', '2026-04-13 16:30:00'),
+(5, 'PMJ-20260412-001', 10, 'Eko Peminjam', 'R&D', 9, 6500000, 'Proyektor HD', 'Presentasi', 5, 'Sari Staff',
+ 'Demo proposal proyek', '2026-04-12', '2026-04-14', '2026-04-14', 6, 'Dikembalikan', 'Normal',
+ 'Semua perlengkapan lengkap.', 'Selesai tanpa kendala.', 0, 0, 0, 0, 'Selesai tanpa kendala.', NULL, '2026-04-12 09:10:00', '2026-04-14 17:10:00'),
+(6, 'PMJ-20260412-002', 8, 'Andi Peminjam', 'Produksi', 4, 450000, 'Kunci Torsi 1/2', 'Mekanik', 3, 'Raka Staff',
+ 'Kalibrasi baut mesin', '2026-04-12', '2026-04-13', NULL, 3, 'Belum Dikembalikan', NULL,
+ NULL, NULL, 0, 0, 0, 0, 'Ditolak karena alat sedang dibutuhkan tim lain.', NULL, '2026-04-12 11:20:00', '2026-04-12 11:45:00'),
+(7, 'PMJ-20260413-001', NULL, 'Guest Vendor', 'Tamu', 6, 175000, 'Helm Safety', 'Safety', 4, 'Dina Staff',
+ 'Kunjungan area produksi', '2026-04-13', '2026-04-13', '2026-04-13', 6, 'Dikembalikan', 'Normal',
+ 'Pinjaman tamu selesai pada hari yang sama.', 'Transaksi tamu selesai di hari yang sama.', 0, 0, 0, 0, 'Transaksi tamu selesai di hari yang sama.', NULL, '2026-04-13 08:00:00', '2026-04-13 17:00:00'),
+(8, 'PMJ-20260414-001', 6, 'Budi Peminjam', 'Produksi', 8, 9500000, 'Laptop Kantor', 'Komputer', 5, 'Sari Staff',
+ 'Presentasi internal tim', '2026-04-14', '2026-04-16', NULL, 2, 'Belum Dikembalikan', NULL,
+ NULL, NULL, 0, 0, 0, 0, 'Disetujui, menunggu serah terima.', NULL, '2026-04-14 10:00:00', '2026-04-14 10:20:00'),
+(9, 'PMJ-20260415-001', 9, 'Maya Peminjam', 'QC', 7, 900000, 'Speaker Portable', 'Audio', 3, 'Raka Staff',
+ 'Briefing lapangan', '2026-04-15', '2026-04-17', NULL, 4, 'Belum Dikembalikan', NULL,
+ NULL, NULL, 0, 0, 0, 0, 'Sedang dipinjam.', NULL, '2026-04-15 13:30:00', '2026-04-15 13:45:00'),
+(10, 'PMJ-20260416-001', 10, 'Eko Peminjam', 'IT', 10, 1100000, 'Router WiFi 6', 'Network', 4, 'Dina Staff',
+ 'Uji koneksi ruangan meeting', '2026-04-16', '2026-04-18', NULL, 1, 'Belum Dikembalikan', NULL,
+ NULL, NULL, 0, 0, 0, 0, 'Menunggu verifikasi kelengkapan.', NULL, '2026-04-16 09:45:00', '2026-04-16 09:45:00');
 
 -- =========================================================
 -- NOTIFICATIONS

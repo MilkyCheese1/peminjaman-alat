@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['category_id', 'nama_alat', 'stok', 'kondisi', 'status', 'lokasi', 'gambar'])]
+#[Fillable(['category_id', 'nama_alat', 'deskripsi', 'harga_asli', 'stok', 'kondisi', 'status', 'lokasi', 'gambar'])]
 class Tool extends Model
 {
     use HasFactory;
@@ -17,4 +17,3 @@ class Tool extends Model
         return $this->belongsTo(Category::class);
     }
 }
-

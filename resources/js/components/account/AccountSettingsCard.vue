@@ -12,6 +12,7 @@
             <input
               v-model.trim="profileForm.nama"
               type="text"
+              readonly
               class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 focus:border-cyan-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100"
             >
           </div>
@@ -29,9 +30,9 @@
 
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
-            <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Role</label>
+            <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Status Akun</label>
             <input
-              v-model="profileForm.role"
+              v-model="profileForm.status"
               type="text"
               readonly
               class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 focus:border-cyan-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100"
@@ -47,6 +48,62 @@
               placeholder="+62 ..."
             >
           </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div>
+            <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">NIK / Nomor Identitas</label>
+            <input
+              v-model.trim="profileForm.nik"
+              type="text"
+              class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 focus:border-cyan-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100"
+              placeholder="Opsional"
+            >
+          </div>
+
+          <div>
+            <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Jenis Kelamin</label>
+            <select
+              v-model="profileForm.jenis_kelamin"
+              class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 focus:border-cyan-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100"
+            >
+              <option value="">Pilih jenis kelamin</option>
+              <option value="Laki-laki">Laki-laki</option>
+              <option value="Perempuan">Perempuan</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div>
+            <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Tempat Lahir</label>
+            <input
+              v-model.trim="profileForm.tempat_lahir"
+              type="text"
+              class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 focus:border-cyan-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100"
+              placeholder="Contoh: Jakarta"
+            >
+          </div>
+
+          <div>
+            <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Tanggal Lahir</label>
+            <input
+              v-model="profileForm.tanggal_lahir"
+              type="date"
+              class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 focus:border-cyan-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100"
+            >
+          </div>
+        </div>
+
+        <div>
+          <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Alamat</label>
+          <textarea
+            v-model.trim="profileForm.alamat"
+            rows="4"
+            class="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 focus:border-cyan-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100"
+            placeholder="Masukkan alamat lengkap"
+          ></textarea>
         </div>
 
         <div class="flex gap-3 pt-2">
@@ -154,9 +211,13 @@ export default {
       profileForm: {
         id: null,
         nama: '',
+        nik: '',
         email: '',
-        role: '',
         telepon: '',
+        jenis_kelamin: '',
+        tempat_lahir: '',
+        tanggal_lahir: '',
+        alamat: '',
         status: 'Aktif',
       },
       originalProfile: null,
@@ -182,15 +243,46 @@ export default {
         return
       }
 
-      this.profileForm = {
-        id: session.id,
-        nama: session.nama || '',
-        email: session.email || '',
-        role: session.role || 'Peminjam',
-        telepon: session.telepon || '',
-        status: session.status || 'Aktif',
+      try {
+        const users = await apiRequest('/api/users')
+        const match = Array.isArray(users)
+          ? users.find((item) => Number(item.id) === Number(session.id))
+          : null
+
+        const profile = match || session
+
+        this.profileForm = {
+          id: profile.id || session.id,
+          nama: profile.nama || '',
+          nik: profile.nik || '',
+          email: profile.email || '',
+          telepon: profile.telepon || '',
+          jenis_kelamin: profile.jenis_kelamin || '',
+          tempat_lahir: profile.tempat_lahir || '',
+          tanggal_lahir: profile.tanggal_lahir || '',
+          alamat: profile.alamat || '',
+          status: profile.status || 'Aktif',
+        }
+        this.originalProfile = { ...this.profileForm }
+
+        if (match) {
+          setAuthSession({ ...session, ...match })
+        }
+      } catch (error) {
+        this.profileForm = {
+          id: session.id,
+          nama: session.nama || '',
+          nik: session.nik || '',
+          email: session.email || '',
+          telepon: session.telepon || '',
+          jenis_kelamin: session.jenis_kelamin || '',
+          tempat_lahir: session.tempat_lahir || '',
+          tanggal_lahir: session.tanggal_lahir || '',
+          alamat: session.alamat || '',
+          status: session.status || 'Aktif',
+        }
+        this.originalProfile = { ...this.profileForm }
       }
-      this.originalProfile = { ...this.profileForm }
     },
     resetProfile() {
       if (this.originalProfile) {
@@ -214,19 +306,28 @@ export default {
           method: 'PUT',
           body: {
             nama: this.profileForm.nama,
+            nik: this.profileForm.nik,
             email: this.profileForm.email,
-            role: this.profileForm.role,
+            role: session.role,
             status: this.profileForm.status,
             telepon: this.profileForm.telepon,
+            jenis_kelamin: this.profileForm.jenis_kelamin,
+            tempat_lahir: this.profileForm.tempat_lahir,
+            tanggal_lahir: this.profileForm.tanggal_lahir,
+            alamat: this.profileForm.alamat,
           },
         })
 
         this.profileForm = {
           id: updated.id,
           nama: updated.nama || this.profileForm.nama,
+          nik: updated.nik || this.profileForm.nik,
           email: updated.email || this.profileForm.email,
-          role: updated.role || this.profileForm.role,
           telepon: updated.telepon || this.profileForm.telepon,
+          jenis_kelamin: updated.jenis_kelamin || this.profileForm.jenis_kelamin,
+          tempat_lahir: updated.tempat_lahir || this.profileForm.tempat_lahir,
+          tanggal_lahir: updated.tanggal_lahir || this.profileForm.tanggal_lahir,
+          alamat: updated.alamat || this.profileForm.alamat,
           status: updated.status || this.profileForm.status,
         }
         this.originalProfile = { ...this.profileForm }
